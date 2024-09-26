@@ -674,7 +674,6 @@ class Course {
         badgeButton.className = "badge";
         badgeButton.textContent = count;
         badgeButton.addEventListener("click", () => {
-            // openUploadOverlay(id);
         });
 
         if(count) badgeButton.style.display = "grid";
@@ -691,51 +690,42 @@ class Course {
 
 async function editLearningObjectives(id){
 
-    const filenameResponse = await AJAXCall({
-        phpFilePath: "../include/course/getLearningObjectivesFilename.php",
+    const response = await AJAXCall({
+        phpFilePath: "../include/course/getLearningObjectives.php",
         rejectMessage: "Getting Filename Failed",
         type: "fetch",
         params: `courseID=${id}`
     })
 
-    const lengthOfResponse = filenameResponse.length; 
-    let filename;
-    let correctPath;
-    let objectivesObjectResponse;
-    let objectives = [];
-    let type = "";
-
-    if(lengthOfResponse == 0){
-        console.log(`There are ${ lengthOfResponse } objectives`);
-        filename = await saveLearningObjectivesInDatabase(id);
-        await saveLearningObjectivesAsJSON(filename, []);
-    }else{
-        filename = filenameResponse[0].filename;
-    }
-
-    correctPath = "../objectives/" + filename;
-    
-    objectivesObjectResponse = await fetch(correctPath, {cache: "reload"});
-
-    objectives = await objectivesObjectResponse.json();
-    type = "edit";
-
-    details = {
-        type,
-        courseID: id
-    }
+    console.log("HERE: response of objectives: ", response);
 
     let addLearningObjectiveButton = document.querySelector(".add-learning-objective-button");
     let saveLearningObjectivesButton = document.querySelector(".save-learning-objectives-button");
 
-    console.log("filename: ", filename);
-    console.log("objectivesObject: ", objectives);
+    
+    let objectives = parseAvailableJSONFromArray(response, "objectives");
 
-    let learningObjectives = new Objectives({ objectives, filename, details });
+    console.log("HERE: parsed objectives", objectives);
+    console.log("HERE: Objectives ID: ", response);
+
+    let learningObjectives = new Objectives({ id: response[0].id, objectives });
     learningObjectives.renderObjectives();
     learningObjectives.setAddNewObjectiveButton(addLearningObjectiveButton);
     learningObjectives.setSaveLearningObjectivesButton(saveLearningObjectivesButton);
     openPopup(".edit-learning-objectives-overlay");
+}
+
+function parseAvailableJSONFromArray(array, objectIdentifier) {
+    
+    let result = []
+
+    if(array.length > 0 ){
+        let temp = array[0];
+        temp = JSON.parse(temp[objectIdentifier]);
+        result = temp;
+    }
+
+    return result;
 }
 
 // TODO: Get Course class lines under 500

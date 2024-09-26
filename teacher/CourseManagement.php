@@ -96,6 +96,9 @@
                     } = await uploadFile(courseImageObject);
                     if (newFileName) params = `id=${id}&&courseCode=${courseCode}&&title=${courseName}&&language=${courseLanguage}&&isLanguage=${isLanguageCourse}&&creatorID=${creatorID}&&image=${newFileName}`;
                     console.log(params);
+
+                    let objectivesResult = await addNewObjective(id);
+                    console.log("Objectives Result: ", objectivesResult);
                 } catch (error) {
                     console.log(error);
                 }
@@ -110,10 +113,7 @@
             });
 
             console.log(result);
-
-            // objectives.
-            await saveLearningObjectivesInDatabase(id);
-
+            
             loadCourses();
 
             setTimeout(() => {

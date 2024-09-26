@@ -2,10 +2,10 @@
 
     include "../databaseConnection.php"; 
 
+
     $conn = OpenConnection();
 
     $id = $_POST['id'];
-    $courseID = $_POST['courseID'];
     $objectives = $_POST['objectives'];
 
     if (!$conn) {
@@ -13,8 +13,9 @@
     }
 
     $query = "
-        INSERT INTO objectives (id, courseID, objectives)
-        VALUES ('$id', '$courseID', '$objectives')
+        UPDATE objectives
+        SET objectives='$objectives'
+        WHERE id='$id'
     ";
 
     $result = mysqli_query($conn,$query);
