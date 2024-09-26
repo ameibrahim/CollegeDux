@@ -3,9 +3,8 @@ class Objectives {
     currentHierarchy = 0
     currentIndex = 0
 
-    constructor({ objectives, filename }){
-        // this.id = objectivesObject.id;
-        this.filename = filename;
+    constructor({ id, objectives }){
+        this.id = id;
         this.objectives = objectives;
         this.currentIndex = this.objectives.length - 1;
     }
@@ -95,11 +94,13 @@ class Objectives {
 
     saveObjectives(){
 
+        //TODO: Objective 1
+
         ( async () => {
 
             try {
-                const jsonResult = await saveLearningObjectivesAsJSON(this.filename, this.objectives);
-                console.log(jsonResult);
+                const result = await saveLearningObjectives(this.id, this.objectives);
+                console.log("save objectives result: ", result);
             }
             catch(error){
                 console.log(error)
@@ -107,56 +108,6 @@ class Objectives {
         })();
 
     }
-
-}
-
-async function saveLearningObjectivesAsJSON(filename, ArrayContainingObjects){
-
-    let JSONString = JSON.stringify(ArrayContainingObjects);
-    const correctPath = `../objectives/${filename}`;
-
-    console.log("[3] correctPath: ", correctPath);
-    console.log("[4] jsonString: ", JSONString);
-
-    try{
-        let result = await AJAXCall({
-            phpFilePath: "../include/saveJSONData.php",
-            rejectMessage: "saving json file failed",
-            params: `filepath=${correctPath}&&jsonString=${JSONString}`,
-            type: "post"
-        });
-
-        console.log("[5] async Result: ", result);
-
-    }catch(error){
-        //TODO: bubbleUpError()
-        console.log(error);
-    }
-
-}
-
-function saveLearningObjectivesInDatabase(courseID){
-
-    const id = uniqueID(1);
-    const filename = `Objective-${uniqueID(2)}.json`;
-
-    return new Promise(async(resolve, reject) => {
-        try{
-            await AJAXCall({
-                phpFilePath: "../include/course/addNewObjective.php",
-                rejectMessage: "adding new objective failed",
-                params: `id=${id}&&filename=${filename}&&courseID=${courseID}`,
-                type: "post"
-            });
-    
-        }catch(error){
-            //TODO: bubbleUpError()
-            reject();
-            console.log(error);
-        }
-    
-        resolve(filename);
-    })
 
 }
 
@@ -171,7 +122,7 @@ async function refreshObjectives(){
 
     const courseDetails = await getTitleAndFilename(id);
     console.log(courseDetails);
-    const { title, filename } = courseDetails[0];
+    const { title } = courseDetails[0];
     
     const prompt = `generate for me in json format with the structure { courseTitle: "", learningObjectives: [ "" ] }, a decent amount of learning 
     objectives for students for the given course title: ${title}
@@ -204,11 +155,62 @@ async function refreshObjectives(){
 
     console.log("objectivesObject: ", objectives);
 
-    let learningObjectives = new Objectives({ objectives, filename, details });
+    let learningObjectives = new Objectives({ objectives, details });
     learningObjectives.renderObjectives();
     learningObjectives.setAddNewObjectiveButton(addLearningObjectiveButton);
     learningObjectives.setSaveLearningObjectivesButton(saveLearningObjectivesButton);
 
     removeLoader(loader);
+
+}
+
+
+function addNewObjective(courseID){
+
+    const id = uniqueID(1);
+    const objectives = JSON.stringify([]);
+
+    return new Promise(async(resolve, reject) => {
+        try{
+            await AJAXCall({
+                phpFilePath: "../include/course/addNewObjective.php",
+                rejectMessage: "adding new objective failed",
+                params: `id=${id}&&courseID=${courseID}&&objectives=${objectives}`,
+                type: "post"
+            });
+    
+        }catch(error){
+            //TODO: bubbleUpError()
+            reject();
+            console.log(error);
+        }
+    
+        resolve(id);
+    })
+
+}
+
+
+function saveLearningObjectives(id, objectives){
+
+    let stringifiedObjectives = JSON.stringify(objectives);
+
+    return new Promise(async(resolve, reject) => {
+        try{
+            await AJAXCall({
+                phpFilePath: "../include/course/saveLearningObjectives.php",
+                rejectMessage: "saving new objective failed",
+                params: `id=${id}&&objectives=${stringifiedObjectives}`,
+                type: "post"
+            });
+    
+        }catch(error){
+            //TODO: bubbleUpError()
+            reject();
+            console.log(error);
+        }
+    
+        resolve(id);
+    })
 
 }
