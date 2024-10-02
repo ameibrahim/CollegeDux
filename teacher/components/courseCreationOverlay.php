@@ -10,7 +10,7 @@
         </div>
 
         <div class="popup-body">
-            <form class="course-form">
+            <form class="course-form" onsubmit="createCourse(event)">
                 <div class="side-by-side-grid">
                     <label for="courseImageUpload" class="course-upload-input">
                         <div class="over-wrapper">
@@ -44,19 +44,18 @@
                     </select>
                 </div>
                 <div class="form-input-container">
-                    <span class="form-input-label"><text>Is thıs course a Language Course ?</text></span>
-                    <select class="form-input course-is-language" placeholder=" Is Language Course" required>
+                    <span class="form-input-label"><text>Is thıs course a Language Course?</text></span>
+                    <select class="form-input course-is-language" placeholder="Is Language Course" required>
                         <option selected value="no">No</option>
                         <option value="yes">Yes</option>
                     </select>
                 </div>
+                <div class="popup-footer">
+                    <button type="submit" class="button">
+                        <text>Create</text>
+                    </button>
+                </div>
             </form>
-        </div>
-
-        <div class="popup-footer">
-            <div type="submit" class="button" onclick="createCourse()">
-                <text>Create</text>
-            </div>
         </div>
     </div>
 </div>

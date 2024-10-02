@@ -10,6 +10,7 @@
         <script src="../js/webSpeechAPI.js"></script>
 
         <?php include '../include/studentImports.php'; ?>
+        <script src="https://code.responsivevoice.org/responsivevoice.js?key=NVbGYm7d"></script>
 
     </head>
     <body>
@@ -107,8 +108,8 @@
                             </div>
 
                             <div class="dux-right-side-pane">
-                                <div class="dux-image-box">
-                                    <img src="../assets/images/dux-male.jpg" alt="">
+                                <div class="dux-image-box" >
+                                    <img id="speakButton" src="../assets/images/secoSpritesilent.gif" alt="">
                                 </div>
                             </div>
                         </div>
