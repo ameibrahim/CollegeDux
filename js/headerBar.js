@@ -8,7 +8,7 @@ let DEMOACCOUNT = false;
     localizeTextElements();
     setHeaderInfo(result);
 
-    if(result.email == "220000@profdux.aiiot.website"){
+    if(result.email == "jeriest59@gmail.com"){
         DEMOACCOUNT = true;
     }
 
@@ -35,11 +35,11 @@ function setHeaderInfo(userObject){
 
         username.innerHTML = "";
         
-        switch(role){
-            case "teacher":
+
+
                 username.appendChild(usernameInnerContainer);
                 username.appendChild(roleAsTextElement);
-        }
+   
     });
 
     imageFields.forEach( imageField => 
