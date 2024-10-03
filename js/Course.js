@@ -507,7 +507,7 @@ class Course {
 
         inputElementContainer.appendChild(makeShiftInputWrapper);
         inputElementContainer.appendChild(this.createAttachButton(id));
-        if (title.length > 0 && DEMOACCOUNT) inputElementContainer.appendChild(generatePDFButton);
+        if (title.length > 0 ) inputElementContainer.appendChild(generatePDFButton);
         inputElementContainer.appendChild(deleteButton);
 
         return { inputElementContainer, makeShiftInputWrapper };
