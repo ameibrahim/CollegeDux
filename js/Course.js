@@ -548,47 +548,25 @@ class Course {
 
 async function editLearningObjectives(id){
 
-    const filenameResponse = await AJAXCall({
-        phpFilePath: "../include/course/getLearningObjectivesFilename.php",
-        rejectMessage: "Getting Filename Failed",
+    const objectives = await AJAXCall({
+        phpFilePath: "../include/objective/getLearningObjectives.php",
+        rejectMessage: "Getting Objectives Failed",
         type: "fetch",
         params: `courseID=${id}`
     })
 
-    const lengthOfResponse = filenameResponse.length; 
-    let filename;
-    let correctPath;
-    let objectivesObjectResponse;
-    let objectives = [];
-    let type = "";
+    objectives.forEach( objectives => objectives.action = "fetched" );
 
-    if(lengthOfResponse == 0){
-        console.log(`There are ${ lengthOfResponse } objectives`);
-        filename = await saveLearningObjectivesInDatabase(id);
-        await saveLearningObjectivesAsJSON(filename, []);
-    }else{
-        filename = filenameResponse[0].filename;
-    }
-
-    correctPath = "../objectives/" + filename;
-    
-    objectivesObjectResponse = await fetch(correctPath, {cache: "reload"});
-
-    objectives = await objectivesObjectResponse.json();
-    type = "edit";
-
-    details = {
-        type,
-        courseID: id
-    }
+    console.log("HERE: response of objectives 1: ", objectives);
 
     let addLearningObjectiveButton = document.querySelector(".add-learning-objective-button");
     let saveLearningObjectivesButton = document.querySelector(".save-learning-objectives-button");
 
-    console.log("filename: ", filename);
-    console.log("objectivesObject: ", objectives);
+    //DEPRACATED: parseAvailableJSONFromArray(response, "objectives");
 
-    let learningObjectives = new Objectives({ objectives, filename, details });
+    console.log("HERE: parsed objectives", objectives);
+
+    let learningObjectives = new Objectives({ courseID: id, objectives });
     learningObjectives.renderObjectives();
     learningObjectives.setAddNewObjectiveButton(addLearningObjectiveButton);
     learningObjectives.setSaveLearningObjectivesButton(saveLearningObjectivesButton);
