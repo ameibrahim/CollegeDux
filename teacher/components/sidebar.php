@@ -19,6 +19,11 @@
             <p><text>Dashboard</text></p>
         </a>
 
+        <a class="sidebar-link" data-id="Dashboard" href="GPTPDF.php">
+            <img src="../assets/icons/fi/fi-rr-border-all.svg" alt="">
+            <p><text>GPT PDF</text></p>
+        </a>
+
         <a class="sidebar-link" data-id="Course Management" href="CourseManagement.php">
             <img src="../assets/icons/fi/fi-rr-apps-add.svg" alt="">
             <p><text>Course Management</text></p>

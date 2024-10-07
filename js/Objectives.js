@@ -1,216 +1,194 @@
 class Objectives {
+  currentHierarchy = 0;
+  currentIndex = 0;
 
-    currentHierarchy = 0
-    currentIndex = 0
+  constructor({ id, objectives }) {
+    this.id = id;
+    this.objectives = objectives;
+    this.currentIndex = this.objectives.length - 1;
+  }
 
-    constructor({ id, objectives }){
-        this.id = id;
-        this.objectives = objectives;
-        this.currentIndex = this.objectives.length - 1;
-    }
+  renderObjectives() {
+    let learningObjectivesOuterContainer = document.querySelector(
+      ".outer-objective-container"
+    );
+    learningObjectivesOuterContainer.innerHTML = "";
 
-    renderObjectives(){
+    this.objectives.forEach((objective, index) => {
+      let objectiveContainer = this.createObjectiveInput(objective, index);
+      learningObjectivesOuterContainer.appendChild(objectiveContainer);
+      this.currentHierarchy = objective.hierarchy;
+    });
+  }
 
-        let learningObjectivesOuterContainer = document.querySelector(".outer-objective-container");
-        learningObjectivesOuterContainer.innerHTML = "";
+  setAddNewObjectiveButton(button) {
+    clearEventListenersFor(button).addEventListener("click", () => {
+      this.addObjective();
+    });
+  }
 
-        this.objectives.forEach( (objective, index) => {
-    
-            let objectiveContainer = this.createObjectiveInput(objective, index);
-            learningObjectivesOuterContainer.appendChild(objectiveContainer);
-            this.currentHierarchy = objective.hierarchy;
+  setSaveLearningObjectivesButton(button) {
+    clearEventListenersFor(button).addEventListener("click", () => {
+      this.saveObjectives();
+      closePopup(".edit-learning-objectives-overlay");
+    });
+  }
 
-        });
+  createObjectiveInput(objective, index) {
+    let objectiveContainer = document.createElement("div");
+    objectiveContainer.className = "objective-container";
 
+    let objectiveItemization = document.createElement("div");
+    objectiveItemization.className = "objective-itemization";
 
-    }
+    let objectiveText = document.createElement("div");
+    objectiveText.className = "objective-text";
+    objectiveText.setAttribute("contentEditable", "true");
+    objectiveText.textContent = objective.title;
+    objectiveText.addEventListener("input", () =>
+      this.updateObjective(objectiveText, this.objectives[index])
+    );
 
-    setAddNewObjectiveButton(button){
-        clearEventListenersFor(button).addEventListener("click", () => {
-            this.addObjective();
-        })
-    }
+    let objectiveDeleteButton = document.createElement("div");
+    objectiveDeleteButton.className = "delete-button";
+    objectiveDeleteButton.addEventListener("click", () => {
+      this.objectives.splice(index, 1);
+      --this.currentIndex;
+      console.log(this.objectives);
+      this.renderObjectives();
+    });
 
-    setSaveLearningObjectivesButton(button){
-        clearEventListenersFor(button).addEventListener("click", () => {
-            this.saveObjectives();
-            closePopup('.edit-learning-objectives-overlay');
-        })
-    }
+    let objectiveDeleteButtonImage = document.createElement("img");
+    objectiveDeleteButtonImage.src = "../assets/icons/delete.png";
 
-    createObjectiveInput(objective, index){
+    objectiveDeleteButton.appendChild(objectiveDeleteButtonImage);
+    objectiveContainer.appendChild(objectiveItemization);
+    objectiveContainer.appendChild(objectiveText);
+    objectiveContainer.appendChild(objectiveDeleteButton);
+    return objectiveContainer;
+  }
 
-        let objectiveContainer = document.createElement("div");
-        objectiveContainer.className = "objective-container";
-        
-        let objectiveItemization = document.createElement("div");
-        objectiveItemization.className = "objective-itemization";
+  addObjective() {
+    let learningObjectivesOuterContainer = document.querySelector(
+      ".outer-objective-container"
+    );
 
-        let objectiveText = document.createElement("div");
-        objectiveText.className = "objective-text";
-        objectiveText.setAttribute("contentEditable", "true");
-        objectiveText.textContent = objective.title;
-        objectiveText.addEventListener("input", () => this.updateObjective(objectiveText, this.objectives[index]))
+    let hierarchy = "" + ++this.currentHierarchy;
+    let index = ++this.currentIndex;
 
-        let objectiveDeleteButton = document.createElement("div");
-        objectiveDeleteButton.className = "delete-button";
-        objectiveDeleteButton.addEventListener("click", () => { 
-            this.objectives.splice(index,1);
-            --this.currentIndex;
-            console.log(this.objectives);
-            this.renderObjectives();
-        })
+    const objective = { hierarchy, title: "" };
+    this.objectives.push(objective);
 
-        let objectiveDeleteButtonImage = document.createElement("img");
-        objectiveDeleteButtonImage.src = "../assets/icons/delete.png";
+    let objectiveContainer = this.createObjectiveInput(objective, index);
+    learningObjectivesOuterContainer.appendChild(objectiveContainer);
+  }
 
-        objectiveDeleteButton.appendChild(objectiveDeleteButtonImage)
-        objectiveContainer.appendChild(objectiveItemization)
-        objectiveContainer.appendChild(objectiveText)
-        objectiveContainer.appendChild(objectiveDeleteButton)
-        return objectiveContainer;
+  updateObjective(element, textObject) {
+    textObject.title = element.textContent;
+    console.log("yupp", this.objectives);
+  }
 
-    }
+  saveObjectives() {
+    //TODO: Objective 1
 
-    addObjective(){
-
-        let learningObjectivesOuterContainer = document.querySelector(".outer-objective-container");
-
-        let hierarchy = '' + ++this.currentHierarchy;
-        let index = ++this.currentIndex;
-
-        const objective = { hierarchy, title: ""};
-        this.objectives.push(objective);
-
-        let objectiveContainer = this.createObjectiveInput(objective, index);
-        learningObjectivesOuterContainer.appendChild(objectiveContainer);
-
-    }
-
-    updateObjective(element, textObject){
-        textObject.title = element.textContent;
-        console.log("yupp", this.objectives)
-    }
-
-    saveObjectives(){
-
-        //TODO: Objective 1
-
-        ( async () => {
-
-            try {
-                const result = await saveLearningObjectives(this.id, this.objectives);
-                console.log("save objectives result: ", result);
-            }
-            catch(error){
-                console.log(error)
-            }
-        })();
-
-    }
-
+    (async () => {
+      try {
+        const result = await saveLearningObjectives(this.id, this.objectives);
+        console.log("save objectives result: ", result);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }
 }
 
-async function refreshObjectives(){
+async function refreshObjectives() {
+  let loader = loadLoader("Generating Objectives");
 
-    let loader = loadLoader("Generating Objectives");
+  let mainContainer = document.querySelector(".main-container");
+  let id = mainContainer.getAttribute("data-id");
 
-    let mainContainer = document.querySelector(".main-container");
-    let id = mainContainer.getAttribute("data-id");
+  console.log("id:", id);
 
-    console.log("id:", id);
+  const courseDetails = await getTitleAndFilename(id);
+  console.log(courseDetails);
+  const { title } = courseDetails[0];
 
-    const courseDetails = await getTitleAndFilename(id);
-    console.log(courseDetails);
-    const { title } = courseDetails[0];
-    
-    const prompt = `generate for me in json format with the structure { courseTitle: "", learningObjectives: [ "" ] }, a decent amount of learning 
+  const prompt = `generate for me in json format with the structure { courseTitle: "", learningObjectives: [ "" ] }, a decent amount of learning 
     objectives for students for the given course title: ${title}
-    `
+    `;
 
-    const objectivesResponse = await generateGPTResponseFor(prompt);
-    const objectivesJSON = await JSON.parse(objectivesResponse);
-    const objectivesList = objectivesJSON.learningObjectives;
+  const objectivesResponse = await generateGPTResponseFor(prompt);
+  const objectivesJSON = await JSON.parse(objectivesResponse);
+  const objectivesList = objectivesJSON.learningObjectives;
 
-    console.log("objectiveList: ", objectivesJSON);
-    console.log("objectiveList: ", objectivesList);
+  console.log("objectiveList: ", objectivesJSON);
+  console.log("objectiveList: ", objectivesList);
 
-    // let objectivesList = [
-    //     "Understand the historical background and context of the story","Analyze the characters and their motivations"
-    //     ,"Examine the themes of friendship, adventure, and self-discovery","Explore the cultural influences and representation in the film","Understand the animation techniques used in the movie","Discuss the music and its importance in setting the tone"
-    // ]
+  const objectives = objectivesList.map((objective, index) => {
+    return { hierarchy: index + 1, title: objective };
+  });
 
-    const objectives = objectivesList.map( (objective, index) => { 
-        return { hierarchy: index + 1, title: objective }
-    })
+  let addLearningObjectiveButton = findElement(
+    ".add-learning-objective-button"
+  );
+  let saveLearningObjectivesButton = findElement(
+    ".save-learning-objectives-button"
+  );
 
-    type = "edit";
-    details = {
-        type,
-        courseID: id
+  console.log("objectivesObject: ", objectives);
+
+  let learningObjectives = new Objectives({ id, objectives });
+  learningObjectives.renderObjectives();
+  learningObjectives.setAddNewObjectiveButton(addLearningObjectiveButton);
+  learningObjectives.setSaveLearningObjectivesButton(
+    saveLearningObjectivesButton
+  );
+
+  removeLoader(loader);
+}
+
+function addNewObjective(courseID) {
+  const id = uniqueID(1);
+  const objectives = encodeURIComponent(JSON.stringify([]));
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      await AJAXCall({
+        phpFilePath: "../include/course/addNewObjective.php",
+        rejectMessage: "adding new objective failed",
+        params: `id=${id}&&courseID=${courseID}&&objectives=${objectives}`,
+        type: "post",
+      });
+    } catch (error) {
+      //TODO: bubbleUpError()
+      reject();
+      console.log(error);
     }
 
-    let addLearningObjectiveButton = findElement(".add-learning-objective-button");
-    let saveLearningObjectivesButton = findElement(".save-learning-objectives-button");
-
-    console.log("objectivesObject: ", objectives);
-
-    let learningObjectives = new Objectives({ objectives, details });
-    learningObjectives.renderObjectives();
-    learningObjectives.setAddNewObjectiveButton(addLearningObjectiveButton);
-    learningObjectives.setSaveLearningObjectivesButton(saveLearningObjectivesButton);
-
-    removeLoader(loader);
-
+    resolve(id);
+  });
 }
 
+function saveLearningObjectives(id, objectives) {
+  let stringifiedObjectives = encodeURIComponent(JSON.stringify(objectives));
 
-function addNewObjective(courseID){
+  //TODO: continue encoding for PHP
 
-    const id = uniqueID(1);
-    const objectives = JSON.stringify([]);
+  return new Promise(async (resolve, reject) => {
+    try {
+      await AJAXCall({
+        phpFilePath: "../include/course/saveLearningObjectives.php",
+        rejectMessage: "saving new objective failed",
+        params: `id=${id}&&objectives=${stringifiedObjectives}`,
+        type: "post",
+      });
+    } catch (error) {
+      //TODO: bubbleUpError()
+      reject();
+      console.log(error);
+    }
 
-    return new Promise(async(resolve, reject) => {
-        try{
-            await AJAXCall({
-                phpFilePath: "../include/course/addNewObjective.php",
-                rejectMessage: "adding new objective failed",
-                params: `id=${id}&&courseID=${courseID}&&objectives=${objectives}`,
-                type: "post"
-            });
-    
-        }catch(error){
-            //TODO: bubbleUpError()
-            reject();
-            console.log(error);
-        }
-    
-        resolve(id);
-    })
-
-}
-
-
-function saveLearningObjectives(id, objectives){
-
-    let stringifiedObjectives = JSON.stringify(objectives);
-
-    return new Promise(async(resolve, reject) => {
-        try{
-            await AJAXCall({
-                phpFilePath: "../include/course/saveLearningObjectives.php",
-                rejectMessage: "saving new objective failed",
-                params: `id=${id}&&objectives=${stringifiedObjectives}`,
-                type: "post"
-            });
-    
-        }catch(error){
-            //TODO: bubbleUpError()
-            reject();
-            console.log(error);
-        }
-    
-        resolve(id);
-    })
-
+    resolve(id);
+  });
 }
