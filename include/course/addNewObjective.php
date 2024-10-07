@@ -6,15 +6,15 @@
 
     $id = $_POST['id'];
     $courseID = $_POST['courseID'];
-    $filename = $_POST['filename'];
+    $objectives = $_POST['objectives'];
 
     if (!$conn) {
         die("Connection failed: " . mysqli_connect_error());
     }
 
     $query = "
-        INSERT INTO objectives (id, courseID, filename)
-        VALUES ('$id', '$courseID', '$filename')
+        INSERT INTO objectives (id, courseID, objectives)
+        VALUES ('$id', '$courseID', '$objectives')
     ";
 
     $result = mysqli_query($conn,$query);

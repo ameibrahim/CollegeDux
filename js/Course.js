@@ -531,7 +531,6 @@ class Course {
         badgeButton.className = "badge";
         badgeButton.textContent = count;
         badgeButton.addEventListener("click", () => {
-            // openUploadOverlay(id);
         });
 
         if(count) badgeButton.style.display = "grid";
@@ -571,6 +570,19 @@ async function editLearningObjectives(id){
     learningObjectives.setAddNewObjectiveButton(addLearningObjectiveButton);
     learningObjectives.setSaveLearningObjectivesButton(saveLearningObjectivesButton);
     openPopup(".edit-learning-objectives-overlay");
+}
+
+function parseAvailableJSONFromArray(array, objectIdentifier) {
+    
+    let result = []
+
+    if(array.length > 0 ){
+        let temp = array[0];
+        temp = JSON.parse(temp[objectIdentifier]);
+        result = temp;
+    }
+
+    return result;
 }
 
 // TODO: Get Course class lines under 500

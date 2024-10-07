@@ -42,21 +42,40 @@ async function generateGPTResponseFor(prompt) {
     }
 }
 
-async function generateQuestion(lectureObject, refresh = true, type = "multiple choice question", level="extremely difficult"){
+async function generateQuestion(generateQuestionObject, amount){
 
-    // let loader = loadLoader("Generating Quiz");
+    const { 
+        type,
+        languages,
+        educationEnvironment,
+        level,
+        topics
+    } = generateQuestionObject;
 
-    let languages=["english", "turkish"];
-    let amount = 4;
+    // TODO: Mickey #1
+    // Everything can be generated, but it will go through a validator
+    // The validator may/will include
+    // * Error Checkers
+    // * Comparators
+    // * Matchers
+    // * Encoders/Decoders
+    // * Loggers
 
-    let lectureID = lectureObject.id;
-    let lectureTitle = lectureObject.title;
-    let courseID = lectureObject.courseID;
-    let subtopicTitles = lectureObject.subtopics
-    .map( subtopic => subtopic.title ).join(", ");
+    // TODO: Mickey #2
+    // Make a ReGenerate () Function that will be able to regenerate the
+    // results of just one question
 
-    let topic = subtopicTitles;
-    let educationEnvironment = "college students";
+    // TODO: Mickey #3
+    // Create premade structure to fill in data and ensure integrity of
+    // a json file. Invalid JSON files should be logged.
+
+    // TODO: Mickey #4
+    // Abstract long generations as classes and ensure all of them have
+    // this new validation process.
+
+    // TODO: Mickey #5
+    // Document all findings.
+
 
     let query = 
     `Please create ${amount} questions in valid JSON format using ISO encoding, with both the questions and their answers written in ${languages.join(", ")}. The questions should cover the topic of ${topic} and be suitable for ${educationEnvironment}.
@@ -71,38 +90,19 @@ async function generateQuestion(lectureObject, refresh = true, type = "multiple 
     - "hardness": The difficulty level of the question.
     
     Please ensure no invalid characters are included in the response.`
-    
-
+   
     let unparsedJSONResponse = await generateGPTResponseFor(query);
-    let questions = await JSON.parse(unparsedJSONResponse);
-    console.log("questions: ", questions);
+    let result = await JSON.parse(unparsedJSONResponse);
 
-    let filename = `Quiz-${uniqueID(2)}.json`;
-    saveAssessmentAsJSON(filename, questions.questions, "generated");
+    try{
+        if(result.questions) return result.questions
+        else if(result.question) return result.question
+        else if(result.questions.questions) return result.questions.questions
+        else return result
+    }catch(error){
+        console.log(error);
+    }
 
-    let quizID = uniqueID(1);
-    let name = `Quiz on ${subtopicTitles}`; // ...
-    let dateGenerated = getCurrentTimeInJSONFormat();
-    let hierarchy = ""; // ...
-    let totalMarks = questions.questions.length; //TODO: figure out the marks properly...
-
-    let params = `id=${quizID}&&courseID=${courseID}&&lectureID=${lectureID}&&name=${name}`+
-    `&&dateGenerated=${dateGenerated}&&filename=${filename}&&totalMarks=${totalMarks}`;
-
-    let response = await AJAXCall({
-        phpFilePath: "../include/quiz/addNewQuiz.php",
-        rejectMessage: "New Quiz Failed To Add",
-        params,
-        type: "post"
-    });
-
-    console.log("quiz generation response: ", response);
-
-    setTimeout(() => {
-        if(refresh) refreshTeacherCourseOutline(); //Bugs???
-        removeLoader(loader);
-    }, 2000);
-    
 }
 
 generateQuestion(lecture)

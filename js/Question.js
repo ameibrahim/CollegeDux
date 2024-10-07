@@ -223,3 +223,15 @@ function mark(questions, language){
     return { result, totalMarks };
 
 }
+
+function MultipleChoiceQuestionStructure(){
+    return {
+        id: (string) => "",
+        question: (object) => { return {"language" : "answer"} },
+        answerOptions: (object) => { return {"language" : [a,a,a,a]} },
+        correctAnswer: (object) => { return {"language" : ""} },
+        type: (string) => "multiple choice",
+        hardness: (string) => "medium",
+        marksWorth: (int) => 1
+    }
+}

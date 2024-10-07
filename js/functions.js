@@ -167,12 +167,12 @@ function cascadingDateChanges(){
 
 // }
 
-function uniqueID(stregth = 2){
+function uniqueID(strength = 2){
     const date = Date.now() + getRandomArbitrary(0, 9999);
     const dateReversed = parseInt(String(date).split("").reverse().join(""));
     const base36 = number => (number).toString(36);
-    if(stregth == 1) return base36(date);
-    if(stregth == -1) return  base36(dateReversed);
+    if(strength == 1) return base36(date);
+    if(strength == -1) return  base36(dateReversed);
     return base36(dateReversed) + base36(date);
 
     // return crypto.randomUUID().split("-").join("");
@@ -715,6 +715,31 @@ async function generateQuestion(generateQuestionObject, amount){
         level,
         topics
     } = generateQuestionObject;
+
+    // TODO: Mickey #1
+    // Everything can be generated, but it will go through a validator
+    // The validator may/will include
+    // * Error Checkers
+    // * Comparators
+    // * Matchers
+    // * Encoders/Decoders
+    // * Loggers
+
+    // TODO: Mickey #2
+    // Make a ReGenerate () Function that will be able to regenerate the
+    // results of just one question
+
+    // TODO: Mickey #3
+    // Create premade structure to fill in data and ensure integrity of
+    // a json file. Invalid JSON files should be logged.
+
+    // TODO: Mickey #4
+    // Abstract long generations as classes and ensure all of them have
+    // this new validation process.
+
+    // TODO: Mickey #5
+    // Document all findings.
+
 
     let query = 
     `create for me in valid json format using ISO encoding, ${amount} questions with the keywords 'questions' in the ${languages.map( language => `${language}`).join("and ")} as well as their answers 
