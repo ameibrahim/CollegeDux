@@ -7,3 +7,4 @@
         // return filemtime($file_url);
         return time();
     }
+?>

@@ -60,21 +60,23 @@ function revertUploadChoice(){
 function startUploading(){
 
     let uploadOverlay = document.querySelector(".upload-overlay");
-    let subtopicID = uploadOverlay.getAttribute("data-id");
+    let lectureID = uploadOverlay.getAttribute("data-id");
+
+    console.log("lectureID for uploading: ", lectureID);
 
     uploadWithObject(globalImageObject);
     uploadWithObject(globalPDFObject);
 
     async function uploadWithObject(fileObject){
 
-        if(fileObject && subtopicID){
+        if(fileObject && lectureID){
 
             let {type} = fileObject;
             const id = uniqueID(1);
 
             try{
                 const { newFileName: value, oldFileName } = await uploadFile(fileObject);
-                if(value) await sendResourceToDatabase({id, value, type, subtopicID, oldFileName});
+                if(value) await sendResourceToDatabase({id, value, type, lectureID, oldFileName});
                 else throw new Error("Upload Failed");
                 
                 setTimeout(() => {
@@ -97,11 +99,11 @@ async function sendResourceToDatabase(resourceObject){
         id, 
         value, 
         type, 
-        subtopicID,
+        lectureID,
         oldFileName
     } = resourceObject;
 
-    const params = `id=${id}&&value=${value}&&type=${type}&&subtopicID=${subtopicID}&&title=${oldFileName}`;
+    const params = `id=${id}&&value=${value}&&type=${type}&&lectureID=${lectureID}&&title=${oldFileName}`;
 
     return await AJAXCall({
         phpFilePath: "../include/course/addNewResource.php",

@@ -584,6 +584,8 @@ function questionMapSwitch(question){
         case "f-i-t-b-s":
         case "blank":
         case "blanks":
+        case "filltheblanks":
+        case "filltheblank":
             return new FillInTheBlank(question);
         default:
             throw new Error(`Not Made Yet: ${question.type.toLowerCase()}`);
@@ -654,19 +656,10 @@ async function fetchCourseWithID(givenID){
 
     let selectedCourse = courses[0];
 
-    ( function sortCourses(course){
-
-        course.lectures.sort((firstLecture, secondLecture) => {
+    selectedCourse.lectures.sort((firstLecture, secondLecture) =>    
+        firstLecture.hierarchy - secondLecture.hierarchy
+    );
     
-            firstLecture.subtopics.sort((firstSubtopic, secondSubtopic) =>
-                firstSubtopic.hierarchy - secondSubtopic.hierarchy
-            );
-    
-            return firstLecture.hierarchy - secondLecture.hierarchy
-        });
-    
-    })(selectedCourse)
-
     setTimeout(() => {
         
         // This is very important

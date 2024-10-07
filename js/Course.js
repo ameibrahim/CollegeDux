@@ -1,12 +1,9 @@
 class Course {
 
     lectureUpdates = {}
-    subtopicUpdates = {}
     newLectures = {}
-    newSubtopics = {}
     newResources = {}
     deleteLectures = {}
-    deleteSubtopics = {}
     deleteResource = {}
 
     itemizationIndex = 0;
@@ -20,9 +17,7 @@ class Course {
     eraseForExcelUpload(lectures){
         this.lectureIndex = 0;
         this.lectureUpdates,
-        this.subtopicUpdates,
         this.newLectures,
-        this.newSubtopics,
         this.newResources = {}
         this.lectures = lectures;
         
@@ -109,29 +104,18 @@ class Course {
                 type: "lecture"
             }
 
-            let lectureInputElement = this.createInputElement(inputElementObject);
-
+            let { inputElementContainer: lectureInputElement, makeShiftInputWrapper } = this.createInputElement(inputElementObject);
             lectureInnerContainer.appendChild(lectureInputElement);
 
+            console.log("lecture view: ", lecture);
             // BADGE FOR SHOWING UPLOADS
-            let resourcesCount = 0;
-            
-            lecture.subtopics.forEach( subtopic => {
-                if(subtopic.resources)
-                    resourcesCount += subtopic.resources.length;
-            });
+            let resourcesCount = lecture.resources == null ? 0 : lecture.resources.length;
 
             const badgeButton = this.createBadgeButton(lecture.id, resourcesCount);
-            lectureInputElement.appendChild(badgeButton);
+            makeShiftInputWrapper.appendChild(badgeButton);
 
             let floatingContainer = document.createElement("div");
             floatingContainer.className = "lecture-floating-container";
-
-            let addSubtopicButton = document.createElement("div");
-            addSubtopicButton.className = "add-subtopic-button";
-            addSubtopicButton.innerHTML = `<img src="../assets/icons/fi/fi-rr-plus.svg" alt="">`;
-
-            floatingContainer.appendChild(addSubtopicButton);
 
             let generateQuizButton = document.createElement("div");
             generateQuizButton.className = "button green-button generate-quiz-button";
@@ -151,59 +135,8 @@ class Course {
 
             //TODO: add/show addQuiz/editQuiz button if subtopicCount is larger than 1;
 
-            if(lecture.subtopics && lecture.quizzes && lecture.subtopics.length > 0 && lecture.quizzes.length == 0)
+            if( lecture.quizzes && lecture.quizzes.length == 0)
                 floatingContainer.appendChild(generateQuizButton);
-    
-
-            let subtopicsContainer = document.createElement("div");
-            subtopicsContainer.className = "subtopics-container";
-
-            let subtopicIndex = 0;
-
-            lecture.subtopics.forEach( subtopic => {
-
-                let subtopicWrapper = document.createElement("div");
-                subtopicWrapper.className = "subtopics-wrapper";
-
-                const attachButton = this.createAttachButton(subtopic.id);
-
-                subtopicIndex = subtopic.hierarchy;
-
-                const inputElementObject = {
-                    id: subtopic.id,
-                    parentID: lecture.id,
-                    title: subtopic.title, 
-                    inputChangeCallback: this.updateSubtopicTitle, 
-                    hierarchy: subtopicIndex,
-                    type: "subtopic"
-                }
-
-                let subtopicInputElement = this.createInputElement(inputElementObject);
-                subtopicInputElement.appendChild(attachButton);
-
-                subtopicWrapper.appendChild(subtopicInputElement);
-
-                let subtopicResourceWrapper = document.createElement("div");
-                subtopicResourceWrapper.className = "subtopics-resource-wrapper";
-
-                subtopic.resources.forEach( resource => {
-
-                    const resourceElement = this.createSubtopicItem(resource);
-                    subtopicResourceWrapper.appendChild(resourceElement);
-
-                })
-
-                subtopicWrapper.appendChild(subtopicResourceWrapper);
-                subtopicsContainer.appendChild(subtopicWrapper);
-            })
-
-            addSubtopicButton.addEventListener("click", () => {
-                this.addSubtopicElement({
-                    parentID: lecture.id, 
-                    parentElement: subtopicsContainer,
-                    hierarchy: ++subtopicIndex
-                });
-            });
 
             let quizContainer = document.createElement("div");
             quizContainer.className = "subtopics-container quiz-container";
@@ -227,7 +160,19 @@ class Course {
 
             })
 
-            lectureInnerContainer.appendChild(subtopicsContainer);
+            let resourcesContainer = document.createElement("div");
+            resourcesContainer.className = "subtopics-wrapper";
+
+            let resourceWrapper = document.createElement("div");
+            resourceWrapper.className = "subtopics-resource-wrapper";
+
+            if(lecture.resources)
+            lecture.resources.forEach( resource => {
+                const resourceElement = this.createResourceItem(resource);
+                resourceWrapper.appendChild(resourceElement);
+            })
+
+            lectureInnerContainer.appendChild(resourceWrapper);
             lectureInnerContainer.appendChild(quizContainer);
             lectureSection.appendChild(floatingContainer);
             lectureSection.appendChild(itemizationElement);
@@ -250,17 +195,31 @@ class Course {
 
     }
 
-    createSubtopicItem(resource){
+    createResourceItem(resource){
 
         let resourceType = extractType(resource.type);
         let { id, value } = resource;
+        let resourceObject = {
+            id,
+            filepath: value
+        }
 
         let mainClassroomSubtopicItem = createElement("div", "main-classroom-subtopic-item");
         mainClassroomSubtopicItem.setAttribute("id", id);
+        mainClassroomSubtopicItem.style.gridTemplateColumns = "auto 1fr auto auto";
 
         let rowItemIcon = createElement("div", "row-item-icon")
         let rowItemText = createElement("div", "row-item-text")
         let rowItemAction = createElement("div", "row-item-action");
+        
+        let deleteButton = document.createElement("div");
+        deleteButton.className = "delete-button";
+        deleteButton.innerHTML = `<img src="../assets/icons/delete.png" alt="">`;
+        deleteButton.addEventListener("click", async () => {
+            const loader = showLoader("Deleting Resource...");
+            await deleteResourceWith(resourceObject);
+            removeLoader(loader);
+        });
 
         let imageElement = document.createElement("img");
 
@@ -289,6 +248,7 @@ class Course {
         mainClassroomSubtopicItem.appendChild(rowItemIcon)
         mainClassroomSubtopicItem.appendChild(rowItemText)
         mainClassroomSubtopicItem.appendChild(rowItemAction)
+        mainClassroomSubtopicItem.appendChild(deleteButton)
 
         return mainClassroomSubtopicItem;
 
@@ -354,36 +314,14 @@ class Course {
             type: "lecture"
         }
 
-        let lectureInputElement = lectureTitle.length == 0 ? 
+        let { inputElementContainer: lectureInputElement} = lectureTitle.length == 0 ? 
         this.createInputElement(inputElementObject) : 
         this.createInputElement(inputElementObject, "excelUpload") ;
-
-        // TODO: BADGE FOR SHOWING UPLOADS
-        const badgeButton = this.createBadgeButton(lectureID, 0);
-        lectureInputElement.appendChild(badgeButton);
 
         let floatingContainer = document.createElement("div");
         floatingContainer.className = "lecture-floating-container";
 
-        let addSubtopicButton = document.createElement("div");
-        addSubtopicButton.className = "add-subtopic-button";
-        addSubtopicButton.innerHTML = `<img src="../assets/icons/fi/fi-rr-plus.svg" alt="">`;
-        
-        let subtopicsContainer = document.createElement("div");
-        subtopicsContainer.className = "subtopics-container";
-
-        addSubtopicButton.addEventListener("click", () => {
-            this.addSubtopicElement({
-                parentID: lectureID, 
-                parentElement: subtopicsContainer,
-                hierarchy: ++subtopicIndex,
-            });
-        });
-
-        floatingContainer.appendChild(addSubtopicButton);
-
         lectureInnerContainer.appendChild(lectureInputElement);
-        lectureInnerContainer.appendChild(subtopicsContainer);
         lectureSection.appendChild(floatingContainer);
         lectureSection.appendChild(itemizationElement);
         lectureSection.appendChild(lectureInnerContainer);
@@ -404,49 +342,14 @@ class Course {
         })
     }
 
-    addSubtopicElement({ parentID, parentElement, hierarchy }, subtopicTitle = ""){
-
-        let subtopicID = uniqueID(1);
-
-        let attachButton = this.createAttachButton(subtopicID);
-
-        let inputElementObject = {
-            id: subtopicID,
-            parentID: parentID,
-            title: subtopicTitle, 
-            inputChangeCallback: this.newSubtopicTitle, 
-            hierarchy,
-            type: "subtopic"
-        }
-
-        let subtopicInputElement = subtopicTitle.length == 0 ? 
-        this.createInputElement(inputElementObject) : 
-        this.createInputElement(inputElementObject, "excelUpload") ;
-
-        subtopicInputElement.appendChild(attachButton);
-
-        parentElement.appendChild(subtopicInputElement);
-
-    }
-
     updateLectureTitle({ id, title, hierarchy, _this }){
         _this.lectureUpdates[id] = { id, title, hierarchy };
         console.log(_this.lectureUpdates[id]);
     }
 
-    updateSubtopicTitle({ id, title, hierarchy, _this }){
-        _this.subtopicUpdates[id] = { id, title, hierarchy };
-        console.log(_this.subtopicUpdates[id]);
-    }
-
     newLectureTitle({ id, parentID, title, hierarchy,  _this }){
         _this.newLectures[id] = { id, parentID, title, hierarchy };
         console.log(_this.newLectures[id]);
-    }
-
-    newSubtopicTitle({ id, parentID, title, hierarchy,  _this }){
-        _this.newSubtopics[id] = { id, parentID, title, hierarchy };
-        console.log(_this.newSubtopics[id]);
     }
 
     deleteCourse(){
@@ -462,10 +365,8 @@ class Course {
         return showOptionsDialog(options, async () => {
 
             this.lectureUpdates = {}
-            this.subtopicUpdates = {}
         
             this.newLectures = {}
-            this.newSubtopics = {}
             this.newResources = {}
 
             this.lectures.map( lecture => { 
@@ -476,16 +377,6 @@ class Course {
                         this.deleteLectures[lecture.id]["quizID"] = quiz.id;
                     })
                 }
-
-                lecture.subtopics.map( subtopic => {
-                    this.deleteSubtopics[subtopic.id] = { id: subtopic.id }
-                    
-                    if(subtopic.resources){
-                        subtopic.resources.map( resource => {
-                            this.deleteResource[resource.id] = { id: resource.id }
-                        })
-                    }
-                })
             })
 
             await courseItemObjectLooper(this, "delete course");
@@ -504,18 +395,6 @@ class Course {
                 hierarchy: lecture.hierarchy,
                 _this: this 
             })
-
-            lecture.subtopics.forEach( subtopic => {
-
-                this.newSubtopicTitle({ 
-                    id: subtopic.id, 
-                    parentID: lecture.id, 
-                    title: subtopic.title, 
-                    hierarchy: subtopic.hierarchy,
-                    _this: this 
-                })
-
-            });
 
         });
 
@@ -540,16 +419,6 @@ class Course {
 
         _this.deleteLectures[id] = { id, quizID };
 
-        if(lectureIndex != null){
-            this.lectures[lectureIndex].subtopics.forEach((subtopic) => {
-                _this.deleteSubtopics[subtopic.id] = { id: subtopic.id };
-            })
-        }
-
-    }
-
-    deleteSubtopicTitle(id, title, _this){
-        _this.deleteSubtopics[id] = { id };
     }
 
     searchAndDeleteLecture(id){
@@ -569,35 +438,6 @@ class Course {
 
     }
 
-    searchAndDeleteSubtopic(idObject){
-
-        let deleted = false;
-
-        let lectureIndex = null;
-        let { id, lectureID } = idObject;
-
-        this.lectures.forEach( (lecture,index) => {
-            if(lecture.id == lectureID){
-                lectureIndex = index;
-                return;
-            }
-        })
-
-        if(lectureIndex != null){
-            this.lectures[lectureIndex].subtopics.forEach( (subtopic,index) => {
-                if(subtopic.id == id){
-                    this.deleteSubtopicTitle(id, "", this);
-                    deleted = true;
-                    return;
-                }
-            })
-        }
-
-        if(!deleted)
-            delete this.newSubtopics[id]
-
-    }
-
     createInputElement(inputElementObject, addType = "normal"){         
 
         let {
@@ -612,11 +452,15 @@ class Course {
         let inputElementContainer = document.createElement("div");
         inputElementContainer.className = "input-element";
 
+        let makeShiftInputWrapper = document.createElement("div");
+        makeShiftInputWrapper.className = "make-shift-input-wrapper";
+
         let inputElement = document.createElement("input");
         inputElement.type = "text";
         inputElement.value = title;
         inputElement.setAttribute("data-id", id);
         inputElement.setAttribute("required", "true");
+        makeShiftInputWrapper.appendChild(inputElement);
         
         let inputCallbackObject = { id, parentID, title: inputElement.value, hierarchy, _this: this };
 
@@ -633,6 +477,12 @@ class Course {
         deleteButton.className = "delete-button";
         deleteButton.innerHTML = `<img src="../assets/icons/delete.png" alt="">`;
 
+        // TODO: HERE
+
+        let generatePDFButton = document.createElement("div");
+        generatePDFButton.className = "generate-pdf-button";
+        generatePDFButton.innerHTML = `<img src="../assets/icons/fi/arrows-rotate.svg" alt="">`;
+
         deleteButton.addEventListener("click", () => {
 
             switch(type){
@@ -642,18 +492,25 @@ class Course {
                     this.searchAndDeleteLecture(id)
                     this.lectureIndex--
                     break;
-                case "subtopic":
-                    inputElementContainer.remove();
-                    this.searchAndDeleteSubtopic({id, lectureID: parentID})
-                    break;
             }
 
         });
 
-        inputElementContainer.appendChild(inputElement);
+        generatePDFButton.addEventListener("click", async () => {
+            const loader = showLoader("Generating PDF...");
+            const {pdfOutput, pdfUrl} = await generatePDFfromGPT({ courseName: this.title, lectureTitle: title });
+            await openPDFViewer(pdfUrl);
+            await uploadBlobPDF({fileObject: pdfOutput, lectureID: id})
+            removeLoader(loader);
+            //TODO: SAVING ONLY SHOWS AFTER REFRESH
+        })
+
+        inputElementContainer.appendChild(makeShiftInputWrapper);
+        inputElementContainer.appendChild(this.createAttachButton(id));
+        if (title.length > 0 ) inputElementContainer.appendChild(generatePDFButton);
         inputElementContainer.appendChild(deleteButton);
 
-        return inputElementContainer;
+        return { inputElementContainer, makeShiftInputWrapper };
     }
 
     createAttachButton(id){
@@ -730,11 +587,13 @@ function parseAvailableJSONFromArray(array, objectIdentifier) {
 
 // TODO: Get Course class lines under 500
 
-async function generateQuiz(lectureObject, refresh = true, language="english"){
+async function generateQuiz(lectureObject, refresh = true){
     let loader = loadLoader("Generating Quiz");
 
+    console.log("lecture data for quiz generation: ", lectureObject);
+
     const languages = ["english", "turkish"];
-    const educationEnvironment = "college students";
+    const educationEnvironment = "university students";
     const types = ["multiple choice questions", "fill in the blanks", "true and false"];
     const levels = ["easy", "medium", "hard", "difficult", "extremely difficult"];
 
@@ -771,7 +630,6 @@ async function generateQuiz(lectureObject, refresh = true, language="english"){
     }
 
     console.log("quizQuestions: ", quizQuestions);
-
 
     let filename = `Quiz-${uniqueID(2)}.json`;
     saveAssessmentAsJSON(filename, quizQuestions,"quiz","generated");
@@ -829,14 +687,10 @@ async function courseItemObjectLooper(course, type = ""){
     loadLoader("Deleting Course");
 
     console.log("delete Lectures: ", course.deleteLectures)
-    console.log("delete Subtopics: ", course.deleteSubtopics)
 
     // Here Now
     await loopThroughObjectForAsync(course.lectureUpdates, updateLectureTitleToDatabase);
     await loopThroughObjectForAsync(course.newLectures, addLectureTitleToDatabase);
-    await loopThroughObjectForAsync(course.subtopicUpdates, updateSubtopicTitleToDatabase);
-    await loopThroughObjectForAsync(course.newSubtopics, addSubtopicTitleToDatabase);
-    await loopThroughObjectForAsync(course.deleteSubtopics, deleteSubtopicsFromDatabase);
     await loopThroughObjectForAsync(course.deleteLectures, deleteLecturesFromDatabase);
 
     setTimeout(async() => {
@@ -892,26 +746,6 @@ async function deleteLecturesFromDatabase(lectureObject){
 
 }
 
-
-async function deleteSubtopicsFromDatabase(subtopicsObject){
-
-    let { id } = subtopicsObject;
-
-    if(id.length > 2){
-        let params = `id=${id}`;
-
-        await AJAXCall({
-            phpFilePath: "../include/delete/deleteSubtopic.php",
-            rejectMessage: "Deleting subtopics failed",
-            params,
-            type: "post"
-        });
-    }
-
-
-}
-
-
 async function updateLectureTitleToDatabase(lectureOject){
 
     let { id, title, hierarchy } = lectureOject;
@@ -929,22 +763,6 @@ async function updateLectureTitleToDatabase(lectureOject){
 
 }
 
-async function updateSubtopicTitleToDatabase(subtopicObject){
-
-    let { id, title, hierarchy } = subtopicObject;
-
-    if(id.length > 2){
-        let params = `id=${id}&&title=${title}&&hierarchy=${hierarchy}`;
-
-        await AJAXCall({
-            phpFilePath: "../include/course/editSubtopicDetails.php",
-            rejectMessage: "Setting Details Failed",
-            params,
-            type: "post"
-        });
-    }
-
-}
 
 async function addLectureTitleToDatabase(lectureOject){
 
@@ -956,23 +774,6 @@ async function addLectureTitleToDatabase(lectureOject){
         await AJAXCall({
             phpFilePath: "../include/course/addNewLecture.php",
             rejectMessage: "Setting Details Failed",
-            params,
-            type: "post"
-        });
-    }
-
-}
-
-async function addSubtopicTitleToDatabase(subtopicObject){
-
-    let { id, parentID: lectureID, title, hierarchy } = subtopicObject;
-
-    if(id.length > 2){
-        let params = `id=${id}&&title=${title}&&lectureID=${lectureID}&&hierarchy=${hierarchy}`;
-
-        await AJAXCall({
-            phpFilePath: "../include/course/addNewSubtopic.php",
-            rejectMessage: "Adding New Subtopic Failed",
             params,
             type: "post"
         });
@@ -1007,4 +808,30 @@ function refreshTeacherCourseOutline(){
     let mainContainer = document.querySelector(".main-container");
     let id = mainContainer.getAttribute("data-id");
     editCourseWith(id);
+}
+
+async function deleteResourceWith(resourceObject){
+
+    return new Promise( async(resolve, reject) => {
+
+        const params = createParametersFrom(resourceObject);
+        console.log("params: ", params)
+
+        try {
+            let result = await AJAXCall({
+                phpFilePath: "../include/delete/deleteResource.php",
+                type: "post",
+                rejectMessage: "Deleting Resource Failed",
+                params
+            })
+
+            console.log(result);
+            resolve();
+        }catch(error){
+            console.log(error);
+            reject(error)
+        }
+
+    })
+
 }

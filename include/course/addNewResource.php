@@ -7,7 +7,7 @@
     $id = $_POST['id'];
     $value = $_POST['value'];
     $type = $_POST['type'];
-    $subtopicID = $_POST['subtopicID'];
+    $lectureID = $_POST['lectureID'];
     $title = $_POST['title'];
 
     if (!$conn) {
@@ -15,8 +15,8 @@
     }
 
     $query = "
-        INSERT INTO resources (id, type, value, subtopicID, title)
-        VALUES ('$id', '$type', '$value', '$subtopicID', '$title')
+        INSERT INTO resources (id, type, value, lectureID, title)
+        VALUES ('$id', '$type', '$value', '$lectureID', '$title')
     ";
 
     $result = mysqli_query($conn,$query);
