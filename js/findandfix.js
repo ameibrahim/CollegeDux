@@ -1,42 +1,29 @@
 async function findAndFixMissingObjectiveFiles(){
 
-    const filenameResponse = await AJAXCall({
+    const problems = document.querySelector(".problems");
+
+    const response = await AJAXCall({
         phpFilePath: "../include/course/getAllObjectivesFilenames.php",
         rejectMessage: "Getting Filenames Failed",
         type: "fetch",
         params: ""
     })
 
-    console.log("filenameResponse: ", filenameResponse);
+    console.log("filenameResponse: ", response);
 
-    let errors = [];
+    for await(objective of response){
 
-    for await( fileObject of filenameResponse ){
+        let {id: courseID, objectives: foundObjectives, title, courseCode } = objective;
 
-        let { filename } = fileObject ;
-        let correctPath = "../objectives/" + filename;
+        if(foundObjectives.length == 0){
+            await addNewObjective(courseID);
 
-        // objectivesObjectResponse = fetch(correctPath, {cache: "reload"});
+            const problem = document.createElement("div");
+            problem.className = "problem"
+            problem.textContent = `${courseCode} - ${title}`;
 
-        await fetch(correctPath, {cache: "reload"}).then((response) => {
-            if (response.ok) {
-                return response.json();
-            }
-            throw new Error('Something went wrong');
-            })
-            .then((responseJson) => {
-            // Do something with the response
-            })
-            .catch( async(error) => {
-                console.log(error)
-
-                await saveLearningObjectivesAsJSON(filename, []);
-
-                errors.push({
-                    ...fileObject
-                })
-        });
+            problems.append(problem);
+        }
     }
-
-    await saveLearningObjectivesAsJSON(`ObjectiveErrors-${uniqueID(2)}`, errors);
+    // await saveLearningObjectivesAsJSON(`ObjectiveErrors-${uniqueID(2)}`, errors);
 }
