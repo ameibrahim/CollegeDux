@@ -42,70 +42,67 @@ async function generateGPTResponseFor(prompt) {
     }
 }
 
-async function generateQuestion(lectureObject, refresh = true, type = "multiple choice question", level="extremely difficult"){
+async function generateQuestion(generateQuestionObject, amount){
 
-    // let loader = loadLoader("Generating Quiz");
+    const { 
+        type,
+        languages,
+        educationEnvironment,
+        level,
+        topics
+    } = generateQuestionObject;
 
-    let languages=["english", "turkish"];
-    let amount = 4;
+    // TODO: Mickey #1
+    // Everything can be generated, but it will go through a validator
+    // The validator may/will include
+    // * Error Checkers
+    // * Comparators
+    // * Matchers
+    // * Encoders/Decoders
+    // * Loggers
 
-    let lectureID = lectureObject.id;
-    let lectureTitle = lectureObject.title;
-    let courseID = lectureObject.courseID;
-    let subtopicTitles = lectureObject.subtopics
-    .map( subtopic => subtopic.title ).join(", ");
+    // TODO: Mickey #2
+    // Make a ReGenerate () Function that will be able to regenerate the
+    // results of just one question
 
-    let topic = subtopicTitles;
-    let educationEnvironment = "college students";
+    // TODO: Mickey #3
+    // Create premade structure to fill in data and ensure integrity of
+    // a json file. Invalid JSON files should be logged.
+
+    // TODO: Mickey #4
+    // Abstract long generations as classes and ensure all of them have
+    // this new validation process.
+
+    // TODO: Mickey #5
+    // Document all findings.
+
 
     let query = 
-    `create for me in valid json format using ISO encoding, ${amount} question in the ${languages.map( language => `${language} language`).join("and ")} as well as their answers 
-    in the ${languages.map( language => `${language} language`).join("and ")} in the topics of ${topic} 
-    for ${educationEnvironment}. 
-
-    The question should be ${type} with its respective answer choices as well 
-    as the correct answer option.
-
-    The question should be ${level}.
-
-    The json format should have the following keys, 
-    "question, answerOptions, answer, type, hardness". 
-
-    The answerOptions should only be available if the 
-    question type is multiple choice or true and false.
-
-    Do not add any invalid characters in the result please.`;
-
-    let unparsedJSONResponse = await generateGPTResponseFor(query);
-    let questions = await JSON.parse(unparsedJSONResponse);
-    console.log("questions: ", questions);
-
-    let filename = `Quiz-${uniqueID(2)}.json`;
-    saveAssessmentAsJSON(filename, questions.questions, "generated");
-
-    let quizID = uniqueID(1);
-    let name = `Quiz on ${subtopicTitles}`; // ...
-    let dateGenerated = getCurrentTimeInJSONFormat();
-    let hierarchy = ""; // ...
-    let totalMarks = questions.questions.length; //TODO: figure out the marks properly...
-
-    let params = `id=${quizID}&&courseID=${courseID}&&lectureID=${lectureID}&&name=${name}`+
-    `&&dateGenerated=${dateGenerated}&&filename=${filename}&&totalMarks=${totalMarks}`;
-
-    let response = await AJAXCall({
-        phpFilePath: "../include/quiz/addNewQuiz.php",
-        rejectMessage: "New Quiz Failed To Add",
-        params,
-        type: "post"
-    });
-
-    console.log("quiz generation response: ", response);
-
-    setTimeout(() => {
-        if(refresh) refreshTeacherCourseOutline(); //Bugs???
-        removeLoader(loader);
-    }, 2000);
+    `Please create ${amount} questions in valid JSON format using ISO encoding, with both the questions and their answers written in ${languages.join(", ")}. The questions should cover the topic of ${topic} and be suitable for ${educationEnvironment}.
     
+    Each question should be in ${type} format, including its respective answer options and the correct answer. Ensure the difficulty level is ${level}.
+    
+    The JSON format must include the following keys: 
+    - "question": The text of the question
+    - "answerOptions": The list of answer choices (only for multiple choice or true/false)
+    - "answer": The correct answer
+    - "type": The question format (multiple choice, true/false, etc.)
+    - "hardness": The difficulty level of the question.
+    
+    Please ensure no invalid characters are included in the response.`
+   
+    let unparsedJSONResponse = await generateGPTResponseFor(query);
+    let result = await JSON.parse(unparsedJSONResponse);
+
+    try{
+        if(result.questions) return result.questions
+        else if(result.question) return result.question
+        else if(result.questions.questions) return result.questions.questions
+        else return result
+    }catch(error){
+        console.log(error);
+    }
+
 }
 
 generateQuestion(lecture)

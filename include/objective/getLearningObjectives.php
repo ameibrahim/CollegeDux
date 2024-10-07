@@ -11,10 +11,10 @@
     }
 
     $query = "
-    SELECT id, objectives
-    FROM `objectives` 
-    WHERE objectives.courseID = '$courseID'
-    LIMIT 1
+        SELECT *
+        FROM `objectives` 
+        WHERE objectives.courseID = '$courseID'
+        ORDER BY hierarchy
     ";
 
     $objectivesResult = mysqli_query($conn,$query);

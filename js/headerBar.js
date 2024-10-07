@@ -1,4 +1,5 @@
 let globalUserDetails;
+let DEMOACCOUNT = false;
 
 ( async () => {
 
@@ -6,6 +7,10 @@ let globalUserDetails;
     globalUserDetails = result;
     localizeTextElements();
     setHeaderInfo(result);
+
+    if(result.email == "jeriest59@gmail.com"){
+        DEMOACCOUNT = true;
+    }
 
 })();
 
@@ -30,11 +35,11 @@ function setHeaderInfo(userObject){
 
         username.innerHTML = "";
         
-        switch(role){
-            case "teacher":
+
+
                 username.appendChild(usernameInnerContainer);
                 username.appendChild(roleAsTextElement);
-        }
+   
     });
 
     imageFields.forEach( imageField => 

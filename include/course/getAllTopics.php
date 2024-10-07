@@ -21,27 +21,7 @@
         $result = mysqli_query($conn,$query);
         $lectures = mysqli_fetch_all($result,MYSQLI_ASSOC);
 
-        $lectureArray = [];
-
-        foreach($lectures as $lecture) {
-
-            $lectureID = $lecture['id'];
-            
-            $subtopicQuery = "
-                SELECT title
-                FROM `subtopics` WHERE lectureID = '$lectureID'
-                ORDER BY subtopics.hierarchy
-            ";
-
-            $subtopicQuery = mysqli_query($conn,$subtopicQuery);
-            $subtopics = mysqli_fetch_all($subtopicQuery,MYSQLI_ASSOC);
-
-            $lectureArray[] = array(
-                "subtopics" => $subtopics,
-            );
-        }
-
-        echo json_encode($lectureArray);
+        echo json_encode($lectures);
 
     }
     else{

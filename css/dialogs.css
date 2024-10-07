@@ -111,6 +111,7 @@
         place-items: center;
         z-index: 99 !important;
         transition: 1s;
+        left: 0px;
     }
 
     .loading-message{

@@ -7,6 +7,8 @@
     <title>Dux Teacher</title>
     <page data-id="Course Management"></page>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <?php include '../include/teacherImports.php'; ?>
 
 </head>
@@ -64,63 +66,55 @@
 
         let courseImageObject;
 
-        async function createCourse() {
+        async function createCourse(event) {
+    // Prevent the default form submission
+    event.preventDefault();
 
-            let createCourseLoader = loadLoader("Creating Course");
+    let createCourseLoader = loadLoader("Creating Course");
 
-            let courseCode = document.querySelector(".course-code").value;
-            let courseName = document.querySelector(".course-name").value;
-            let courseLanguage = document.querySelector(".course-language").value;
-            let courseIsLanguage = document.querySelector(".course-is-language").value;
+    let courseCode = document.querySelector(".course-code").value;
+    let courseName = document.querySelector(".course-name").value;
+    let courseLanguage = document.querySelector(".course-language").value;
+    let courseIsLanguage = document.querySelector(".course-is-language").value;
 
-            let isLanguageCourse = "false"
-            if (courseIsLanguage === "no") {
-                isLanguageCourse = "false"
-            } else {
-                isLanguageCourse = "true"
-            }
+    let isLanguageCourse = (courseIsLanguage === "yes") ? "true" : "false";
 
-            let id = uniqueID(1);
+    let id = uniqueID(1);
 
-            let {
-                id: creatorID
-            } = await getGlobalDetails();
+    let { id: creatorID } = await getGlobalDetails();
 
-            let params = `id=${id}&&courseCode=${courseCode}&&title=${courseName}&&language=${courseLanguage}&&isLanguage=${isLanguageCourse}&&creatorID=${creatorID}&&image=''`;
+    let params = `id=${id}&&courseCode=${courseCode}&&title=${courseName}&&language=${courseLanguage}&&isLanguage=${isLanguageCourse}&&creatorID=${creatorID}&&image=''`;
 
-            if (courseImageObject) {
-
-                try {
-                    let {
-                        newFileName
-                    } = await uploadFile(courseImageObject);
-                    if (newFileName) params = `id=${id}&&courseCode=${courseCode}&&title=${courseName}&&language=${courseLanguage}&&isLanguage=${isLanguageCourse}&&creatorID=${creatorID}&&image=${newFileName}`;
-                    console.log(params);
-
-                    let objectivesResult = await addNewObjective(id);
-                    console.log("Objectives Result: ", objectivesResult);
-                } catch (error) {
-                    console.log(error);
-                }
-
-            }
-
-            let result = await AJAXCall({
-                phpFilePath: "../include/course/addNewCourse.php",
-                rejectMessage: "course error",
-                params,
-                type: "post"
-            });
-
-            console.log(result);
-            
-            loadCourses();
-
-            setTimeout(() => {
-                closeCreateCourseOverlay();
-                removeLoader(createCourseLoader);
-            }, 2000)
+    if (courseImageObject) {
+        try {
+            let { newFileName } = await uploadFile(courseImageObject);
+            if (newFileName) params = `id=${id}&&courseCode=${courseCode}&&title=${courseName}&&language=${courseLanguage}&&isLanguage=${isLanguageCourse}&&creatorID=${creatorID}&&image=${newFileName}`;
+            console.log(params);
+        } catch (error) {
+            console.log(error);
         }
+    }
+
+    let result = await AJAXCall({
+        phpFilePath: "../include/course/addNewCourse.php",
+        rejectMessage: "course error",
+        params,
+        type: "post"
+    });
+
+    console.log(result);
+
+    // objectives.
+    await saveLearningObjectivesInDatabase(id);
+
+    loadCourses();
+
+    setTimeout(() => {
+        closeCreateCourseOverlay();
+        removeLoader(createCourseLoader);
+    }, 2000);
+}
+
 
         function openCreateCourseOverlay() {
             clearCourseOverlayInputs();

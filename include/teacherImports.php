@@ -39,6 +39,8 @@
         "../js/excelParser.js",
         "../js/Objectives.js",
         "../js/Messaging.js",
+        "../js/ExcelObjective.js",
+        "../js/GPTPDF.js",
     );
 
     // These are for javascript files that you want

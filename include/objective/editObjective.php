@@ -5,9 +5,6 @@
     $conn = OpenConnection();
 
     $id = $_POST['id'];
-    $value = $_POST['value'];
-    $type = $_POST['type'];
-    $lectureID = $_POST['lectureID'];
     $title = $_POST['title'];
 
     if (!$conn) {
@@ -15,10 +12,10 @@
     }
 
     $query = "
-        INSERT INTO resources (id, type, value, lectureID, title)
-        VALUES ('$id', '$type', '$value', '$lectureID', '$title')
+        UPDATE objectives SET title='$title' 
+        WHERE id='$id'
     ";
 
     $result = mysqli_query($conn,$query);
+    echo "success";
 
-    if($result) echo "success";

@@ -7,16 +7,16 @@
 
     <!-- use version 0.20.1 -->
     <script lang="javascript" src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
-    <script src="index.js"></script>
+    <script src="../../js/ExcelObjective.js"></script>
 </head>
 <body>
 
-    <input type="file" id="excelCourseFileUpload" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onchange="loadExcelSheetToView(event)">
+    <input type="file" id="excelCourseFileUpload" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onchange="loadExcelToObjectiveSheetView(event)">
 
     <script>
 
 
-        function loadExcelSheetToView(event){
+        function loadExcelToObjectiveSheetView(event){
             
             let file = event.target.files[0];
 

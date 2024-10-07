@@ -4,7 +4,12 @@
             <h1 class="pop-up-title">
                 <text>Edit Learning Objectives</text>
             </h1> 
+
             <div class="objectives-action-buttons">
+                <label for="excelObjectiveUpload" class="circular-button upload-objectives">
+                    <img src="../assets/icons/up-arrow.png" alt="">
+                    <input type="file" id="excelObjectiveUpload" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onchange="loadExcelToObjectiveSheetView(event)">
+                </label>
                 <div class="circular-button reload-objectives" onclick="refreshObjectives()">
                     <img src="../assets/icons/reload.png" alt="">
                 </div>

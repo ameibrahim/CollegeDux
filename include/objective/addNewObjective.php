@@ -6,7 +6,7 @@
 
     $id = $_POST['id'];
     $title = $_POST['title'];
-    $lectureID = $_POST['lectureID'];
+    $courseID = $_POST['courseID'];
     $hierarchy = $_POST['hierarchy'];
 
     if (!$conn) {
@@ -14,10 +14,10 @@
     }
 
     $query = "
-        INSERT INTO subtopics (id, title, lectureID, hierarchy, done)
-        VALUES ('$id', '$title', '$lectureID ', '$hierarchy', 'false')
+    INSERT INTO objectives(id, courseID, hierarchy, title) 
+    VALUES ('$id','$courseID','$hierarchy','$title')
     ";
 
     $result = mysqli_query($conn,$query);
+    echo "success";
 
-    if($result) echo "success";
