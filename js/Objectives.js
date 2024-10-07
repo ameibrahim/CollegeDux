@@ -1,10 +1,11 @@
 class Objectives {
   currentHierarchy = 0;
   currentIndex = 0;
+  objectivesToDelete = [];
 
-  constructor({ id, objectives }) {
-    this.id = id;
+  constructor({ courseID, objectives }) {
     this.objectives = objectives;
+    this.courseID = courseID;
     this.currentIndex = this.objectives.length - 1;
   }
 
@@ -19,6 +20,8 @@ class Objectives {
       learningObjectivesOuterContainer.appendChild(objectiveContainer);
       this.currentHierarchy = objective.hierarchy;
     });
+
+    console.log("Objectives Modified: ", this.objectives);
   }
 
   setAddNewObjectiveButton(button) {
@@ -52,6 +55,7 @@ class Objectives {
     let objectiveDeleteButton = document.createElement("div");
     objectiveDeleteButton.className = "delete-button";
     objectiveDeleteButton.addEventListener("click", () => {
+      this.objectivesToDelete.push(this.objectives[index].id)
       this.objectives.splice(index, 1);
       --this.currentIndex;
       console.log(this.objectives);
@@ -75,8 +79,9 @@ class Objectives {
 
     let hierarchy = "" + ++this.currentHierarchy;
     let index = ++this.currentIndex;
+    let id = uniqueID(1);
 
-    const objective = { hierarchy, title: "" };
+    const objective = { hierarchy, title: "", id, courseID: this.courseID, action: "new" };
     this.objectives.push(objective);
 
     let objectiveContainer = this.createObjectiveInput(objective, index);
@@ -85,15 +90,16 @@ class Objectives {
 
   updateObjective(element, textObject) {
     textObject.title = element.textContent;
-    console.log("yupp", this.objectives);
+    textObject.action = textObject.action == "new" ? "new" : "editted";
+    console.log("updating objective: ", this.objectives);
   }
 
   saveObjectives() {
     //TODO: Objective 1
 
-    (async () => {
+    ( async () => {
       try {
-        const result = await saveLearningObjectives(this.id, this.objectives);
+        const result = await saveLearningObjectives(this.courseID, this.objectives, this.objectivesToDelete);
         console.log("save objectives result: ", result);
       } catch (error) {
         console.log(error);
@@ -106,11 +112,11 @@ async function refreshObjectives() {
   let loader = loadLoader("Generating Objectives");
 
   let mainContainer = document.querySelector(".main-container");
-  let id = mainContainer.getAttribute("data-id");
+  let courseID = mainContainer.getAttribute("data-id");
 
-  console.log("id:", id);
+  console.log("id:", courseID);
 
-  const courseDetails = await getTitleAndFilename(id);
+  const courseDetails = await getTitleAndFilename(courseID);
   console.log(courseDetails);
   const { title } = courseDetails[0];
 
@@ -126,7 +132,7 @@ async function refreshObjectives() {
   console.log("objectiveList: ", objectivesList);
 
   const objectives = objectivesList.map((objective, index) => {
-    return { hierarchy: index + 1, title: objective };
+    return {id: uniqueID(), hierarchy: index + 1, title: objective, courseID, action: "new" };
   });
 
   let addLearningObjectiveButton = findElement(
@@ -138,7 +144,7 @@ async function refreshObjectives() {
 
   console.log("objectivesObject: ", objectives);
 
-  let learningObjectives = new Objectives({ id, objectives });
+  let learningObjectives = new Objectives({ courseID, objectives });
   learningObjectives.renderObjectives();
   learningObjectives.setAddNewObjectiveButton(addLearningObjectiveButton);
   learningObjectives.setSaveLearningObjectivesButton(
@@ -148,47 +154,58 @@ async function refreshObjectives() {
   removeLoader(loader);
 }
 
-function addNewObjective(courseID) {
-  const id = uniqueID(1);
-  const objectives = encodeURIComponent(JSON.stringify([]));
+async function saveLearningObjectives(courseID, objectives, objectivesToDelete){
 
-  return new Promise(async (resolve, reject) => {
-    try {
-      await AJAXCall({
-        phpFilePath: "../include/course/addNewObjective.php",
-        rejectMessage: "adding new objective failed",
-        params: `id=${id}&&courseID=${courseID}&&objectives=${objectives}`,
-        type: "post",
-      });
-    } catch (error) {
-      //TODO: bubbleUpError()
-      reject();
-      console.log(error);
+  for await( objective of objectives ){
+
+    switch(objective.action){
+      case "new":
+        addNewObjective(objective);
+        break;
+      case "editted":
+        editObjective(objective);
+        break;
+      default:
+        console.log("objective action: ", objective.action);
+        break;
     }
 
-    resolve(id);
+  }
+
+  for await ( objective of objectivesToDelete ){
+    deleteObjective(objective);
+  }
+
+}
+
+async function addNewObjective(objective){
+
+  let params = createParametersFrom(objective);
+
+  return AJAXCall({
+    phpFilePath: "../include/objective/addNewObjective.php",
+    rejectMessage: "Adding New Objective Failed",
+    type: "post",
+    params
   });
 }
 
-function saveLearningObjectives(id, objectives) {
-  let stringifiedObjectives = encodeURIComponent(JSON.stringify(objectives));
+async function editObjective(objective){
+  let params = createParametersFrom(objective);
 
-  //TODO: continue encoding for PHP
+  return AJAXCall({
+    phpFilePath: "../include/objective/editObjective.php",
+    rejectMessage: "Editting Objective Failed",
+    type: "post",
+    params
+  });
+}
 
-  return new Promise(async (resolve, reject) => {
-    try {
-      await AJAXCall({
-        phpFilePath: "../include/course/saveLearningObjectives.php",
-        rejectMessage: "saving new objective failed",
-        params: `id=${id}&&objectives=${stringifiedObjectives}`,
-        type: "post",
-      });
-    } catch (error) {
-      //TODO: bubbleUpError()
-      reject();
-      console.log(error);
-    }
-
-    resolve(id);
+async function deleteObjective(objectiveID){
+  return AJAXCall({
+    phpFilePath: "../include/objective/deleteObjective.php",
+    rejectMessage: "Deleting Objective Failed",
+    type: "post",
+    params: `objectiveID=${objectiveID}`,
   });
 }

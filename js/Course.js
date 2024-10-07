@@ -690,25 +690,25 @@ class Course {
 
 async function editLearningObjectives(id){
 
-    const response = await AJAXCall({
-        phpFilePath: "../include/course/getLearningObjectives.php",
-        rejectMessage: "Getting Filename Failed",
+    const objectives = await AJAXCall({
+        phpFilePath: "../include/objective/getLearningObjectives.php",
+        rejectMessage: "Getting Objectives Failed",
         type: "fetch",
         params: `courseID=${id}`
     })
 
-    console.log("HERE: response of objectives: ", response);
+    objectives.forEach( objectives => objectives.action = "fetched" );
+
+    console.log("HERE: response of objectives 1: ", objectives);
 
     let addLearningObjectiveButton = document.querySelector(".add-learning-objective-button");
     let saveLearningObjectivesButton = document.querySelector(".save-learning-objectives-button");
 
-    
-    let objectives = parseAvailableJSONFromArray(response, "objectives");
+    //DEPRACATED: parseAvailableJSONFromArray(response, "objectives");
 
     console.log("HERE: parsed objectives", objectives);
-    console.log("HERE: Objectives ID: ", response);
 
-    let learningObjectives = new Objectives({ id: response[0].id, objectives });
+    let learningObjectives = new Objectives({ courseID: id, objectives });
     learningObjectives.renderObjectives();
     learningObjectives.setAddNewObjectiveButton(addLearningObjectiveButton);
     learningObjectives.setSaveLearningObjectivesButton(saveLearningObjectivesButton);

@@ -11,10 +11,9 @@
     }
 
     $query = "
-    SELECT id, objectives
-    FROM `objectives` 
-    WHERE objectives.courseID = '$courseID'
-    LIMIT 1
+        SELECT *
+        FROM `objectives` 
+        WHERE objectives.courseID = '$courseID'
     ";
 
     $objectivesResult = mysqli_query($conn,$query);

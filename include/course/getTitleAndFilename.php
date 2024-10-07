@@ -11,8 +11,7 @@
     $courseID = $_POST["id"];
 
     $query = "
-        SELECT title, filename FROM courses
-        INNER JOIN objectives ON objectives.courseID = courses.id
+        SELECT title FROM courses
         WHERE courses.id = '$courseID'
     ";
 
