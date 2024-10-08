@@ -33,7 +33,7 @@
     <div class="wrapper">
         <div class="logo-container">
             <img src="assets/images/air-logo.png" alt="">
-            <div class="top-text">College Dux</div>
+            <div class="top-text">Prof Dux</div>
         </div>
     
         <div class="outer-container">

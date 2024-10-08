@@ -36,10 +36,6 @@
     cursor: default;
 }
 
-.attachments-button:hover > .icon {
-    filter: invert(100%);
-}
-
 body {
     width: 100vw;
 }
@@ -382,4 +378,8 @@ a {
 
 .view:has(.empty-view){
     height: 100%;
+}
+
+.make-shift-input-wrapper {
+    position: relative;
 }

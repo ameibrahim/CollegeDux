@@ -52,15 +52,11 @@
 
                     course.lectures.forEach( lectures => 
                         
-                        lectures.subtopics.forEach( subtopic => 
-
-                            subtopic.resources.forEach( resource => 
-                                resource.type == "application/pdf" ? ebooks.push({
-                                    title: resource.title,
-                                    value: resource.value
-                                }) : false
-                            )
-
+                        lectures.resources.forEach( resource => 
+                            resource.type == "application/pdf" ? ebooks.push({
+                                title: resource.title,
+                                value: resource.value
+                            }) : false
                         )
 
                     )

@@ -78,25 +78,19 @@ async function generateQuestion(generateQuestionObject, amount){
 
 
     let query = 
-    `create for me in valid json format using ISO encoding, ${amount} questions with the keywords 'questions' in the ${languages.map( language => `${language}`).join("and ")} as well as their answers 
-    in the ${languages.map( language => `${language}`).join("and ")} with those exact key names in the topics of ${topics} 
-    for ${educationEnvironment}. 
-
-    The questions should be ${type} with its respective answer choices as well in the languages types ${languages.map( language => `${language}`).join("and ")}
-    as well as the correct answer option in ${languages.map( language => `${language}`).join("and ")}.
-
-    The questions should be ${level}.
-
-    The json format should have the following keys, 
-    "question, answerOptions, answer, type, hardness". 
-
-    question, answerOptions and answer should all come with the ${languages.map( language => `${language}`).join("and ")}
-
-    The answerOptions should only be available if the 
-    question type is multiple choice or true and false.
-
-    Do not add any invalid characters in the result please.`;
-
+    `Please create ${amount} questions in valid JSON format using ISO encoding, with both the questions and their answers written in ${languages.join(", ")}. The questions should cover the topic of ${topic} and be suitable for ${educationEnvironment}.
+    
+    Each question should be in ${type} format, including its respective answer options and the correct answer. Ensure the difficulty level is ${level}.
+    
+    The JSON format must include the following keys: 
+    - "question": The text of the question
+    - "answerOptions": The list of answer choices (only for multiple choice or true/false)
+    - "answer": The correct answer
+    - "type": The question format (multiple choice, true/false, etc.)
+    - "hardness": The difficulty level of the question.
+    
+    Please ensure no invalid characters are included in the response.`
+   
     let unparsedJSONResponse = await generateGPTResponseFor(query);
     let result = await JSON.parse(unparsedJSONResponse);
 
