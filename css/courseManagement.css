@@ -113,7 +113,7 @@
     height: 20px;
 }
 
-#excelCourseFileUpload {
+#excelCourseFileUpload, #excelObjectiveUpload {
     display: none;
 }
 

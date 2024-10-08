@@ -186,7 +186,7 @@ class Course {
                 let subtopicResourceWrapper = document.createElement("div");
                 subtopicResourceWrapper.className = "subtopics-resource-wrapper";
 
-                subtopic.resources.forEach( resource => {
+                subtopic.resources && subtopic.resources.forEach( resource => {
 
                     const resourceElement = this.createSubtopicItem(resource);
                     subtopicResourceWrapper.appendChild(resourceElement);

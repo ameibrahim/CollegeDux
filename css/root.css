@@ -117,7 +117,7 @@ a {
 .objectives-action-buttons {
     display: grid;
     align-items: center;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: auto auto auto auto;
     grid-gap: 11px;
 }
 
@@ -129,10 +129,14 @@ a {
     position: relative;
 }
 
-.circular-button.reload-objectives img {
+.circular-button.reload-objectives img, .circular-button.upload-objectives img {
     filter: invert(100%);
     height: 15px;
     width: 15px;
+}
+
+.circular-button.upload-objectives{
+    background: #13c548;
 }
 
 .inner-header {
@@ -188,7 +192,6 @@ a {
     display: grid;
     place-items: center;
     background: var(--accent);
-    position: absolute;
     cursor: pointer;
     transition: 0.3s all;
 } .close-button {

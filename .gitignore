@@ -8,3 +8,4 @@ objectives/*json
 exam/generated/*
 exam/taken/*
 templates/longGenerations.js
+.DS_Store
