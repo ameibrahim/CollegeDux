@@ -14,6 +14,7 @@
         SELECT *
         FROM `objectives` 
         WHERE objectives.courseID = '$courseID'
+        ORDER BY hierarchy
     ";
 
     $objectivesResult = mysqli_query($conn,$query);

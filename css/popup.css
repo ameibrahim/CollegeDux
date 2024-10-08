@@ -78,7 +78,7 @@
     width: 100%;
     display: grid;
     place-items: center;
-    grid-gap: 50px;
+    grid-gap: 20px;
     box-sizing: border-box;
     align-self: start;
 }

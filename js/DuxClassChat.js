@@ -413,10 +413,84 @@ class DuxClassChat {
 
     }
 
-    async playVoice(text, apiKey){
-        const response = await generateTextToAudioFor(text, this.apiKey);
-        playAudioFileFromResponse(response);
-    }
+    // async playVoice(text, apiKey){
+    //     const response = await generateTextToAudioFor(text, this.apiKey);
+    //     playAudioFileFromResponse(response);
+        
+            
+
+
+    // }
+    async  playVoice(text, _) {
+        // Detect language for the main text
+        const language = detectLanguage(text);
+        let introText = introTextEnglish; // Default to English intro
+        let introVoice = introVoiceEnglish; // Default to English voice
+    
+        if (language === 'Turkish') {
+            introText = introTextTurkish; // Switch to Turkish intro if text is in Turkish
+            introVoice = introVoiceTurkish; // Set to Turkish voice if text is detected as Turkish
+        }
+    
+        // Split the main text into sentences based on punctuation marks
+        let sentences = text.split(/(?<=[.!?])/).filter(sentence => sentence.trim() !== '');
+    
+        console.log('Detected language:', language);
+        console.log('Selected voice:', introVoice);
+    
+        return new Promise(resolve => {
+            const speakMainText = () => {
+                const speakNextSentence = (index) => {
+                    if (index < sentences.length) {
+                        isLastSentenceSpoken = false;
+                        currentSentenceIndex = index;
+    
+                        responsiveVoice.speak(sentences[index].trim(), introVoice, {
+                            onstart: function() {
+                                speakButton.src = talkingGif;
+                            },
+                            onend: function() {
+                                isLastSentenceSpoken = (index === sentences.length - 1);
+                                // Ensure the silent GIF shows only after all sentences are spoken and voice has stopped
+                                if (isLastSentenceSpoken) {
+                                    setTimeout(() => {
+                                        speakButton.src = silentGif;
+                                        resolve(); // Resolve the promise when the last sentence is done
+                                    }, 500); // Adjust the delay as needed
+                                } else {
+                                    setTimeout(() => {
+                                        speakButton.src = silentGif;
+                                        setTimeout(() => {
+                                            speakNextSentence(index + 1); // Speak the next sentence
+                                        }, 700); // Delay before starting the next sentence
+                                    }, 100); // Short delay to handle GIF change
+                                }
+                            }
+                        });
+                    } else {
+                        speakButton.src = silentGif; // Set the silent GIF after all sentences are spoken
+                        resolve();
+                    }
+                };
+    
+                speakNextSentence(0); // Start speaking the first sentence of the main text
+            };
+    
+            if (!introSpoken) {
+                responsiveVoice.speak(introText, introVoice, {
+                    onstart: function() {
+                        speakButton.src = talkingGif;
+                    },
+                    onend: function() {
+                        introSpoken = true; // Mark the introduction as spoken
+                        speakMainText(); // Proceed to speak the main text
+                    }
+                });
+            } else {
+                speakMainText(); // Skip the intro and directly speak the main text
+            }
+        });
+    };
 
     renderDuxMessageFor(message, promptMessage, type){
 
@@ -575,3 +649,51 @@ async function playAudioFileFromResponse({ audioCtx, buffer }){
         console.log("HMMM")
     }
 }
+
+
+
+
+
+
+
+
+// Define the talking and silent GIF URLs
+const talkingGif = "../assets/images/DuxTalk3.gif";
+const silentGif = "../assets/images/secoSpritesilent.gif";
+
+// Get the speak button element
+const speakButton = document.getElementById('speakButton');
+
+// Define the intro text and voice
+const introTextEnglish = 'Hello, I will read the text for you.';
+const introTextTurkish = 'Merhaba, metni size okuyacağım.';
+const introVoiceEnglish = 'UK English Male';
+const introVoiceTurkish = 'Turkish Male';
+
+// Define the API key (replace with your actual API key)
+// const apiKey = 'NVbGYm7d';
+
+// Flag to track if the intro has been spoken
+let introSpoken = false;
+
+// Flag to track if the last sentence has been spoken
+let isLastSentenceSpoken = false;
+
+// Current sentence index
+let currentSentenceIndex = 0;
+
+// Function to detect the language of the text
+function detectLanguage(text) {
+    // Implement your language detection logic here
+    // For demonstration purposes, assume the language is Turkish if the text contains 'Merhaba'
+    return text.includes('Merhaba') ? 'Turkish' : 'English';
+}
+
+// Function to play the voice
+
+
+// Function to create delay using Promise
+const delay = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+};
+

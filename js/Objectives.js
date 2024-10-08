@@ -3,10 +3,11 @@ class Objectives {
   currentIndex = 0;
   objectivesToDelete = [];
 
-  constructor({ courseID, objectives }) {
+  constructor({ courseID, objectives }, overwrite = "false") {
     this.objectives = objectives;
     this.courseID = courseID;
     this.currentIndex = this.objectives.length - 1;
+    this.overwrite = overwrite;
   }
 
   renderObjectives() {
@@ -99,7 +100,7 @@ class Objectives {
 
     ( async () => {
       try {
-        const result = await saveLearningObjectives(this.courseID, this.objectives, this.objectivesToDelete);
+        const result = await saveLearningObjectives(this.courseID, this.objectives, this.objectivesToDelete, this.overwrite);
         console.log("save objectives result: ", result);
       } catch (error) {
         console.log(error);
@@ -154,7 +155,20 @@ async function refreshObjectives() {
   removeLoader(loader);
 }
 
-async function saveLearningObjectives(courseID, objectives, objectivesToDelete){
+async function deleteAllObjectivesFor(courseID) {
+    return AJAXCall({
+      phpFilePath: "../include/objective/deleteAllObjectivesFor.php",
+      rejectMessage: `Deleting Objectives For Course With ID ${courseID} Has Failed`,
+      type: "post",
+      params: createParametersFrom({courseID})
+    })
+} 
+
+async function saveLearningObjectives(courseID, objectives, objectivesToDelete, overwrite){
+
+  if(overwrite == "overwrite"){
+    await deleteAllObjectivesFor(courseID);
+  }
 
   for await( objective of objectives ){
 

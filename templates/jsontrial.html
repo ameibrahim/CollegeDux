@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="../js/functions.js"></script>
+</head>
+<body>
+
+    <script>
+
+        var data = [{
+            name: "Çalışkan",
+            city: "İstanbul"
+        },
+        {
+            name: "Çalışkan",
+            city: "İstanbul"
+        }];
+
+        // Convert the JavaScript object to a JSON string
+        var jsonData = JSON.stringify(data);
+
+        // Create the XMLHttpRequest
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "../include/jsonTrial.php", true);
+
+        // Set the request header for URL-encoded form data
+        // xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log(xhr.responseText); // Handle the response
+        }
+        };
+
+        // Send the JSON string as a single POST parameter
+        xhr.send("jsonData=" + encodeURIComponent(jsonData));
+
+
+        async function getData(){
+
+            let result = await AJAXCall({
+                phpFilePath: "../include/getJson.php",
+                rejectMessage: "Something went wrong",
+                params: '',
+                type: 'fetch'
+            })
+
+            console.log(result);
+        }
+    </script>
+
+    <button onclick="getData()">Get Data</button>
+
+    
+</body>
+</html>

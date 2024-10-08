@@ -2,23 +2,19 @@
 
     include "../databaseConnection.php"; 
 
-
     $conn = OpenConnection();
 
-    $id = $_POST['id'];
-    $title = $_POST['title'];
-    $hierarchy = $_POST['hierarchy'];
+    $courseID = $_POST['courseID'];
 
     if (!$conn) {
         die("Connection failed: " . mysqli_connect_error());
     }
 
     $query = "
-        UPDATE subtopics
-        SET title='$title', hierarchy='$hierarchy'
-        WHERE id='$id'
+        DELETE FROM objectives 
+        WHERE courseID='$courseID'
     ";
 
     $result = mysqli_query($conn,$query);
+    echo "success";
 
-    if($result) echo "success";
