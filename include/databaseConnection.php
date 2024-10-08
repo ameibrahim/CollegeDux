@@ -4,7 +4,7 @@
       $host = "localhost";
       $username = "aiiovdft_lms";
       $password = "strong#dux13";
-      $dbname = "aiiovdft_profdux";
+      $dbname = "aiiovdft_lms";
       
       $conn = new mysqli($host, $username, $password, $dbname) or die("Connection to database failed: %s\n". $conn -> error);
 

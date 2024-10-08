@@ -42,20 +42,45 @@
             foreach($lectures as $lecture){
 
                 $lectureID = $lecture['id'];
-                    
-                $resourceQuery = "
+                
+                $subtopicQuery = "
                 SELECT *
-                FROM `resources` WHERE lectureID = '$lectureID'
+                FROM `subtopics` WHERE lectureID = '$lectureID'
+                ORDER BY subtopics.hierarchy
                 ";
 
-                $resourcesResult = mysqli_query($conn,$resourceQuery);
-                $resources = mysqli_fetch_all($resourcesResult,MYSQLI_ASSOC);
+                $subtopicResult = mysqli_query($conn,$subtopicQuery);
+                $subtopics = mysqli_fetch_all($subtopicResult,MYSQLI_ASSOC);
+
+                $subtopicArray = array();
+
+                foreach($subtopics as $subtopic){
+
+                    $subtopicID = $subtopic['id'];
+                    
+                    $resourceQuery = "
+                    SELECT *
+                    FROM `resources` WHERE subtopicID = '$subtopicID'
+                    ";
+    
+                    $resourcesResult = mysqli_query($conn,$resourceQuery);
+                    $resources = mysqli_fetch_all($resourcesResult,MYSQLI_ASSOC);
+
+                    $subtopicArray[] = array(
+                        "id" => $subtopicID,
+                        "title" => $subtopic['title'],
+                        "hierarchy" => $subtopic['hierarchy'],
+                        "resources" => $resources
+                    );
+                    
+                }
+
 
                 $lectureArray[] = array(
                     "id" => $lectureID,
                     "title" => $lecture['title'],
                     "hierarchy" => $lecture['hierarchy'],
-                    "resources" => $resources
+                    "subtopics" => $subtopicArray,
                 );
 
             }

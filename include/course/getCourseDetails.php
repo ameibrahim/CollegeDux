@@ -51,14 +51,37 @@
                 $lectureTimeResult = mysqli_query($conn,$timeQuery);
                 $lectureTime = mysqli_fetch_all($lectureTimeResult,MYSQLI_ASSOC);
                 
-
-                $resourceQuery = "
+                $subtopicQuery = "
                 SELECT *
-                FROM `resources` WHERE lectureID = '$lectureID'
+                FROM `subtopics` WHERE lectureID = '$lectureID'
+                ORDER BY subtopics.hierarchy
                 ";
 
-                $resourcesResult = mysqli_query($conn,$resourceQuery);
-                $resources = mysqli_fetch_all($resourcesResult,MYSQLI_ASSOC);
+                $subtopicResult = mysqli_query($conn,$subtopicQuery);
+                $subtopics = mysqli_fetch_all($subtopicResult,MYSQLI_ASSOC);
+
+                $subtopicArray = array();
+
+                foreach($subtopics as $subtopic){
+
+                    $subtopicID = $subtopic['id'];
+                    
+                    $resourceQuery = "
+                    SELECT *
+                    FROM `resources` WHERE subtopicID = '$subtopicID'
+                    ";
+    
+                    $resourcesResult = mysqli_query($conn,$resourceQuery);
+                    $resources = mysqli_fetch_all($resourcesResult,MYSQLI_ASSOC);
+
+                    $subtopicArray[] = array(
+                        "id" => $subtopicID,
+                        "title" => $subtopic['title'],
+                        "hierarchy" => $subtopic['hierarchy'],
+                        "resources" => $resources
+                    );
+                    
+                }
 
                 $quizQuery = "
                 SELECT *
@@ -73,7 +96,7 @@
                     "title" => $lecture['title'],
                     "time" => $lectureTime[0],
                     "hierarchy" => $lecture['hierarchy'],
-                    "resources" => $resources,
+                    "subtopics" => $subtopicArray,
                     "quizzes" => $quizzes
                 );
 
