@@ -233,11 +233,13 @@ async function loadCourses(options = "id") {
       courseCardImage.appendChild(imageElement);
 
       let cardText = createElement("div", "card-text");
-      let courseCardCode = createElement("div", "course-card-code");
+      let courseCardCode = createElement("text", "course-card-code");
       let courseCardTitle = createElement("div", "course-card-title");
+      let courseCardCodeContent = createLocalizedTextElement(courseCode);   
+      let courseCardTitleContent = createLocalizedTextElement(title);   
 
-      courseCardCode.textContent = courseCode;
-      courseCardTitle.textContent = title;
+      courseCardCode.appendChild(courseCardCodeContent);
+      courseCardTitle.appendChild(courseCardTitleContent);
 
       cardText.appendChild(courseCardCode);
       cardText.appendChild(courseCardTitle);
