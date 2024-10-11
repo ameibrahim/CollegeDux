@@ -40,6 +40,8 @@
                         <option selected value="turkish">Turkish</option>
                         <option value="english">English</option>
                         <option value="russian">Russian</option>
+                        <option value="russian">German</option>
+                        <option value="russian">French</option>
                         <option value="ukrainian">Ukrainian</option>
                     </select>
                 </div>
