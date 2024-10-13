@@ -1,1 +1,158 @@
-[{"question":{"en":"Which of the following rocks is an example of a metamorphic rock?","tr":"Aşağıdaki taşlardan hangisi bir metamorfik taş örneğidir?"},"answerOptions":{"en":["Granite","Marble","Sandstone","Basalt"],"tr":["Granit","Mermer","Kumtaşı","Basalt"]},"answer":{"en":"Marble","tr":"Mermer"},"type":"multiple choice","hardness":"difficult"},{"question":{"en":"What type of rock is formed by the cooling and solidification of magma?","tr":"Magma'nın soğuması ve katılaşması ile hangi tür taş oluşur?"},"answerOptions":{"en":["Igneous","Metamorphic","Sedimentary","Extrusive"],"tr":["Kayaçlı","Metamorfik","Sedimanter","Dışa Çıkan"]},"answer":{"en":"Igneous","tr":"Kayaçlı"},"type":"multiple choice","hardness":"difficult"},{"question":{"english":"_____ is a naturally occurring solid aggregate of one or more minerals.","turkish":"_____, bir veya daha fazla mineralin doğal olarak oluşan katı bir birleşimidir."},"answerOptions":[{"english":"A) Soil","turkish":"A) Toprak"},{"english":"B) Rock","turkish":"B) Kaya"},{"english":"C) Water","turkish":"C) Su"},{"english":"D) Air","turkish":"D) Hava"}],"answer":{"english":"B) Rock","turkish":"B) Kaya"},"type":"fillInBlanks","hardness":"difficult"},{"question":{"english":"______ are formed through the process of ______ and ________.","turkish":"______ oluşurken ______ ve _______ işlemi gerçekleşir."},"answerOptions":[{"english":"A) Volcanoes, Cooling, Crystallization","turkish":"A) Yanardağlar, Soğuma, Kristallenme"},{"english":"B) Erosion, Sedimentation, Compaction","turkish":"B) Aşındırma, Tortul Birikimi, Sıkışma"},{"english":"C) Weathering, Erosion, Sedimentation","turkish":"C) Yer Yüzeyi Aşındırma, Aşındırma, Tortul Birikimi"},{"english":"D) Melting, Solidification, Weathering","turkish":"D) Erime, Katılaşma, Yer Yüzeyi Aşındırma"}],"answer":{"english":"A) Volcanoes, Cooling, Crystallization","turkish":"A) Yanardağlar, Soğuma, Kristallenme"},"type":"fillInBlanks","hardness":"difficult"},{"question":{"en":"Sedimentary rocks are formed from the cooling and solidification of magma.","tr":"Tortul kayaçlar, magmanın soğuması ve katılaşması sonucunda oluşur."},"answerOptions":{"en":["True","False"],"tr":["Doğru","Yanlış"]},"answer":{"en":"False","tr":"Yanlış"},"type":"trueFalse","hardness":"difficult"},{"question":{"en":"Metamorphic rocks can be formed from both sedimentary and igneous rocks.","tr":"Metamorfik kayaçlar hem tortul hem de magmatik kayaçlardan oluşabilir."},"answerOptions":{"en":["True","False"],"tr":["Doğru","Yanlış"]},"answer":{"en":"True","tr":"Doğru"},"type":"trueFalse","hardness":"difficult"}]
+[
+    {
+        "question": {
+            "en": "Which of the following rocks is an example of a metamorphic rock?",
+            "tr": "Aşağıdaki taşlardan hangisi bir metamorfik taş örneğidir?"
+        },
+        "answerOptions": {
+            "en": [
+                "Granite",
+                "Marble",
+                "Sandstone",
+                "Basalt"
+            ],
+            "tr": [
+                "Granit",
+                "Mermer",
+                "Kumtaşı",
+                "Basalt"
+            ]
+        },
+        "answer": {
+            "en": "Marble",
+            "tr": "Mermer"
+        },
+        "type": "multiple choice",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "en": "What type of rock is formed by the cooling and solidification of magma?",
+            "tr": "Magma'nın soğuması ve katılaşması ile hangi tür taş oluşur?"
+        },
+        "answerOptions": {
+            "en": [
+                "Igneous",
+                "Metamorphic",
+                "Sedimentary",
+                "Extrusive"
+            ],
+            "tr": [
+                "Kayaçlı",
+                "Metamorfik",
+                "Sedimanter",
+                "Dışa Çıkan"
+            ]
+        },
+        "answer": {
+            "en": "Igneous",
+            "tr": "Kayaçlı"
+        },
+        "type": "multiple choice",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "english": "_____ is a naturally occurring solid aggregate of one or more minerals.",
+            "turkish": "_____, bir veya daha fazla mineralin doğal olarak oluşan katı bir birleşimidir."
+        },
+        "answerOptions": [
+            {
+                "english": "A) Soil",
+                "turkish": "A) Toprak"
+            },
+            {
+                "english": "B) Rock",
+                "turkish": "B) Kaya"
+            },
+            {
+                "english": "C) Water",
+                "turkish": "C) Su"
+            },
+            {
+                "english": "D) Air",
+                "turkish": "D) Hava"
+            }
+        ],
+        "answer": {
+            "english": "B) Rock",
+            "turkish": "B) Kaya"
+        },
+        "type": "fillInBlanks",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "english": "______ are formed through the process of ______ and ________.",
+            "turkish": "______ oluşurken ______ ve _______ işlemi gerçekleşir."
+        },
+        "answerOptions": [
+            {
+                "english": "A) Volcanoes, Cooling, Crystallization",
+                "turkish": "A) Yanardağlar, Soğuma, Kristallenme"
+            },
+            {
+                "english": "B) Erosion, Sedimentation, Compaction",
+                "turkish": "B) Aşındırma, Tortul Birikimi, Sıkışma"
+            },
+            {
+                "english": "C) Weathering, Erosion, Sedimentation",
+                "turkish": "C) Yer Yüzeyi Aşındırma, Aşındırma, Tortul Birikimi"
+            },
+            {
+                "english": "D) Melting, Solidification, Weathering",
+                "turkish": "D) Erime, Katılaşma, Yer Yüzeyi Aşındırma"
+            }
+        ],
+        "answer": {
+            "english": "A) Volcanoes, Cooling, Crystallization",
+            "turkish": "A) Yanardağlar, Soğuma, Kristallenme"
+        },
+        "type": "fillInBlanks",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "en": "Sedimentary rocks are formed from the cooling and solidification of magma.",
+            "tr": "Tortul kayaçlar, magmanın soğuması ve katılaşması sonucunda oluşur."
+        },
+        "answerOptions": {
+            "en": [
+                "True",
+                "False"
+            ],
+            "tr": [
+                "Doğru",
+                "Yanlış"
+            ]
+        },
+        "answer": {
+            "en": "False",
+            "tr": "Yanlış"
+        },
+        "type": "trueFalse",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "en": "Metamorphic rocks can be formed from both sedimentary and igneous rocks.",
+            "tr": "Metamorfik kayaçlar hem tortul hem de magmatik kayaçlardan oluşabilir."
+        },
+        "answerOptions": {
+            "en": [
+                "True",
+                "False"
+            ],
+            "tr": [
+                "Doğru",
+                "Yanlış"
+            ]
+        },
+        "answer": {
+            "en": "True",
+            "tr": "Doğru"
+        },
+        "type": "trueFalse",
+        "hardness": "difficult"
+    }
+]

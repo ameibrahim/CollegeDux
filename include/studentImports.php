@@ -43,6 +43,7 @@
         "../js/localize.js",
         "../js/PDFSearch.js",
         "../js/Messaging.js",
+        "../js/dictionary.js"
     );
 
     // These are for javascript files that you want

@@ -67,7 +67,7 @@ class Classroom {
                 mainClassroomSubtopicHeader.textContent = subtopic.title;
                 mainClassroomSubtopicContainer.appendChild(mainClassroomSubtopicHeader);
 
-                subtopic.resources.forEach( resource => {
+                subtopic.resources && subtopic.resources.forEach( resource => {
 
                     let mainClassroomSubtopicItem = this.createSubtopicItem(resource, isTimeReadyForLecture);
                     mainClassroomSubtopicContainer.appendChild(mainClassroomSubtopicItem);
@@ -205,6 +205,8 @@ function refreshCourseOutline(){
 async function viewQuizResults(studentQuizFilename){
 
     openPopup('.review-quiz-overlay');
+    
+    const language = extrapolateLanguage();
 
     let reviewQuizOverlay = document.querySelector(".review-quiz-overlay");
 
@@ -218,9 +220,7 @@ async function viewQuizResults(studentQuizFilename){
     let quizFileResponse = await fetch(correctPath, {cache: "reload"});
     let questions = await quizFileResponse.json();
 
-    mark(questions);
-
-    let { result, totalMarks } = mark(questions);
+    let { result, totalMarks } = mark(questions, language);
 
     let totalResultPlaceholder = reviewQuizOverlay.querySelector(".total-quiz-mark-placeholder");
     let scoreResultPlaceholder = reviewQuizOverlay.querySelector(".earned-quiz-mark-placeholder");

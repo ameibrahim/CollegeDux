@@ -1,1 +1,138 @@
-[{"question":{"english":"Which of the following is an example of a metamorphic rock?","turkish":"Aşağıdakilerden hangisi bir tortul kaya örneğidir?"},"answerOptions":{"english":["Granite","Marble","Basalt","Sandstone"],"turkish":["Granit","Mermer","Bazalt","Kumtaşı"]},"answer":{"english":"Marble","turkish":"Mermer"},"type":"multiple choice","hardness":"difficult"},{"question":{"english":"What is the main mineral found in the rock type known as schist?","turkish":"Şist olarak bilinen kaya türünde bulunan ana mineral nedir?"},"answerOptions":{"english":["Quartz","Mica","Feldspar","Calcite"],"turkish":["Kuvars","Mika","Feldispat","Kalsit"]},"answer":{"english":"Mica","turkish":"Mika"},"type":"multiple choice","hardness":"difficult"},{"question":{"english":"______ are naturally occurring solid aggregates of minerals or mineraloids.","turkish":"______, doğal olarak oluşan mineral veya mineraloid bileşimleridir."},"answerOptions":{"english":["Rocks","Clouds","Trees","Oceans"],"turkish":["Kayaçlar","Bulutlar","Ağaçlar","Okyanuslar"]},"answer":{"english":"Rocks","turkish":"Kayaçlar"},"type":"fill in the blanks","hardness":"difficult"},{"question":{"english":"Which of the following is NOT a classification of rocks?","turkish":"Aşağıdakilerden hangisi kayaçların bir sınıflandırması değildir?"},"answerOptions":{"english":["Sedimentary","Igneous","Diamond","Metamorphic"],"turkish":["Tortul","Magmatik","Elmas","Metamorfik"]},"answer":{"english":"Diamond","turkish":"Elmas"},"type":"multiple choice","hardness":"difficult"},{"question":{"english":"Rocks are composed solely of non-living material.","turkish":"Kayaçlar sadece cansız malzemelerden oluşur."},"answerOptions":["True","False"],"answer":{"english":"False","turkish":"Yanlış"},"type":"trueFalse","hardness":"difficult"},{"question":{"english":"Metamorphic rocks are primarily formed through volcanic activity.","turkish":"Metamorfik kayaçlar temelde volkanik aktivite ile oluşur."},"answerOptions":["True","False"],"answer":{"english":"False","turkish":"Yanlış"},"type":"trueFalse","hardness":"difficult"}]
+[
+    {
+        "question": {
+            "english": "Which of the following is an example of a metamorphic rock?",
+            "turkish": "Aşağıdakilerden hangisi bir tortul kaya örneğidir?"
+        },
+        "answerOptions": {
+            "english": [
+                "Granite",
+                "Marble",
+                "Basalt",
+                "Sandstone"
+            ],
+            "turkish": [
+                "Granit",
+                "Mermer",
+                "Bazalt",
+                "Kumtaşı"
+            ]
+        },
+        "answer": {
+            "english": "Marble",
+            "turkish": "Mermer"
+        },
+        "type": "multiple choice",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "english": "What is the main mineral found in the rock type known as schist?",
+            "turkish": "Şist olarak bilinen kaya türünde bulunan ana mineral nedir?"
+        },
+        "answerOptions": {
+            "english": [
+                "Quartz",
+                "Mica",
+                "Feldspar",
+                "Calcite"
+            ],
+            "turkish": [
+                "Kuvars",
+                "Mika",
+                "Feldispat",
+                "Kalsit"
+            ]
+        },
+        "answer": {
+            "english": "Mica",
+            "turkish": "Mika"
+        },
+        "type": "multiple choice",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "english": "______ are naturally occurring solid aggregates of minerals or mineraloids.",
+            "turkish": "______, doğal olarak oluşan mineral veya mineraloid bileşimleridir."
+        },
+        "answerOptions": {
+            "english": [
+                "Rocks",
+                "Clouds",
+                "Trees",
+                "Oceans"
+            ],
+            "turkish": [
+                "Kayaçlar",
+                "Bulutlar",
+                "Ağaçlar",
+                "Okyanuslar"
+            ]
+        },
+        "answer": {
+            "english": "Rocks",
+            "turkish": "Kayaçlar"
+        },
+        "type": "fill in the blanks",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "english": "Which of the following is NOT a classification of rocks?",
+            "turkish": "Aşağıdakilerden hangisi kayaçların bir sınıflandırması değildir?"
+        },
+        "answerOptions": {
+            "english": [
+                "Sedimentary",
+                "Igneous",
+                "Diamond",
+                "Metamorphic"
+            ],
+            "turkish": [
+                "Tortul",
+                "Magmatik",
+                "Elmas",
+                "Metamorfik"
+            ]
+        },
+        "answer": {
+            "english": "Diamond",
+            "turkish": "Elmas"
+        },
+        "type": "multiple choice",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "english": "Rocks are composed solely of non-living material.",
+            "turkish": "Kayaçlar sadece cansız malzemelerden oluşur."
+        },
+        "answerOptions": [
+            "True",
+            "False"
+        ],
+        "answer": {
+            "english": "False",
+            "turkish": "Yanlış"
+        },
+        "type": "trueFalse",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "english": "Metamorphic rocks are primarily formed through volcanic activity.",
+            "turkish": "Metamorfik kayaçlar temelde volkanik aktivite ile oluşur."
+        },
+        "answerOptions": [
+            "True",
+            "False"
+        ],
+        "answer": {
+            "english": "False",
+            "turkish": "Yanlış"
+        },
+        "type": "trueFalse",
+        "hardness": "difficult"
+    }
+]

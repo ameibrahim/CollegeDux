@@ -239,7 +239,7 @@ a {
 
 .editable:hover{
     border-color: var(--accent);
-    cursor: pointer;
+    cursor: text;
     border-style: dashed;
 }
 

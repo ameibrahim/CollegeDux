@@ -379,8 +379,16 @@ async function saveAssessmentAsJSON(
   assessmentType,
   type
 ) {
-  let JSONString = JSON.stringify(ArrayContainingObjects);
 
+  function escapeNonASCII(jsonString) {
+    return jsonString.replace(/[\u007F-\uFFFF]/g, function(ch) {
+      return '\\u' + ('0000' + ch.charCodeAt(0).toString(16)).slice(-4);
+    });
+  }
+
+  let JSONString = JSON.stringify(ArrayContainingObjects);
+  JSONString = escapeNonASCII(JSONString);
+  
   console.log("assessment type: ", assessmentType);
 
   let correctPath;
@@ -518,37 +526,11 @@ function extractType(type) {
 
 function questionMapSwitch(question) {
   switch (question.type.toLowerCase()) {
-    case "mcq":
-    case "multiple choice":
-    case "multiple choice question":
-    case "multiple choice questions":
+    case "multiplechoicequestion":
       return new MultipleChoice(question);
-    case "true and false":
-    case "true or false":
-    case "t and f":
-    case "t/f":
-    case "true/false":
-    case "true-false":
-    case "true_false":
-    case "t-f":
-    case "truefalse":
+    case "trueandfalsequestion":
       return new TrueAndFalse(question);
-    case "fill in the blank":
-    case "fill_in_the_blank":
-    case "fill in the blanks":
-    case "fill_in_the_blanks":
-    case "fillintheblank":
-    case "fillintheblanks":
-    case "fill/in/the/blank":
-    case "fill/in/the/blanks":
-    case "fill-in-the-blank":
-    case "fill-in-the-blanks":
-    case "fitb":
-    case "fitbs":
-    case "f-i-t-b":
-    case "f-i-t-b-s":
-    case "blank":
-    case "blanks":
+    case "fillintheblankquestion":
       return new FillInTheBlank(question);
     default:
       throw new Error(`Not Made Yet: ${question.type.toLowerCase()}`);
@@ -557,37 +539,11 @@ function questionMapSwitch(question) {
 
 function questionEditMapSwitch(question) {
   switch (question.type.toLowerCase()) {
-    case "mcq":
-    case "multiple choice":
-    case "multiple choice question":
-    case "multiple choice questions":
+    case "multiplechoicequestion":
       return new EditMultipleChoice(question);
-    case "true and false":
-    case "true or false":
-    case "t and f":
-    case "t/f":
-    case "true/false":
-    case "true-false":
-    case "true_false":
-    case "t-f":
-    case "truefalse":
+    case "trueandfalsequestion":
       return new EditTrueAndFalse(question);
-    case "fill in the blank":
-    case "fill_in_the_blank":
-    case "fill in the blanks":
-    case "fill_in_the_blanks":
-    case "fillintheblank":
-    case "fillintheblanks":
-    case "fill/in/the/blank":
-    case "fill/in/the/blanks":
-    case "fill-in-the-blank":
-    case "fill-in-the-blanks":
-    case "fitb":
-    case "fitbs":
-    case "f-i-t-b":
-    case "f-i-t-b-s":
-    case "blank":
-    case "blanks":
+    case "fillintheblankquestion":
       return new EditFillInTheBlank(question);
     default:
       throw new Error(`Not Made Yet: ${question.type.toLowerCase()}`);
@@ -676,72 +632,18 @@ async function fetchCourseWithID(givenID) {
   }, 2000);
 }
 
-async function generateQuestion(generateQuestionObject, amount) {
-  const { type, languages, educationEnvironment, level, topics } =
-    generateQuestionObject;
+function shuffle(array) {
+  let currentIndex = array.length;
 
-  // TODO: Mickey #1
-  // Everything can be generated, but it will go through a validator
-  // The validator may/will include
-  // * Error Checkers
-  // * Comparators
-  // * Matchers
-  // * Encoders/Decoders
-  // * Loggers
+  // While there remain elements to shuffle...
+  while (currentIndex != 0) {
 
-  // TODO: Mickey #2
-  // Make a ReGenerate () Function that will be able to regenerate the
-  // results of just one question
+    // Pick a remaining element...
+    let randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
 
-  // TODO: Mickey #3
-  // Create premade structure to fill in data and ensure integrity of
-  // a json file. Invalid JSON files should be logged.
-
-  // TODO: Mickey #4
-  // Abstract long generations as classes and ensure all of them have
-  // this new validation process.
-
-  // TODO: Mickey #5
-  // Document all findings.
-
-  let query = `create for me in valid json format using ISO encoding, ${amount} questions with the keywords 'questions' in the ${languages
-    .map((language) => `${language}`)
-    .join("and ")} as well as their answers 
-    in the ${languages
-      .map((language) => `${language}`)
-      .join("and ")} with those exact key names in the topics of ${topics} 
-    for ${educationEnvironment}. 
-
-    The questions should be ${type} with its respective answer choices as well in the languages types ${languages
-    .map((language) => `${language}`)
-    .join("and ")}
-    as well as the correct answer option in ${languages
-      .map((language) => `${language}`)
-      .join("and ")}.
-
-    The questions should be ${level}.
-
-    The json format should have the following keys, 
-    "question, answerOptions, answer, type, hardness". 
-
-    question, answerOptions and answer should all come with the ${languages
-      .map((language) => `${language}`)
-      .join("and ")}
-
-    The answerOptions should only be available if the 
-    question type is multiple choice or true and false.
-
-    Do not add any invalid characters in the result please.`;
-
-  let unparsedJSONResponse = await generateGPTResponseFor(query);
-  let result = await JSON.parse(unparsedJSONResponse);
-
-  try {
-    if (result.questions) return result.questions;
-    else if (result.question) return result.question;
-    else if (result.questions.questions) return result.questions.questions;
-    else return result;
-  } catch (error) {
-    console.log(error);
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
   }
 }

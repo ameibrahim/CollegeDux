@@ -41,6 +41,7 @@
         "../js/Messaging.js",
         "../js/ExcelObjective.js",
         "../js/GPTPDF.js",
+        "../js/dictionary.js"
     );
 
     // These are for javascript files that you want

@@ -195,8 +195,9 @@ class EditMultipleChoice extends Question {
                 this.answerOptions[language][index] = event.target.textContent;
             })
 
-            answerOptionContainer.addEventListener("click", () => {
+            letterOption.addEventListener("click", () => {
                 disableOtherOptions();
+                // TODO: Better selection of correct answer
                 this.answer[language] = this.answerOptions[language][index];
                 console.log(this.answer[language], " == ", this.answerOptions[language][index]);
                 answerOptionContainer.className = "answer-option-container active";
