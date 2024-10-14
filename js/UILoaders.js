@@ -79,9 +79,12 @@ async function loadCoursesGeneric(options = "id", eventListener, metadata){
             let cardText = createElement("div", "card-text");
             let courseCardCode = createElement("div", "course-card-code");
             let courseCardTitle = createElement("div", "course-card-title");
-            
-            courseCardCode.textContent = courseCode;
-            courseCardTitle.textContent = title;
+
+            let courseCardCodeContent = createLocalizedTextElement(courseCode);   
+            let courseCardTitleContent = createLocalizedTextElement(title);   
+      
+            courseCardCode.appendChild(courseCardCodeContent);
+            courseCardTitle.appendChild(courseCardTitleContent);
 
             cardText.appendChild(courseCardCode);
             cardText.appendChild(courseCardTitle);
