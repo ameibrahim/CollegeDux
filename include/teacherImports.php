@@ -37,11 +37,13 @@
         "../js/localize.js",
         "../js/Schedules.js",
         "../js/excelParser.js",
+        "../js/courseManagement.js",
         "../js/Objectives.js",
         "../js/Messaging.js",
         "../js/ExcelObjective.js",
         "../js/GPTPDF.js",
-        "../js/dictionary.js"
+        "../js/dictionary.js",
+        "../js/UILoaders.js",
     );
 
     // These are for javascript files that you want
@@ -56,7 +58,6 @@
         "../js/headerBar.js",
         "../js/pdf-viewer.js",
         "../js/image-viewer.js",
-        "../js/courseManagement.js",
         "../js/Course.js",
         "../js/Question.js",
         "../js/Quiz.js",

@@ -255,7 +255,7 @@ async function loadCourses(options = "id") {
       courseCard.addEventListener("click", () => {
         switch (options) {
           case "id":
-            editCourseWith(id);
+            editCourseWith({id});
             break;
           case "all":
             // TODO: Using Subscriptions, toggle different popups.
@@ -331,17 +331,17 @@ async function loadCourses(options = "id") {
       type: "fetch",
     });
   }
-
-  function goToCourse(id) {
-    console.log("curent id:", id);
-    openPopup(".classroom-inner-overlay");
-    let classRoomOverlay = document.querySelector(".classroom-inner-overlay");
-    classRoomOverlay.setAttribute("id", id);
-    renderCourseOutline(id);
-  }
 }
 
-function editCourseWith(id) {
+function goToCourse({id}) {
+  console.log("curent id:", id);
+  openPopup(".classroom-inner-overlay");
+  let classRoomOverlay = document.querySelector(".classroom-inner-overlay");
+  classRoomOverlay.setAttribute("id", id);
+  renderCourseOutline(id);
+}
+
+function editCourseWith({id}) {
   let mainContainer = document.querySelector(".main-container");
   mainContainer.setAttribute("data-id", id);
 

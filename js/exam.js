@@ -482,7 +482,6 @@ async function editExam(courseObject) {
   openPopup(".edit-exam-container");
 
   const { id } = courseObject;
-
   const metadata = { id };
 
   const examsView = new ExamsView(metadata);

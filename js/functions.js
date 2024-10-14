@@ -272,9 +272,14 @@ async function getUserDetails() {
   }
 }
 
-function openPopup(selector) {
+function openPopup(selector, going="forward") {
   let popup = document.querySelector(selector);
   popup.style.display = "grid";
+
+  try{
+    if( going == "back")
+      removeURLParameter("id");
+  }catch(error){}
 }
 
 function closePopup(selector) {
@@ -379,16 +384,15 @@ async function saveAssessmentAsJSON(
   assessmentType,
   type
 ) {
-
   function escapeNonASCII(jsonString) {
-    return jsonString.replace(/[\u007F-\uFFFF]/g, function(ch) {
-      return '\\u' + ('0000' + ch.charCodeAt(0).toString(16)).slice(-4);
+    return jsonString.replace(/[\u007F-\uFFFF]/g, function (ch) {
+      return "\\u" + ("0000" + ch.charCodeAt(0).toString(16)).slice(-4);
     });
   }
 
   let JSONString = JSON.stringify(ArrayContainingObjects);
   JSONString = escapeNonASCII(JSONString);
-  
+
   console.log("assessment type: ", assessmentType);
 
   let correctPath;
@@ -573,6 +577,8 @@ async function fetchCourseWithID(givenID) {
 
   let selectedCourse = courses[0];
 
+  console.log("selectedCourse: ", selectedCourse);
+
   (function sortCourses(course) {
     course.lectures.sort((firstLecture, secondLecture) => {
       firstLecture.subtopics.sort(
@@ -637,13 +643,43 @@ function shuffle(array) {
 
   // While there remain elements to shuffle...
   while (currentIndex != 0) {
-
     // Pick a remaining element...
     let randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
 
     // And swap it with the current element.
     [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex], array[currentIndex]];
+      array[randomIndex],
+      array[currentIndex],
+    ];
   }
 }
+
+function setURLParameter(name, value){
+  let url = new URL(window.location);
+  let urlSearchParams = new URLSearchParams(url.search);
+
+  urlSearchParams.set(name, value);
+  url.search = urlSearchParams.toString();
+  window.history.pushState(null, null, url.toString());
+}
+
+function getURLParameter(identifier){
+  let searchParams = new URLSearchParams(window.location.search);
+  const hasIdentifier = searchParams.has(identifier); 
+  return hasIdentifier ? searchParams.get(identifier) : null;
+}
+
+function removeURLParameter(identifier){
+  let url = new URL(window.location);
+  let searchParams = new URLSearchParams(url.search);
+  const hasIdentifier = searchParams.has(identifier); 
+  hasIdentifier ? searchParams.delete(identifier) : false;
+
+  console.log("search params: ", searchParams);
+
+  url.search = searchParams.toString();
+  window.history.pushState(null, null, url.toString());
+}
+
+

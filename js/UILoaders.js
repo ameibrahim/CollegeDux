@@ -92,7 +92,12 @@ async function loadCoursesGeneric(options = "id", eventListener, metadata){
             courseCard.appendChild(cardText);
             courseCard.appendChild(cardOverlay);
 
-            courseCard.addEventListener("click", () => eventListener(course));
+            courseCard.addEventListener("click", () => {
+                closePopup('.course-view-container');
+                setURLParameter("id", id);
+                console.log("setting URL id: ", id);
+                eventListener(course);
+            });
             
             if( showSubscription ){
                 let subscriptionResult = await getCourseSubscriptionStatus(id, userID);

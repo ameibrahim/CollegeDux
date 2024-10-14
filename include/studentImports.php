@@ -43,11 +43,15 @@
         "../js/localize.js",
         "../js/PDFSearch.js",
         "../js/Messaging.js",
-        "../js/dictionary.js"
+        "../js/dictionary.js",
+        "../js/UILoaders.js",
+        "../js/courseManagement.js",
+        "../js/Classroom.js"
     );
 
     // These are for javascript files that you want
     // to run when the page completes loading.
+    // Recheck some of these imports
     $jsPaths_Defer = array(
         "../js/sidebar.js",
         "../js/dropdown.js",
@@ -57,11 +61,9 @@
         "../js/headerBar.js",
         "../js/pdf-viewer.js",
         "../js/image-viewer.js",
-        "../js/courseManagement.js",
         "../js/Course.js",
         "../js/Question.js",
         "../js/Quiz.js",
-        "../js/Classroom.js",
         "../js/GlobalCache.js",
         "../js/DuxChat.js",
         "../js/Ebooks.js",

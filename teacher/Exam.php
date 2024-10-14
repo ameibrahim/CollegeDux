@@ -8,7 +8,6 @@
     <page data-id="Exam"></page>
 
     <?php include '../include/teacherImports.php'; ?>
-    <script src="../js/UILoaders.js?4"></script>
     <script src="../js/exam.js?5"></script>
     <script src="../js/BatchGenerator.js?2"></script>
 
@@ -40,7 +39,7 @@
 
             <div class="edit-exam-container inner-overlay">
 
-                <div class="back-arrow" onclick="openPopup('.course-view-container'); closePopup('.edit-exam-container')">
+                <div class="back-arrow" onclick="openPopup('.course-view-container','back'); closePopup('.edit-exam-container')">
                     <img class="icon" src="../assets/icons/fi/fi-rr-arrow-alt-left.svg" alt="">
                 </div>
 
@@ -54,6 +53,11 @@
     </div>
 
     <script>
+
+        const URLID = getURLParameter("id");
+        if(URLID && URLID.length > 1){
+            editExam({ id: URLID });
+        }
 
         ( async () => {
             await loadCoursesGeneric("id", editExam, { emptyMessage: "No Courses To Create Exams For Yet." });

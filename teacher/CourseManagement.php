@@ -44,7 +44,7 @@
 
             <div class="edit-course-container inner-overlay">
 
-                <div class="back-arrow" onclick="openPopup('.course-view-container'); closeEditCourseContainer()">
+                <div class="back-arrow" onclick="openPopup('.course-view-container','back'); closeEditCourseContainer()">
                     <img class="icon" src="../assets/icons/fi/fi-rr-arrow-alt-left.svg" alt="">
                 </div>
 
@@ -59,61 +59,66 @@
     <?php include 'components/editLearningObjectivesOverlay.php' ?>
 
     <script>
-        
-        window.addEventListener("load", function() {
-            loadCourses("id");
-        })
+
+        const URLID = getURLParameter("id");
+        if (URLID && URLID.length > 1) {
+            editCourseWith({ id: URLID });
+        }
+
+        (async () => {
+            await loadCoursesGeneric("id", editCourseWith, { emptyMessage: "No courses yet" });
+        })();
 
         let courseImageObject;
 
         async function createCourse(event) {
-    // Prevent the default form submission
-    event.preventDefault();
+            // Prevent the default form submission
+            event.preventDefault();
 
-    let createCourseLoader = loadLoader("Creating Course");
+            let createCourseLoader = loadLoader("Creating Course");
 
-    let courseCode = document.querySelector(".course-code").value;
-    let courseName = document.querySelector(".course-name").value;
-    let courseLanguage = document.querySelector(".course-language").value;
-    let courseIsLanguage = document.querySelector(".course-is-language").value;
+            let courseCode = document.querySelector(".course-code").value;
+            let courseName = document.querySelector(".course-name").value;
+            let courseLanguage = document.querySelector(".course-language").value;
+            let courseIsLanguage = document.querySelector(".course-is-language").value;
 
-    let isLanguageCourse = (courseIsLanguage === "yes") ? "true" : "false";
+            let isLanguageCourse = (courseIsLanguage === "yes") ? "true" : "false";
 
-    let id = uniqueID(1);
+            let id = uniqueID(1);
 
-    let { id: creatorID } = await getGlobalDetails();
+            let { id: creatorID } = await getGlobalDetails();
 
-    let params = `id=${id}&&courseCode=${courseCode}&&title=${courseName}&&language=${courseLanguage}&&isLanguage=${isLanguageCourse}&&creatorID=${creatorID}&&image=''`;
+            let params = `id=${id}&&courseCode=${courseCode}&&title=${courseName}&&language=${courseLanguage}&&isLanguage=${isLanguageCourse}&&creatorID=${creatorID}&&image=''`;
 
-    if (courseImageObject) {
-        try {
-            let { newFileName } = await uploadFile(courseImageObject);
-            if (newFileName) params = `id=${id}&&courseCode=${courseCode}&&title=${courseName}&&language=${courseLanguage}&&isLanguage=${isLanguageCourse}&&creatorID=${creatorID}&&image=${newFileName}`;
-            console.log(params);
-        } catch (error) {
-            console.log(error);
+            if (courseImageObject) {
+                try {
+                    let { newFileName } = await uploadFile(courseImageObject);
+                    if (newFileName) params = `id=${id}&&courseCode=${courseCode}&&title=${courseName}&&language=${courseLanguage}&&isLanguage=${isLanguageCourse}&&creatorID=${creatorID}&&image=${newFileName}`;
+                    console.log(params);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
+            let result = await AJAXCall({
+                phpFilePath: "../include/course/addNewCourse.php",
+                rejectMessage: "course error",
+                params,
+                type: "post"
+            });
+
+            console.log(result);
+
+            // objectives.
+            // await saveLearningObjectivesInDatabase(id);
+
+            await loadCoursesGeneric("id", editCourseWith, { emptyMessage: "No courses yet" });
+
+            setTimeout(() => {
+                closeCreateCourseOverlay();
+                removeLoader(createCourseLoader);
+            }, 2000);
         }
-    }
-
-    let result = await AJAXCall({
-        phpFilePath: "../include/course/addNewCourse.php",
-        rejectMessage: "course error",
-        params,
-        type: "post"
-    });
-
-    console.log(result);
-
-    // objectives.
-    // await saveLearningObjectivesInDatabase(id);
-
-    loadCourses();
-
-    setTimeout(() => {
-        closeCreateCourseOverlay();
-        removeLoader(createCourseLoader);
-    }, 2000);
-}
 
 
         function openCreateCourseOverlay() {
@@ -137,7 +142,7 @@
             courseImageObject = event.target.files[0];
 
             output.src = URL.createObjectURL(event.target.files[0]);
-            output.onload = function() {
+            output.onload = function () {
                 URL.revokeObjectURL(output.src) // free memory
             }
         }

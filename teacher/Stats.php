@@ -1,67 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Dux Teacher</title>
-        <page data-id="Class Stats"></page> 
 
-        <?php include '../include/teacherImports.php'; ?>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dux Teacher</title>
+    <page data-id="Class Stats"></page>
 
-        <link rel="stylesheet" href="../css/grid-table.css?4">
-        <script src="../js/StatsView.js?3" defer></script>
-        <script src="../js/Stats.js?1"></script>
-        <script src="../js/UILoaders.js?3"></script>
+    <?php include '../include/teacherImports.php'; ?>
 
-    </head>
-    <body>
+    <link rel="stylesheet" href="../css/grid-table.css?4">
+    <script src="../js/StatsView.js?3" defer></script>
+    <script src="../js/Stats.js?1"></script>
 
-        <?php include 'components/header.php'; ?>
+</head>
 
-        <div class="outer-container">
-            <?php include 'components/sidebar.php'; ?>
-            <div class="main-container">
-                <h1 class="large-title">Grades</h1>
+<body>
 
-                <div class="course-view-container" id="load-exam-container" style="margin-top:10px">
-                    <div class="container-message blank course-view-container-loader" style="height: 100%">
-                        <div class="sk-fold">
-                            <div class="sk-fold-cube"></div>
-                            <div class="sk-fold-cube"></div>
-                            <div class="sk-fold-cube"></div>
-                            <div class="sk-fold-cube"></div>
-                        </div>
+    <?php include 'components/header.php'; ?>
+
+    <div class="outer-container">
+        <?php include 'components/sidebar.php'; ?>
+        <div class="main-container">
+            <h1 class="large-title">Grades</h1>
+
+            <div class="course-view-container" id="load-exam-container" style="margin-top:10px">
+                <div class="container-message blank course-view-container-loader" style="height: 100%">
+                    <div class="sk-fold">
+                        <div class="sk-fold-cube"></div>
+                        <div class="sk-fold-cube"></div>
+                        <div class="sk-fold-cube"></div>
+                        <div class="sk-fold-cube"></div>
                     </div>
-                </div>
-
-                <div class="load-grades-container inner-overlay">
-
-                    <div class="back-arrow" onclick="openPopup('.course-view-container'); closePopup('.load-grades-container')">
-                        <img class="icon" src="../assets/icons/fi/fi-rr-arrow-alt-left.svg" alt="">
-                    </div>
-
-                    <?php include 'components/loadGradesOverlay.php' ?>
-
                 </div>
             </div>
+
+            <div class="load-grades-container inner-overlay">
+
+                <div class="back-arrow"
+                    onclick="openPopup('.course-view-container','back'); closePopup('.load-grades-container')">
+                    <img class="icon" src="../assets/icons/fi/fi-rr-arrow-alt-left.svg" alt="">
+                </div>
+
+                <?php include 'components/loadGradesOverlay.php' ?>
+
+            </div>
         </div>
+    </div>
 
-        <style>
+    <style>
+        .load-grades-container {
+            grid-template-rows: auto auto 1fr;
+        }
+    </style>
 
-            .load-grades-container{
-                grid-template-rows: auto auto 1fr;
-            }
+    <script>
 
-        </style>
+        const URLID = getURLParameter("id");
+        if (URLID && URLID.length > 1) loadGrades({ id: URLID });
 
-        <script>
+        (async () => {
 
-            ( async () => {
+            await loadCoursesGeneric("id", loadGrades, { emptyMessage: "No Course To Show Grades For Yet." });
 
-                await loadCoursesGeneric("id", loadGrades, { emptyMessage: "No Course To Show Grades For Yet."});
+        })();
 
-            })();
+    </script>
+</body>
 
-        </script>
-    </body>
 </html>
