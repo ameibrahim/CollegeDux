@@ -18,9 +18,7 @@ class Classroom {
 
     renderTitle(){
         let titleElement = findElement(".classroom-course-title");
-        let textElement = document.createElement("div");
-
-        textElement.textContent = this.title;
+        let textElement = createLocalizedTextElement(this.title);
         titleElement.innerHTML = "";
         titleElement.appendChild(textElement);
     }

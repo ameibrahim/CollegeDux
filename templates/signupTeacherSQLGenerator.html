@@ -79,6 +79,17 @@
 
     <script>
 
+            const makeUnique = (fn, count) => {
+                let cache = {};
+                let current = 0;
+                while(current <= count){
+                    const result = fn();
+                    cache[result] = result;
+                    current = Object.entries(cache).length
+                }
+                return cache;
+            }
+
         async function parseExcelForCourseObject(url){
 
         const file = await (await fetch(url)).arrayBuffer();
@@ -107,14 +118,18 @@
         let userDetailsSQLArray = [];
         let passwords = []
 
-        lessonStructuredObjects.forEach( rowObject => {
+        const count = lessonStructuredObjects.length;
+        const _uniqueMadeIDs = makeUnique(uniqueID, count);
+        const uniqueMadeIDs = Object.entries(_uniqueMadeIDs).map(([key,value]) => key);
 
-            let id = uniqueID(1);
+        lessonStructuredObjects.forEach( (rowObject,index) => {
+
+            let id = uniqueMadeIDs[index];
             let password = uniqueID(-1);
             let timestamp = new Date().toJSON();
 
-            userSQLArray.push(`('${id}', '${rowObject.Email}', '${password}', 'teacher', '${timestamp}')`);
-            userDetailsSQLArray.push(`('${id}', '${rowObject.Name}', 'Unset', 'demoAccount.png', '00000000000', 'unset', '${rowObject.Branch}')`);
+            userSQLArray.push(`('${id}', '${rowObject.Email}', '${password}', 'student', '${timestamp}')`);
+            userDetailsSQLArray.push(`('${id}', '${rowObject.Name}', 'unset', 'demoAccount.png', '00000000000', 'unset', 'seymen college')`);
             passwords.push(password);
 
         });

@@ -46,8 +46,7 @@ class Course {
 
   renderTitle() {
     let titleElement = findElement("#course-title");
-    let textElement = document.createElement("p");
-    textElement.textContent = this.title;
+    let textElement = createLocalizedTextElement(this.title);
     titleElement.innerHTML = "";
     titleElement.appendChild(textElement);
   }
@@ -181,10 +180,11 @@ class Course {
         let subtopicResourceWrapper = document.createElement("div");
         subtopicResourceWrapper.className = "subtopics-resource-wrapper";
 
-        subtopic.resources && subtopic.resources.forEach((resource) => {
-          const resourceElement = this.createSubtopicItem(resource);
-          subtopicResourceWrapper.appendChild(resourceElement);
-        });
+        subtopic.resources &&
+          subtopic.resources.forEach((resource) => {
+            const resourceElement = this.createSubtopicItem(resource);
+            subtopicResourceWrapper.appendChild(resourceElement);
+          });
 
         subtopicWrapper.appendChild(subtopicResourceWrapper);
         subtopicsContainer.appendChild(subtopicWrapper);
@@ -738,7 +738,7 @@ async function generateQuiz(
   let quizQuestions = [];
 
   for await (const type of types) {
-    try{
+    try {
       console.log("type: ", type);
       const generateQuestionObject = {
         type,
@@ -748,14 +748,14 @@ async function generateQuiz(
         topics,
         level: getRandomElement(levels),
       };
-  
+
       console.log("generateQuestionObject: ", generateQuestionObject);
-  
+
       let result = await generateQuestion(generateQuestionObject, 4);
       console.log("result: ", result);
       quizQuestions = [...quizQuestions, ...result];
-    }catch(error){
-        continue;
+    } catch (error) {
+      continue;
     }
   }
 
@@ -989,5 +989,5 @@ async function deleteQuiz(id) {
 function refreshTeacherCourseOutline() {
   let mainContainer = document.querySelector(".main-container");
   let id = mainContainer.getAttribute("data-id");
-  editCourseWith({id});
+  editCourseWith({ id });
 }

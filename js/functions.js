@@ -156,14 +156,22 @@ function cascadingDateChanges() {
 
 // }
 
-function uniqueID(strength = 2) {
-  const date = Date.now() + getRandomArbitrary(0, 9999);
-  const dateReversed = parseInt(String(date).split("").reverse().join(""));
+function makeUnique(strength){
+  let cache = {};
+  let n = uniqueID(strength);
+  while(!n in cache){
+    n = uniqueID(strength);
+  }
+  cache[n] = n;
+}
+
+function uniqueID(strength = 1) {
+  const date = Date.now() + getRandomArbitrary(3000, 9999);
+  const dateReversed =  getRandomArbitrary(3000, 9999) + parseInt(String(date).split("").reverse().join(""));
   const base36 = (number) => number.toString(36);
   if (strength == 1) return base36(date);
   if (strength == -1) return base36(dateReversed);
   return base36(dateReversed) + base36(date);
-
   // return crypto.randomUUID().split("-").join("");
 }
 
