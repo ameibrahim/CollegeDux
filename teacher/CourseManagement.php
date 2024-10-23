@@ -26,8 +26,13 @@
                     <text>Course Management</text>
                 </h1>
 
-                <div class="button" onclick="openCreateCourseOverlay()">
-                    <text>Create Course</text>
+                <div class="two-column-grid">
+                    <div class="button" onclick="openPopup('.create-mover-overlay'); startCourseMover()">
+                        <text>Move Course</text>
+                    </div>
+                    <div class="button" onclick="openCreateCourseOverlay()">
+                        <text>Create Course</text>
+                    </div>
                 </div>
             </div>
 
@@ -56,6 +61,7 @@
     </div>
 
     <?php include 'components/courseCreationOverlay.php' ?>
+    <?php include 'components/courseMoverOverlay.php' ?>
     <?php include 'components/editLearningObjectivesOverlay.php' ?>
 
     <script>
@@ -161,6 +167,26 @@
             courseCodeElement.value = "";
             courseTitleElement.value = "";
         }
+
+        async function startCourseMover() {
+
+            let { id: currentOwner } = await getGlobalDetails();
+            const courseMoverEngine = new CourseMoverEngine({ currentOwner });
+
+            const recipientListContainer = document.querySelector(".teacher-list-container");
+            const courseListContainer = document.querySelector(".course-list-container");
+            const moveButton = document.querySelector(".move-button");
+            const courseCountElement = document.querySelector(".course-count");
+
+            courseMoverEngine.setRecipientListContainer(recipientListContainer)
+            courseMoverEngine.setCourseListContainer(courseListContainer)
+            courseMoverEngine.setMoveButton(moveButton)
+            courseMoverEngine.setCourseCountElement(courseCountElement)
+            courseMoverEngine.setup()
+
+        }
+
+
     </script>
 
     <?php include 'components/uploadCourseMaterialOverlay.php'; ?>

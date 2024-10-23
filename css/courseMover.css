@@ -1,0 +1,135 @@
+.checkbox > input {
+  display: none;
+}
+
+.checkbox {
+  display: grid;
+  width: 100%;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+}
+
+.checkbox > label {
+  padding: 10px;
+  position: relative;
+  z-index: 1;
+  border-radius: 5px;
+  border: 2px solid rgb(192, 185, 185);
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  background-color: white;
+  opacity: 0.6;
+  transition: 0.3s all;
+  cursor: pointer;
+}
+.person-checkbox > label {
+  border-radius: 10px;
+  border-style: dashed;
+  border-width: 1.8px;
+}
+
+.checkbox > label .background-image img {
+  width: 70px;
+  height: 100%;
+  aspect-ratio: 1/1;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.person-checkbox > label .background-image img {
+  width: 50px;
+  padding: 10px 10px 10px 0px;
+  height: 100%;
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+}
+
+.checkbox > input:checked + label {
+  border-color: #9c0723;
+  opacity: 1;
+}
+
+label:hover {
+  border-color: #9c0723;
+  opacity: 1;
+  transform: scale(1.03);
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 20px;
+}
+
+.checkbox-details-container {
+  padding: 10px;
+  overflow: hidden;
+  background-color: rgb(249, 240, 240);
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  font-size: 10px;
+}
+
+.person-checkbox .checkbox-details-container {
+  border-radius: 10px;
+}
+
+.checkbox-details-container .course-title, .checkbox-details-container .course-code , .checkbox-details-container .person-name, .checkbox-details-container .person-email {
+  width: 140px;
+  word-break: break-all;
+}
+
+.split-view {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100%;
+}
+
+.create-mover-overlay .popup {
+    grid-template-rows: auto 1fr auto;
+}
+
+.create-mover-overlay .popup .popup-body {
+    padding: 0px;
+    height: 100%;
+}
+
+.create-mover-overlay .popup .popup-footer{
+    border-top: 1px solid rgb(213, 213, 213);
+    padding: 10px;
+}
+
+.split-view {
+    height: 100%;
+}
+
+.split-view > * {
+    border-right: 1px solid rgb(213, 213, 213);
+    padding: 26px;
+    max-height: 400px;
+    overflow: scroll;
+    display: grid;
+    grid-gap: 20px;
+    align-items: start;
+    grid-template-rows: auto 1fr;
+}
+
+.split-view > *:last-child {
+    border-right: none;
+}
+
+.badge-title {
+  background: var(--accent);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  font-size: 9px;
+  letter-spacing: 1.8px;
+  text-align: center;
+  justify-self: center;
+}

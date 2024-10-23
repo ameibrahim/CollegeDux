@@ -26,7 +26,8 @@
         "../css/exam.css",
         "../css/classroom.css",
         "../css/image-viewer.css",
-        "../css/messaging.css"
+        "../css/messaging.css",
+        "../css/courseMover.css",
     );
 
     // These are for javascript files that you want
@@ -44,6 +45,7 @@
         "../js/GPTPDF.js",
         "../js/dictionary.js",
         "../js/UILoaders.js",
+        "../js/CourseMoverEngine.js",
     );
 
     // These are for javascript files that you want

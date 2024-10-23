@@ -55,6 +55,9 @@
     font-weight: 600;
     cursor: pointer;
     transition: 0.1s;
+    display: grid;
+    place-content: center;
+    text-align: center;
 }
 
 .dialog .options > *:hover {

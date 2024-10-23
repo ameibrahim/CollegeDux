@@ -13,6 +13,7 @@
     $query = "
     SELECT *
     FROM `courses` WHERE creatorID = '$id'
+    ORDER BY courses.title
     ";
 
     $coursesResult = mysqli_query($conn,$query);
