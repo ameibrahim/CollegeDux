@@ -11,10 +11,16 @@ if (!$conn) {
 }
 
 // Function to clean Turkish special characters
-
-function clean_string($text) {
+function clean_string($text, $is_email = false) {
     // This regex pattern includes Turkish characters (ç, ğ, ı, ö, ş, ü, Ç, Ğ, İ, Ö, Ş, Ü)
-    $text = preg_replace('/[^\p{L}\p{N}\sçğıöşüÇĞİÖŞÜ]/u', '', $text); // Remove non-alphanumeric characters except spaces, Unicode letters/numbers, and Turkish characters
+    // Remove non-alphanumeric characters except spaces, Unicode letters/numbers, and Turkish characters
+    $text = preg_replace('/[^\p{L}\p{N}\sçğıöşüÇĞİÖŞÜ]/u', '', $text); 
+
+    // If it's an email, preserve dots and the @ symbol
+    if ($is_email) {
+        $text = preg_replace('/[^.@\p{L}\p{N}]/u', '', $text); // Allow . and @ in emails
+    }
+    
     $text = strtolower($text); // Convert to lowercase
     return $text;
 }
@@ -38,7 +44,7 @@ if ($coursesResult) {
             'id' => $row['id'],
             'name' => clean_string($row['name']),  // Clean the name
             'image' => $row['image'],
-            'email' => $row['email'] // Clean the email if needed
+            'email' => clean_string($row['email'], true) // Clean the email, preserving . and @
         ];
     }
 
