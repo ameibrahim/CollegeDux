@@ -37,6 +37,11 @@ $coursesResult = mysqli_query($conn, $query);
 // Initialize an empty array to hold users
 $users = [];
 
+function escape_email($email) {
+    // Use htmlspecialchars to escape special HTML characters
+    return htmlspecialchars($email, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+}
+
 if ($coursesResult) {
     // Fetch all courses data and assign to $users array
     while ($row = mysqli_fetch_assoc($coursesResult)) {
@@ -44,7 +49,7 @@ if ($coursesResult) {
             'id' => $row['id'],
             'name' => clean_string($row['name']),  // Clean the name
             'image' => $row['image'],
-            'email' => $row['email'] // Clean the email, preserving . and @
+            'email' => escape_email($row['email']) // Clean the email, preserving . and @
         ];
     }
 
