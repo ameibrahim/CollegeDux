@@ -8,7 +8,7 @@ if (!$conn) {
 }
 
 $query = "
-        SELECT * FROM users
+       SELECT * FROM `users`
     ";
 
 $result = mysqli_query($conn, $query);
@@ -16,6 +16,8 @@ $result = mysqli_query($conn, $query);
 if (!$result) {
     echo json_encode(["error" => "Query failed: " . mysqli_error($conn)]);
     exit;
+}else{
+    var_dump("heeeee",$result);
 }
 
 $teachers = mysqli_fetch_all($result, MYSQLI_ASSOC);
