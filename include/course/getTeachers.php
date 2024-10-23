@@ -44,7 +44,7 @@ if ($coursesResult) {
             'id' => $row['id'],
             'name' => clean_string($row['name']),  // Clean the name
             'image' => $row['image'],
-            'email' => clean_string($row['email'], true) // Clean the email, preserving . and @
+            'email' => $row['email'] // Clean the email, preserving . and @
         ];
     }
 
