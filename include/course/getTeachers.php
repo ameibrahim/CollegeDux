@@ -5,15 +5,10 @@ $conn = OpenConnection();
 
 if (!$conn) {
     die(json_encode(["error" => "Connection failed: " . mysqli_connect_error()]));
-}else{
-    echo "hi ocam";
 }
 
 $query = "
-        SELECT users.id, userDetails.name, userDetails.image, users.email FROM `users`
-        INNER JOIN `userDetails` ON userDetails.id = users.id
-        WHERE users.role = 'teacher'
-        ORDER BY userDetails.name
+        SELECT users.id, users.email FROM `users`
     ";
 
 $result = mysqli_query($conn, $query);
