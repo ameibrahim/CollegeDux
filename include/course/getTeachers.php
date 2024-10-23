@@ -21,11 +21,22 @@ $coursesResult = mysqli_query($conn, $query);
 
 // Check if query executed successfully
 if ($coursesResult) {
+    // Get number of rows
+    $num_rows = mysqli_num_rows($coursesResult);
+
     // Fetch all courses data
     $courses = mysqli_fetch_all($coursesResult, MYSQLI_ASSOC);
 
-    // Output as JSON
-    echo json_encode($courses, JSON_UNESCAPED_UNICODE);
+    // Print number of rows
+    echo "Number of rows: " . $num_rows . "<br>";
+
+    // Print all courses data
+    foreach ($courses as $course) {
+        echo "ID: " . $course['id'] . "<br>";
+        echo "Name: " . $course['name'] . "<br>";
+        echo "Image: " . $course['image'] . "<br>";
+        echo "Email: " . $course['email'] . "<br><br>";
+    }
 } else {
     echo "Error executing query: " . mysqli_error($conn);
 }
