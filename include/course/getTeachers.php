@@ -39,9 +39,7 @@ if ($coursesResult) {
     while ($row = mysqli_fetch_assoc($coursesResult)) {
         $users[] = [
             'id' => $row['id'],
-            'name' => clean_string($row['name']),  // Clean the name
-            'image' => $row['image'],
-            'email' => clean_string($row['email']) // Clean the email if needed
+            'image' => $row['image']
         ];
     }
 
