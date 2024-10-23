@@ -21,13 +21,13 @@ $coursesResult = mysqli_query($conn, $query);
 
 // Check if query executed successfully
 if ($coursesResult) {
-    // Fetch all courses data as an associative array
+    // Fetch all courses data
     $courses = mysqli_fetch_all($coursesResult, MYSQLI_ASSOC);
 
-    // Encode the result as JSON and output it
-    echo json_encode($courses);
+    // Output as JSON
+    echo json_encode($courses, JSON_UNESCAPED_UNICODE);
 } else {
-    echo json_encode(array("error" => mysqli_error($conn)));
+    echo "Error executing query: " . mysqli_error($conn);
 }
 
 mysqli_close($conn);
