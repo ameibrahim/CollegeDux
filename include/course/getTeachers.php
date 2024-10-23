@@ -8,7 +8,10 @@ if (!$conn) {
 }
 
 $query = "
-        SELECT users.id, users.email FROM `users`
+        SELECT users.id, userDetails.name, userDetails.image, users.email FROM users
+        INNER JOIN userDetails ON userDetails.id = users.id
+        WHERE users.role = 'teacher'
+        ORDER BY userDetails.name
     ";
 
 $result = mysqli_query($conn, $query);
