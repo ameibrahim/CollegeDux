@@ -1,26 +1,23 @@
 <?php
-include "../databaseConnection.php";
 
-$conn = OpenConnection();
+    include "../databaseConnection.php"; 
 
-if (!$conn) {
-    die(json_encode(["error" => "Connection failed: " . mysqli_connect_error()]));
-}
+    $conn = OpenConnection();
 
-$query = "
-       SELECT * FROM `users`
+    $id = "ef87w9r42rbw";
+
+    if (!$conn) {
+        die("Connection failed: " . mysqli_connect_error());
+    }
+
+    $query = "
+        SELECT *
+        FROM `courses` WHERE creatorID = '$id'
+        ORDER BY courses.title
     ";
 
-$result = mysqli_query($conn, $query);
+    $coursesResult = mysqli_query($conn,$query);
+    $courses = mysqli_fetch_all($coursesResult,MYSQLI_ASSOC);
 
-if (!$result) {
-    echo json_encode(["error" => "Query failed: " . mysqli_error($conn)]);
-    exit;
-}else{
-    var_dump("heeeee",$result);
-}
-
-$teachers = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-echo json_encode($teachers);
+    echo json_encode($courses);
 
