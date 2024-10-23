@@ -10,6 +10,18 @@ if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
+// Function to clean Turkish special characters
+function clean_string($string) {
+    // Replace Turkish characters with their ASCII equivalents
+    $replace = [
+        'Ç' => 'C', 'Ğ' => 'G', 'İ' => 'I', 'Ö' => 'O', 'Ş' => 'S', 'Ü' => 'U',
+        'ç' => 'c', 'ğ' => 'g', 'ı' => 'i', 'ö' => 'o', 'ş' => 's', 'ü' => 'u'
+    ];
+
+    // Return the cleaned string
+    return strtr($string, $replace);
+}
+
 $query = "
     SELECT users.id, userDetails.name, userDetails.image, users.email 
     FROM users
@@ -27,9 +39,9 @@ if ($coursesResult) {
     while ($row = mysqli_fetch_assoc($coursesResult)) {
         $users[] = [
             'id' => $row['id'],
-            'name' => $row['name'],
+            'name' => clean_string($row['name']),  // Clean the name
             'image' => $row['image'],
-            'email' => $row['email']
+            'email' => clean_string($row['email']) // Clean the email if needed
         ];
     }
 
