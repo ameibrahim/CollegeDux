@@ -38,7 +38,7 @@ if ($coursesResult) {
             'id' => $row['id'],
             'name' => clean_string($row['name']),  // Clean the name
             'image' => $row['image'],
-            'email' => clean_string($row['email']) // Clean the email if needed
+            'email' => $row['email'] // Clean the email if needed
         ];
     }
 
