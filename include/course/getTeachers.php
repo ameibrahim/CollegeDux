@@ -14,7 +14,7 @@
         SELECT users.id, userDetails.name, userDetails.image, users.email FROM users
         INNER JOIN userDetails ON userDetails.id = users.id
         WHERE users.role = 'teacher'
-        LIMIT 150
+        LIMIT 110
     ";
 
     $coursesResult = mysqli_query($conn,$query);
