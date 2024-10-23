@@ -11,9 +11,9 @@
     }
 
     $query = "
-        SELECT *
-        FROM `courses` WHERE creatorID = '$id'
-        ORDER BY courses.title
+        SELECT users.id, userDetails.name, userDetails.image, users.email FROM users
+        INNER JOIN userDetails ON userDetails.id = users.id
+        WHERE users.role = 'teacher'
     ";
 
     $coursesResult = mysqli_query($conn,$query);
