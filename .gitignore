@@ -8,4 +8,4 @@ objectives/*json
 exam/generated/*
 exam/taken/*
 templates/*
-include/course/getTeachersA.php
+/include/course/getTeachersA.php
