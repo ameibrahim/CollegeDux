@@ -1,11 +1,10 @@
 <?php
-
     include "../databaseConnection.php"; 
 
     $conn = OpenConnection();
 
     if (!$conn) {
-        die("Connection failed: " . mysqli_connect_error());
+        die(json_encode(["error" => "Connection failed: " . mysqli_connect_error()]));
     }
 
     $query = "
@@ -15,8 +14,14 @@
         ORDER BY userDetails.name
     ";
 
-    $result = mysqli_query($conn,$query);
-    $teachers = mysqli_fetch_all($result,MYSQLI_ASSOC);
+    $result = mysqli_query($conn, $query);
+
+    if (!$result) {
+        echo json_encode(["error" => "Query failed: " . mysqli_error($conn)]);
+        exit;
+    }
+
+    $teachers = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     echo json_encode($teachers);
 

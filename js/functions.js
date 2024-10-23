@@ -199,23 +199,28 @@ function AJAXCall(callObject) {
 
     xhr.onload = function () {
       if (this.status == 200) {
-        let result =
-          type == "fetch" ? JSON.parse(this.responseText) : this.responseText;
+        console.log("Raw response:", this.responseText);  // Log the raw response
+        try {
+          let result = type === "fetch" ? JSON.parse(this.responseText) : this.responseText;
 
-        //TODO: Take a look one more time
-        if (result.length < 1 && type != "fetch")
-          reject(rejectMessage || "SQLError");
-        else {
-          resolve(result);
+          if (result.length < 1 && type !== "fetch") reject(rejectMessage || "SQLError");
+          else resolve(result);
+        } catch (e) {
+          reject("JSON Parse Error: " + e.message);
         }
       } else {
-        reject("Error With PHP Script");
+        reject("Error With PHP Script: Status " + this.status);
       }
+    };
+
+    xhr.onerror = function () {
+      reject("Network Error");
     };
 
     xhr.send(params);
   });
 }
+
 
 function loadImage(event, outputElement) {
   const output = document.querySelector(outputElement);
