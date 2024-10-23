@@ -11,21 +11,35 @@ if (!$conn) {
 }
 
 $query = "
-        SELECT users.id, userDetails.name, userDetails.image, users.email FROM users
-        INNER JOIN userDetails ON userDetails.id = users.id
-        WHERE users.role = 'teacher'
-        
-    ";
+    SELECT users.id, userDetails.name, userDetails.image, users.email 
+    FROM users
+    INNER JOIN userDetails ON userDetails.id = users.id
+    WHERE users.role = 'teacher'
+";
 
 $coursesResult = mysqli_query($conn, $query);
-$courses = mysqli_fetch_all($coursesResult, MYSQLI_ASSOC);
-$all = array($courses);
 
-foreach ($all as $x) {
-    // var_dump("ideeeeeeeeeeeeeee",$x);
+// Check if query executed successfully
+if ($coursesResult) {
+    // Get number of rows
+    $num_rows = mysqli_num_rows($coursesResult);
 
-    echo json_encode($x);
+    // Fetch all courses data
+    $courses = mysqli_fetch_all($coursesResult, MYSQLI_ASSOC);
+
+    // Print number of rows
+    echo "Number of rows: " . $num_rows . "<br>";
+
+    // Print all courses data
+    foreach ($courses as $course) {
+        echo "ID: " . $course['id'] . "<br>";
+        echo "Name: " . $course['name'] . "<br>";
+        echo "Image: " . $course['image'] . "<br>";
+        echo "Email: " . $course['email'] . "<br><br>";
+    }
+} else {
+    echo "Error executing query: " . mysqli_error($conn);
 }
 
-
-
+mysqli_close($conn);
+?>
