@@ -11,15 +11,12 @@ if (!$conn) {
 }
 
 // Function to clean Turkish special characters
-function clean_string($string) {
-    // Replace Turkish characters with their ASCII equivalents
-    $replace = [
-        'Ç' => 'C', 'Ğ' => 'G', 'İ' => 'I', 'Ö' => 'O', 'Ş' => 'S', 'Ü' => 'U',
-        'ç' => 'c', 'ğ' => 'g', 'ı' => 'i', 'ö' => 'o', 'ş' => 's', 'ü' => 'u'
-    ];
 
-    // Return the cleaned string
-    return strtr($string, $replace);
+function clean_string($text) {
+    // This regex pattern includes Turkish characters (ç, ğ, ı, ö, ş, ü, Ç, Ğ, İ, Ö, Ş, Ü)
+    $text = preg_replace('/[^\p{L}\p{N}\sçğıöşüÇĞİÖŞÜ]/u', '', $text); // Remove non-alphanumeric characters except spaces, Unicode letters/numbers, and Turkish characters
+    $text = strtolower($text); // Convert to lowercase
+    return $text;
 }
 
 $query = "
@@ -39,7 +36,9 @@ if ($coursesResult) {
     while ($row = mysqli_fetch_assoc($coursesResult)) {
         $users[] = [
             'id' => $row['id'],
-            'image' => $row['image']
+            'name' => clean_string($row['name']),  // Clean the name
+            'image' => $row['image'],
+            'email' => clean_string($row['email']) // Clean the email if needed
         ];
     }
 
