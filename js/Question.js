@@ -174,7 +174,53 @@ class FillInTheBlank extends Question {
   }
 }
 
-function mark(questions, language) {
+async function markFITBQuestion(questionObject, language) {
+
+  const {question, marksWorth, hardness:level, inputAnswer } = questionObject;
+
+  const educationEnvironment =  extrapolateEducationEnvironment();
+
+  let query =
+    `
+        Evaluate the following question and answer, and provide a fair score rounded to the nearest integer. For short answers (1-3 words), award partial marks if the response demonstrates relevant understanding, even if it’s not fully comprehensive.
+            - Question: "${question[language]}"
+            - Answer: "${inputAnswer}"
+            - Maximum Marks: ${marksWorth}
+            - Audience: ${educationEnvironment} students
+            - Difficulty Level: ${level}
+
+            Return only the score as a JSON object with a single key, ` + `mark` + `, in the format: { "mark": <score> }. Ensure there are no nested objects or extra fields.
+    `;
+
+  let unparsedJSONResponse = await generateGPTResponseFor(query);
+  let result = await JSON.parse(unparsedJSONResponse);
+
+  try {
+    if (result.mark >= 0) return result.mark;
+    else if(result.mark.mark >= 0) return result.mark.mark;
+    else return result
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function markTrueAndFalse(questionObject, language){
+
+  const {marksWorth, inputAnswer, answer } = questionObject;
+  if(inputAnswer == answer[language]) return Number(marksWorth);
+  else return 0;
+
+}
+
+function markMultipleChoiceQuestion(questionObject, language){
+
+  const {marksWorth, inputAnswer, answer } = questionObject;
+  if(inputAnswer == answer[language]) return Number(marksWorth);
+  else return 0;
+
+}
+
+async function mark(questions, language) {
   let result = 0;
   let totalMarks = 0;
 
@@ -183,25 +229,42 @@ function mark(questions, language) {
 
   console.log("language: ", language);
 
-  questions.forEach((question) => {
-    console.log("correct answer: ", question.answer[language]);
-    console.log("inputted answer: ", question.inputAnswer);
-
-    if (question.answer[language].toLowerCase() == question.inputAnswer.toLowerCase()) {
-      result += question.marksWorth;
-    }
+  for await (const question of questions) {
 
     totalMarks += question.marksWorth;
-  });
 
+    switch (question.type.toLowerCase()) {
+      case "multiplechoicequestion":
+        result += markMultipleChoiceQuestion(question, language);
+        break;
+      case "trueandfalsequestion":
+        result += markTrueAndFalse(question, language);
+        break;
+      case "fillintheblankquestion":
+        let a = await markFITBQuestion(question, language);
+        console.log("result from marking: ", a);
+        result += a;
+        break;
+      default:
+        throw new Error(`Not Made Yet: ${question.type.toLowerCase()}`);
+    }
+
+    
+  }
+
+    console.log(`{ result: ${result}, totalMarks: ${totalMarks} }`);
   return { result, totalMarks };
 }
 
 // CHANGES FOR GENERATION
 
 async function generateQuestion(generateQuestionObject, amount = 1) {
+
+  console.log("GOT HERE");
+
   const { type, languages, educationEnvironment, level, topics } =
     generateQuestionObject;
+
 
   console.log("generateQuestionObject: ", generateQuestionObject);
 

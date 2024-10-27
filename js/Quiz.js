@@ -139,7 +139,7 @@ async function handleEndQuiz(quizObject){
 
     saveAssessmentAsJSON(filename, questions, "quiz", type);
 
-    let { result, totalMarks } = mark(questions, language);
+    let { result, totalMarks } = await mark(questions, language);
 
     let quizBody = document.querySelector(".quiz-popup-body");
     let resultsBody = document.querySelector(".quiz-results-body");
@@ -317,7 +317,7 @@ async function handleQuiz(quiz, quizButton, mode){
         // name,
     } = quiz;
 
-    let { id: globalUserID } = globalUserDetails;
+    let { id: globalUserID } = await getUserDetails();;
     console.log("user id: ", globalUserID);
 
     const quizResponse = await AJAXCall({
@@ -403,6 +403,8 @@ async function addNewQuizGradeRowInDatabase(quizGradeObject){
     let params = `id=${id}&&userID=${userID}&&quizID=${quizID}`+
     `&&filename=${fileToSave}&&timeStarted=${timeStarted}&&status=started`
     + `&&courseID=${courseID}&&hierarchy=${hierarchy}`;
+
+    console.log("hmmmm: ", params);
 
     let response = await AJAXCall({
         phpFilePath: "../include/quiz/addNewQuizGradeRow.php",

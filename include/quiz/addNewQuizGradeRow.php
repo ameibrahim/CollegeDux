@@ -18,8 +18,8 @@
     }
 
     $query = "
-        INSERT INTO quizGrades (id, userID, quizID, filename, status, timeStarted, courseID, hierarchy)
-        VALUES ('$id', '$userID', '$quizID', '$filename', '$status', '$timeStarted', '$courseID', '$hierarchy')
+        INSERT INTO quizGrades (id, userID, quizID, filename, status, timeStarted, courseID, hierarchy, totalMarks)
+        VALUES ('$id', '$userID', '$quizID', '$filename', '$status', '$timeStarted', '$courseID', '$hierarchy', '0')
     ";
 
     $result = mysqli_query($conn,$query);

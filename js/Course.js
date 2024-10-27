@@ -717,7 +717,7 @@ async function generateQuiz(
   let loader = loadLoader("Generating Quiz");
 
   const languages = ["english", "turkish"];
-  const educationEnvironment = "college students";
+  const educationEnvironment = extrapolateEducationEnvironment();
   const types = [
     "MultipleChoiceQuestion",
     "FillInTheBlankQuestion",
@@ -740,6 +740,7 @@ async function generateQuiz(
   for await (const type of types) {
     try {
       console.log("type: ", type);
+
       const generateQuestionObject = {
         type,
         languages,
@@ -749,13 +750,12 @@ async function generateQuiz(
         level: getRandomElement(levels),
       };
 
-      console.log("generateQuestionObject: ", generateQuestionObject);
-
       let result = await generateQuestion(generateQuestionObject, 4);
       console.log("result: ", result);
+
       quizQuestions = [...quizQuestions, ...result];
     } catch (error) {
-      continue;
+      console.log(error);
     }
   }
 

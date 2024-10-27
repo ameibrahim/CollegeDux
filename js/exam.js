@@ -1,82 +1,3 @@
-// async function generateExam(
-//   lectureObject,
-//   refresh = true,
-//   language = "english"
-// ) {
-//   let loader = loadLoader("Generating Quiz");
-
-//   const languages = ["english", "turkish"];
-//   const educationEnvironment = "college students";
-//   const types = [
-//     "MultipleChoiceQuestion",
-//     "FillInTheBlankQuestion",
-//     "TrueAndFalseQuestion",
-//   ];
-//   const levels = ["easy", "medium", "hard", "difficult", "extremely difficult"];
-
-//   const lectureID = lectureObject.id;
-//   const lectureTitle = lectureObject.title;
-//   const courseID = lectureObject.courseID;
-
-//   console.log("courseID: ", courseID);
-
-//   const topics = lectureObject.subtopics
-//     .map((subtopic) => subtopic.title)
-//     .join(", ");
-
-//   let quizQuestions = [];
-
-//   for await (const type of types) {
-//     console.log("type: ", type);
-
-//     const generateQuestionObject = {
-//       type,
-//       languages,
-//       subtopics: lectureObject.subtopics,
-//       educationEnvironment,
-//       topics,
-//       level: getRandomElement(levels),
-//     };
-
-//     console.log("generateQuestionObject: ", generateQuestionObject);
-
-//     let result = await generateQuestion(generateQuestionObject, 2);
-//     console.log("result: ", result);
-//     quizQuestions = [...quizQuestions, ...result];
-//   }
-
-//   console.log("quizQuestions: ", quizQuestions);
-
-//   let filename = `Quiz-${uniqueID(2)}.json`;
-//   saveAssessmentAsJSON(filename, quizQuestions, "quiz", "generated");
-
-//   let quizID = uniqueID(1);
-//   let name = `Quiz on ${topics}`; // ...
-//   let dateGenerated = getCurrentTimeInJSONFormat();
-//   let hierarchy = ""; // ...
-//   let totalMarks = quizQuestions.length; //TODO: figure out the marks properly...
-
-//   console.log("hierarchy: ", lectureObject.hierarchy);
-
-//   let params =
-//     `id=${quizID}&&courseID=${courseID}&&lectureID=${lectureID}&&name=${name}` +
-//     `&&dateGenerated=${dateGenerated}&&filename=${filename}&&totalMarks=${totalMarks}&&hierarchy=${lectureObject.hierarchy}`;
-
-//   let response = await AJAXCall({
-//     phpFilePath: "../include/quiz/addNewQuiz.php",
-//     rejectMessage: "New Quiz Failed To Add",
-//     params,
-//     type: "post",
-//   });
-
-//   console.log("quiz generation response: ", response);
-
-//   setTimeout(() => {
-//     if (refresh) refreshTeacherCourseOutline(); //Bugs???
-//     removeLoader(loader);
-//   }, 2000);
-// }
-
 class ExamsView {
   constructor(metadata) {
     this.courseID = metadata.id;
@@ -368,7 +289,7 @@ class CreateExam {
     console.log("totalQuestions: ", this.totalQuestions);
 
     const languages = ["english", "turkish"];
-    const educationEnvironment = "college students";
+    const educationEnvironment = extrapolateEducationEnvironment();
     const topics = this.topics;
 
     const mcqObject = {

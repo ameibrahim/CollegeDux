@@ -218,7 +218,7 @@ async function viewQuizResults(studentQuizFilename){
     let quizFileResponse = await fetch(correctPath, {cache: "reload"});
     let questions = await quizFileResponse.json();
 
-    let { result, totalMarks } = mark(questions, language);
+    let { result, totalMarks } = await mark(questions, language);
 
     let totalResultPlaceholder = reviewQuizOverlay.querySelector(".total-quiz-mark-placeholder");
     let scoreResultPlaceholder = reviewQuizOverlay.querySelector(".earned-quiz-mark-placeholder");

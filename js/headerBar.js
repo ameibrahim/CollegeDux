@@ -68,6 +68,12 @@ function extrapolateLanguage(){
     }
 }
 
+function extrapolateEducationEnvironment(){
+    return "college students";
+}
+
+"college students"
+
 function setCurrentLanguageToLocalStorage() {
 
 

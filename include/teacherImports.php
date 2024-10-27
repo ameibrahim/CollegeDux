@@ -46,6 +46,7 @@
         "../js/dictionary.js",
         "../js/UILoaders.js",
         "../js/CourseMoverEngine.js",
+        "../js/Question.js",
     );
 
     // These are for javascript files that you want
@@ -61,7 +62,6 @@
         "../js/pdf-viewer.js",
         "../js/image-viewer.js",
         "../js/Course.js",
-        "../js/Question.js",
         "../js/Quiz.js",
         "../js/EditAssessment.js",
     );

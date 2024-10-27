@@ -1,1 +1,274 @@
-[{"question":{"en":"Which of the following minerals is considered a form of quartz?","tr":"Aşağıdaki minerallerden hangisi bir kuvars formu olarak kabul edilir?"},"answerOptions":{"en":["Amethyst","Muscovite","Hematite","Fluorite"],"tr":["Mor taş","Muskovit","Hematit","Florit"]},"answer":{"en":"Amethyst","tr":"Mor taş"},"type":"multiple choice","hardness":"difficult"},{"question":{"en":"What is the name of the process by which sedimentary rocks are transformed into solid rock?","tr":"Tortul kayaçların katı kayaçlara dönüştüğü sürecin adı nedir?"},"answerOptions":{"en":["Metamorphism","Erosion","Weathering","Deposition"],"tr":["Metamorfizma","Aşındırma","Hava aşındırması","Çökme"]},"answer":{"en":"Metamorphism","tr":"Metamorfizma"},"type":"multiple choice","hardness":"difficult"},{"question":{"en":"What is the name of the most common group of minerals on Earth's crust?","tr":"Dünya'nın kabuğundaki en yaygın mineral grubunun adı nedir?"},"answerOptions":{"en":["Silicates","Oxides","Sulfides","Carbonates"],"tr":["Silikatlar","Oksitler","Sülfidler","Karbonatlar"]},"answer":{"en":"Silicates","tr":"Silikatlar"},"type":"multiple choice","hardness":"difficult"},{"question":{"en":"Which mineral is classified as a metamorphic rock?","tr":"Hangi mineral metamorfik bir kayaç olarak sınıflandırılır?"},"answerOptions":{"en":["Marble","Granite","Basalt","Pumice"],"tr":["Mermer","Granit","Bazalt","Pomza"]},"answer":{"en":"Marble","tr":"Mermer"},"type":"multiple choice","hardness":"difficult"},{"question":{"english":"____ is a common mineral found in Earth's crust and has a hardness of 7 on the Mohs scale.","turkish":"Dünya'nın kabuğunda bulunan yaygın bir mineral olan ___ Mohs ölçeğinde 7 sertliğe sahiptir."},"answerOptions":{"english":["A) Quartz","B) Calcite","C) Topaz","D) Feldspar"],"turkish":["A) Kuvars","B) Kalsit","C) Topaz","D) Feldispat"]},"answer":{"english":"A) Quartz","turkish":"A) Kuvars"},"type":"multiple choice","hardness":"difficult"},{"question":{"english":"____ is an extrusive igneous rock with fine-grained texture and is often black or dark gray in color.","turkish":"____ ince taneli dokuya sahip bir ekstrüzyon kaya türü olup genellikle siyah veya koyu gri renktedir."},"answerOptions":{"english":["A) Basalt","B) Rhyolite","C) Pumice","D) Andesite"],"turkish":["A) Bazalt","B) Riolit","C) Pomza","D) Andezit"]},"answer":{"english":"A) Basalt","turkish":"A) Bazalt"},"type":"multiple choice","hardness":"difficult"},{"question":{"english":"____ is the most common mineral group on Earth and includes minerals like Muscovite and Biotite.","turkish":"___ Dünya'da en yaygın mineral grubudur ve Muskovit ve Biotit gibi mineralleri içerir."},"answerOptions":{"english":["A) Feldspar","B) Mica","C) Quartz","D) Garnet"],"turkish":["A) Feldispat","B) Mika","C) Kuvars","D) Granat"]},"answer":{"english":"B) Mica","turkish":"B) Mika"},"type":"multiple choice","hardness":"difficult"},{"question":{"english":"____ is a metamorphic rock that forms from the recrystallization of limestone.","turkish":"___ limestone'ın ikrystalizasyonuyla oluşan bir metamorfik kaya türüdür."},"answerOptions":{"english":["A) Quartzite","B) Marble","C) Slate","D) Schist"],"turkish":["A) Kuvarsit","B) Mermer","C) Arduvaz","D) Şist"]},"answer":{"english":"B) Marble","turkish":"B) Mermer"},"type":"multiple choice","hardness":"difficult"},{"question":{"en":"Igneous rocks are formed from cooling and solidification of magma or lava.","tr":"Yanık taşlar, magmanın veya lavın soğuyup katılaşmasıyla oluşur."},"answerOptions":["True","False"],"answer":{"en":"True","tr":"Doğru"},"type":"trueFalse","hardness":"difficult"},{"question":{"en":"Metamorphic rocks are only formed from melting and solidifying of other rocks.","tr":"Metamorfik taşlar, sadece diğer taşların erimesi ve katılaşmasıyla oluşur."},"answerOptions":["True","False"],"answer":{"en":"False","tr":"Yanlış"},"type":"trueFalse","hardness":"difficult"},{"question":{"en":"Sedimentary rocks are formed from the accumulation and lithification of sediment.","tr":"Tortul taşlar, tortul birikimi ve litifikasyonuyla oluşur."},"answerOptions":["True","False"],"answer":{"en":"True","tr":"Doğru"},"type":"trueFalse","hardness":"difficult"},{"question":{"en":"Rock cycle is a linear process without any recycling of materials.","tr":"Taş döngüsü, malzemelerin geri dönüşümü olmadan lineer bir süreçtir."},"answerOptions":["True","False"],"answer":{"en":"False","tr":"Yanlış"},"type":"trueFalse","hardness":"difficult"}]
+[
+    {
+        "question": {
+            "en": "Which of the following minerals is considered a form of quartz?",
+            "tr": "Aşağıdaki minerallerden hangisi bir kuvars formu olarak kabul edilir?"
+        },
+        "answerOptions": {
+            "en": [
+                "Amethyst",
+                "Muscovite",
+                "Hematite",
+                "Fluorite"
+            ],
+            "tr": [
+                "Mor taş",
+                "Muskovit",
+                "Hematit",
+                "Florit"
+            ]
+        },
+        "answer": {
+            "en": "Amethyst",
+            "tr": "Mor taş"
+        },
+        "type": "multiple choice",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "en": "What is the name of the process by which sedimentary rocks are transformed into solid rock?",
+            "tr": "Tortul kayaçların katı kayaçlara dönüştüğü sürecin adı nedir?"
+        },
+        "answerOptions": {
+            "en": [
+                "Metamorphism",
+                "Erosion",
+                "Weathering",
+                "Deposition"
+            ],
+            "tr": [
+                "Metamorfizma",
+                "Aşındırma",
+                "Hava aşındırması",
+                "Çökme"
+            ]
+        },
+        "answer": {
+            "en": "Metamorphism",
+            "tr": "Metamorfizma"
+        },
+        "type": "multiple choice",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "en": "What is the name of the most common group of minerals on Earth's crust?",
+            "tr": "Dünya'nın kabuğundaki en yaygın mineral grubunun adı nedir?"
+        },
+        "answerOptions": {
+            "en": [
+                "Silicates",
+                "Oxides",
+                "Sulfides",
+                "Carbonates"
+            ],
+            "tr": [
+                "Silikatlar",
+                "Oksitler",
+                "Sülfidler",
+                "Karbonatlar"
+            ]
+        },
+        "answer": {
+            "en": "Silicates",
+            "tr": "Silikatlar"
+        },
+        "type": "multiple choice",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "en": "Which mineral is classified as a metamorphic rock?",
+            "tr": "Hangi mineral metamorfik bir kayaç olarak sınıflandırılır?"
+        },
+        "answerOptions": {
+            "en": [
+                "Marble",
+                "Granite",
+                "Basalt",
+                "Pumice"
+            ],
+            "tr": [
+                "Mermer",
+                "Granit",
+                "Bazalt",
+                "Pomza"
+            ]
+        },
+        "answer": {
+            "en": "Marble",
+            "tr": "Mermer"
+        },
+        "type": "multiple choice",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "english": "____ is a common mineral found in Earth's crust and has a hardness of 7 on the Mohs scale.",
+            "turkish": "Dünya'nın kabuğunda bulunan yaygın bir mineral olan ___ Mohs ölçeğinde 7 sertliğe sahiptir."
+        },
+        "answerOptions": {
+            "english": [
+                "A) Quartz",
+                "B) Calcite",
+                "C) Topaz",
+                "D) Feldspar"
+            ],
+            "turkish": [
+                "A) Kuvars",
+                "B) Kalsit",
+                "C) Topaz",
+                "D) Feldispat"
+            ]
+        },
+        "answer": {
+            "english": "A) Quartz",
+            "turkish": "A) Kuvars"
+        },
+        "type": "multiple choice",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "english": "____ is an extrusive igneous rock with fine-grained texture and is often black or dark gray in color.",
+            "turkish": "____ ince taneli dokuya sahip bir ekstrüzyon kaya türü olup genellikle siyah veya koyu gri renktedir."
+        },
+        "answerOptions": {
+            "english": [
+                "A) Basalt",
+                "B) Rhyolite",
+                "C) Pumice",
+                "D) Andesite"
+            ],
+            "turkish": [
+                "A) Bazalt",
+                "B) Riolit",
+                "C) Pomza",
+                "D) Andezit"
+            ]
+        },
+        "answer": {
+            "english": "A) Basalt",
+            "turkish": "A) Bazalt"
+        },
+        "type": "multiple choice",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "english": "____ is the most common mineral group on Earth and includes minerals like Muscovite and Biotite.",
+            "turkish": "___ Dünya'da en yaygın mineral grubudur ve Muskovit ve Biotit gibi mineralleri içerir."
+        },
+        "answerOptions": {
+            "english": [
+                "A) Feldspar",
+                "B) Mica",
+                "C) Quartz",
+                "D) Garnet"
+            ],
+            "turkish": [
+                "A) Feldispat",
+                "B) Mika",
+                "C) Kuvars",
+                "D) Granat"
+            ]
+        },
+        "answer": {
+            "english": "B) Mica",
+            "turkish": "B) Mika"
+        },
+        "type": "multiple choice",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "english": "____ is a metamorphic rock that forms from the recrystallization of limestone.",
+            "turkish": "___ limestone'ın ikrystalizasyonuyla oluşan bir metamorfik kaya türüdür."
+        },
+        "answerOptions": {
+            "english": [
+                "A) Quartzite",
+                "B) Marble",
+                "C) Slate",
+                "D) Schist"
+            ],
+            "turkish": [
+                "A) Kuvarsit",
+                "B) Mermer",
+                "C) Arduvaz",
+                "D) Şist"
+            ]
+        },
+        "answer": {
+            "english": "B) Marble",
+            "turkish": "B) Mermer"
+        },
+        "type": "multiple choice",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "en": "Igneous rocks are formed from cooling and solidification of magma or lava.",
+            "tr": "Yanık taşlar, magmanın veya lavın soğuyup katılaşmasıyla oluşur."
+        },
+        "answerOptions": [
+            "True",
+            "False"
+        ],
+        "answer": {
+            "en": "True",
+            "tr": "Doğru"
+        },
+        "type": "trueFalse",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "en": "Metamorphic rocks are only formed from melting and solidifying of other rocks.",
+            "tr": "Metamorfik taşlar, sadece diğer taşların erimesi ve katılaşmasıyla oluşur."
+        },
+        "answerOptions": [
+            "True",
+            "False"
+        ],
+        "answer": {
+            "en": "False",
+            "tr": "Yanlış"
+        },
+        "type": "trueFalse",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "en": "Sedimentary rocks are formed from the accumulation and lithification of sediment.",
+            "tr": "Tortul taşlar, tortul birikimi ve litifikasyonuyla oluşur."
+        },
+        "answerOptions": [
+            "True",
+            "False"
+        ],
+        "answer": {
+            "en": "True",
+            "tr": "Doğru"
+        },
+        "type": "trueFalse",
+        "hardness": "difficult"
+    },
+    {
+        "question": {
+            "en": "Rock cycle is a linear process without any recycling of materials.",
+            "tr": "Taş döngüsü, malzemelerin geri dönüşümü olmadan lineer bir süreçtir."
+        },
+        "answerOptions": [
+            "True",
+            "False"
+        ],
+        "answer": {
+            "en": "False",
+            "tr": "Yanlış"
+        },
+        "type": "trueFalse",
+        "hardness": "difficult"
+    }
+]
