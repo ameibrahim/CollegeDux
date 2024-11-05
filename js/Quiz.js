@@ -327,8 +327,6 @@ async function handleQuiz(quiz, quizButton, mode){
         type: "fetch",
     }); // TODO:
 
-    console.log("quiz response: ", quizResponse);
-
     if(quizResponse.length > 0){
 
         let {
@@ -359,7 +357,7 @@ async function handleQuiz(quiz, quizButton, mode){
             case "done":
                 quizButton.textContent = "Review Results"; // TODO: Localize
                 quizButton.addEventListener("click", () => {
-                    viewQuizResults(studentQuizFilename); // View Results
+                    viewQuizResults({studentQuizFilename, quizID}); // View Results
                 });
             break;
         }

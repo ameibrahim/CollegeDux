@@ -254,6 +254,10 @@ class Course {
     let rowItemText = createElement("div", "row-item-text");
     let rowItemAction = createElement("div", "row-item-action");
 
+    let previewElement = document.createElement("div")
+    previewElement.className = "preview";
+    previewElement.innerHTML = createLinkPreview(value)
+
     let imageElement = document.createElement("img");
 
     switch (resourceType) {
@@ -272,7 +276,29 @@ class Course {
           openPDFViewer(`../uploads/${value}`)
         );
         break;
-      //TODO: Video
+      case "video":
+        imageElement.src = "../assets/icons/play.png";
+        rowItemAction.textContent = "view";
+        rowItemAction.addEventListener("click", () =>
+          openyyoutubeViewer(`${value}`)
+        );
+        break;
+      case "player":
+        imageElement.src = "../assets/icons/play.png";
+        rowItemAction.textContent = "view";
+        rowItemAction.addEventListener("click", () =>
+          openVideoViewer(`${value}`)
+        );
+        break;
+      case "text":
+        imageElement.src = "../assets/icons/fi/fi-rr-pen-clip.svg";
+        // rowItemAction.textContent = value;
+        break;
+      case "link":
+        imageElement.src = "../assets/icons/globe1.png";
+        imageElement.className = "red";
+        rowItemAction.innerHTML = `<a href="${value}" target="_blank">Go</a>`;
+        break;
       default:
         throw new Error("Type has not been created yet!");
         break;
@@ -283,8 +309,17 @@ class Course {
 
     rowItemIcon.appendChild(imageElement);
     mainClassroomSubtopicItem.appendChild(rowItemIcon);
-    mainClassroomSubtopicItem.appendChild(rowItemText);
-    mainClassroomSubtopicItem.appendChild(rowItemAction);
+    if (resourceType != "link")
+      mainClassroomSubtopicItem.appendChild(rowItemText);
+    if (resourceType == "link"){
+      // rowItemText.innerHTML = `<a style="color: inherit; text-decoration:none;" href="${value}" target="_blank">${value}</a>`;
+      mainClassroomSubtopicItem.appendChild(previewElement);
+    }
+
+
+    if (resourceType != "text")
+      mainClassroomSubtopicItem.appendChild(rowItemAction);
+    // mainClassroomSubtopicItem.appendChild(deleteButton);
 
     return mainClassroomSubtopicItem;
   }
@@ -614,6 +649,7 @@ class Course {
     deleteButton.className = "delete-button";
     deleteButton.innerHTML = `<img src="../assets/icons/delete.png" alt="">`;
 
+    
     deleteButton.addEventListener("click", () => {
       switch (type) {
         case "lecture":
@@ -990,4 +1026,62 @@ function refreshTeacherCourseOutline() {
   let mainContainer = document.querySelector(".main-container");
   let id = mainContainer.getAttribute("data-id");
   editCourseWith({ id });
+}
+
+async function deleteResourceWith(resourceObject) {
+  return new Promise(async (resolve, reject) => {
+    const params = createParametersFrom(resourceObject);
+    console.log("params: ", params);
+
+    try {
+      let result = await AJAXCall({
+        phpFilePath: "../include/delete/deleteResource.php",
+        type: "post",
+        rejectMessage: "Deleting Resource Failed",
+        params,
+      });
+
+      console.log(result);
+      resolve();
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
+}
+
+async function saveVideo() {
+  try {
+    const value = globalCache.get("savevideo");
+    const type = "video";
+    const id = uniqueID(1);
+    const lectureID = globalCache.get("lectureid");
+    const title = globalCache.get("title");
+
+    const params = {
+      id: id,
+      type: type,
+      value: value,
+      lectureID: lectureID,
+      title: title,
+    };
+
+    const response = await AJAXCall({
+      phpFilePath: "../include/course/addNewResource.php",
+      rejectMessage: "Saving video failed",
+      params: createParametersFrom(params),
+      type: "post",
+    });
+
+    console.log("Save Response: ", response);
+
+    if (response === "success") {
+      alert("Video saved successfully!");
+    } else {
+      alert("Failed to save video.");
+    }
+  } catch (error) {
+    console.error("Error saving video: ", error);
+    alert("Error occurred while saving the video.");
+  }
 }

@@ -103,63 +103,10 @@ function cascadingDateChanges() {
   });
 }
 
-// function showBatchSelectContainerView(){
-
-//     let view;
-//     let container = document.querySelector("#studentsListAll");
-//     let batchSelectContainer = document.querySelector(".batch-select-container");
-//     let studentCheckboxes = container.querySelectorAll('input[type="checkbox"]');
-
-//     let count = 0;
-
-//     studentCheckboxes.forEach( checkbox => {
-//         if(!checkbox.checked){
-//             count++;
-//         }
-//     });
-
-//     let textRequest = count == 1 ? "Request" : "Requests";
-//     let areIs = count == 1 ? "is" : "are";
-
-//     if(count > 0){
-//         view = `
-//             <p>There ${areIs} ( <b>${count}</b> ) new ${textRequest}</p>
-//             <button onclick="SelectAllCheckboxes()">Approve ${count} ${textRequest}</button>
-//         `;
-//     }
-//     else{
-//         view = `<p class="stretch-x">There are no new requests</p>`
-//     }
-
-//     batchSelectContainer.innerHTML = view;
-
-// }
-
-// function SelectAllCheckboxes(){
-
-//     let container = document.querySelector("#studentsListAll");
-//     let studentCheckboxes = container.querySelectorAll('input[type="checkbox"]');
-
-//     studentCheckboxes.forEach( checkbox => {
-//         if( !checkbox.checked ){
-//             checkbox.checked = true;
-
-//             // Create a new 'change' event
-//             var event = new Event('change');
-
-//             // Dispatch it.
-//             checkbox.dispatchEvent(event);
-//         }
-//     });
-
-//     showBatchSelectContainerView();
-
-// }
-
-function makeUnique(strength){
+function makeUnique(strength) {
   let cache = {};
   let n = uniqueID(strength);
-  while(!n in cache){
+  while (!n in cache) {
     n = uniqueID(strength);
   }
   cache[n] = n;
@@ -167,7 +114,9 @@ function makeUnique(strength){
 
 function uniqueID(strength = 1) {
   const date = Date.now() + getRandomArbitrary(3000, 9999);
-  const dateReversed =  getRandomArbitrary(3000, 9999) + parseInt(String(date).split("").reverse().join(""));
+  const dateReversed =
+    getRandomArbitrary(3000, 9999) +
+    parseInt(String(date).split("").reverse().join(""));
   const base36 = (number) => number.toString(36);
   if (strength == 1) return base36(date);
   if (strength == -1) return base36(dateReversed);
@@ -199,11 +148,15 @@ function AJAXCall(callObject) {
 
     xhr.onload = function () {
       if (this.status == 200) {
-        console.log("Raw response:", this.responseText);  // Log the raw response
+        console.log("Raw response:", this.responseText); // Log the raw response
         try {
-          let result = type === "fetch" ? JSON.parse(this.responseText) : this.responseText;
+          let result =
+            type === "fetch"
+              ? JSON.parse(this.responseText)
+              : this.responseText;
 
-          if (result.length < 1 && type !== "fetch") reject(rejectMessage || "SQLError");
+          if (result.length < 1 && type !== "fetch")
+            reject(rejectMessage || "SQLError");
           else resolve(result);
         } catch (e) {
           reject("JSON Parse Error: " + e.message);
@@ -220,7 +173,6 @@ function AJAXCall(callObject) {
     xhr.send(params);
   });
 }
-
 
 function loadImage(event, outputElement) {
   const output = document.querySelector(outputElement);
@@ -285,14 +237,13 @@ async function getUserDetails() {
   }
 }
 
-function openPopup(selector, going="forward") {
+function openPopup(selector, going = "forward") {
   let popup = document.querySelector(selector);
   popup.style.display = "grid";
 
-  try{
-    if( going == "back")
-      removeURLParameter("id");
-  }catch(error){}
+  try {
+    if (going == "back") removeURLParameter("id");
+  } catch (error) {}
 }
 
 function closePopup(selector) {
@@ -346,12 +297,28 @@ async function fetchOpenAIKey(phpFilePath = "../include/openAIKey.php") {
 }
 
 async function generateGPTResponseFor(prompt) {
-  const response = await fetchOpenAIKey();
-  let apiKey = response[0].value;
-
-  const endpoint = "https://api.openai.com/v1/chat/completions";
-
   try {
+    // Fetch API key
+    const keyResponse = await fetchOpenAIKey();
+    if (!keyResponse || !keyResponse[0] || !keyResponse[0].value) {
+      throw new Error("Invalid API key configuration");
+    }
+    const apiKey = keyResponse[0].value;
+
+    const endpoint = "https://api.openai.com/v1/chat/completions";
+
+    // Ensure the prompt includes JSON format instruction
+    const systemMessage = {
+      role: "system",
+      content:
+        "You are a helpful assistant. Always respond in JSON format with a 'response' key containing your message.",
+    };
+
+    const userMessage = {
+      role: "user",
+      content: typeof prompt === "string" ? prompt : prompt.content,
+    };
+
     const response = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -359,27 +326,32 @@ async function generateGPTResponseFor(prompt) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [
-          {
-            role: "system",
-            content: "You are a helpful assistant.",
-          },
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
+        model: "gpt-3.5-turbo-1106", // Updated to a version that supports JSON response format
+        messages: [systemMessage, userMessage],
         response_format: { type: "json_object" },
+        temperature: 0.7,
+        max_tokens: 150,
       }),
     });
 
+    if (!response.ok) {
+      throw new Error(`API request failed with status ${response.status}`);
+    }
+
     const data = await response.json();
-    console.log("HERE IS DATA FROM GPT: ", data);
-    return data.choices[0].message.content;
+    // console.log("GPT Response Data:", data);
+
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      throw new Error("Invalid response structure from API");
+    }
+
+    // Parse the JSON response
+    const parsedContent = JSON.parse(data.choices[0].message.content)
+    console.log("parsedContent: ",parsedContent);
+    return parsedContent.response || "No response content available";
   } catch (error) {
-    console.error("Error fetching response:", error);
-    return null;
+    console.error("Error in generateGPTResponseFor:", error);
+    return "I apologize, but I encountered an error processing your request.";
   }
 }
 
@@ -538,6 +510,25 @@ function extractType(type) {
       return "image";
     case "application/pdf":
       return "pdf";
+    case "video":
+      return "video";
+    case "video/mp4":
+    case "video/webm":
+    case "video/ogg":
+    case "video/quicktime":
+    case "video/x-msvideo":
+    case "video/x-ms-wmv":
+    case "video/x-flv":
+    case "video/3gpp":
+    case "video/3gpp2":
+    case "video/mpeg":
+    case "video/x-matroska":
+    case "video/x-f4v":
+      return "player";
+    case "text":
+      return "text";
+    case "link":
+      return "link";
   }
 }
 
@@ -668,7 +659,7 @@ function shuffle(array) {
   }
 }
 
-function setURLParameter(name, value){
+function setURLParameter(name, value) {
   let url = new URL(window.location);
   let urlSearchParams = new URLSearchParams(url.search);
 
@@ -677,16 +668,16 @@ function setURLParameter(name, value){
   window.history.pushState(null, null, url.toString());
 }
 
-function getURLParameter(identifier){
+function getURLParameter(identifier) {
   let searchParams = new URLSearchParams(window.location.search);
-  const hasIdentifier = searchParams.has(identifier); 
+  const hasIdentifier = searchParams.has(identifier);
   return hasIdentifier ? searchParams.get(identifier) : null;
 }
 
-function removeURLParameter(identifier){
+function removeURLParameter(identifier) {
   let url = new URL(window.location);
   let searchParams = new URLSearchParams(url.search);
-  const hasIdentifier = searchParams.has(identifier); 
+  const hasIdentifier = searchParams.has(identifier);
   hasIdentifier ? searchParams.delete(identifier) : false;
 
   console.log("search params: ", searchParams);
@@ -695,4 +686,15 @@ function removeURLParameter(identifier){
   window.history.pushState(null, null, url.toString());
 }
 
-
+function getMarksForQuestion(type) {
+  switch (type.toLowerCase()) {
+    case "multiplechoicequestion":
+      return 1;
+    case "trueandfalsequestion":
+      return 1;
+    case "fillintheblankquestion":
+      return 1;
+    default:
+      return 1;
+  }
+}

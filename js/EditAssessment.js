@@ -40,13 +40,6 @@ class EditAssessment {
         this.renderQuestion();
     }
 
-    // autoSave(){
-
-    //     //TODO: Consider saving as sessionStorage?
-    //     // or having a timer to save every 60 seconds
-    //     this.saveAssessment();
-    // }
-
     saveAssessment(){
         saveAssessmentAsJSON(this.filename, this.questions, this.assessmentType, this.type);
 
@@ -159,7 +152,8 @@ class EditMultipleChoice extends Question {
         let question = document.createElement("div");
         question.setAttribute("contentEditable","true");
         question.className = "question editable";
-        question.textContent = this.question[language];
+        const lockedQuestion = createLocalizedTextElement(this.question[language]);
+        question.append(lockedQuestion);
 
         question.addEventListener("input", event => {
             this.question[language] = event.target.textContent;
@@ -189,7 +183,8 @@ class EditMultipleChoice extends Question {
             let answerOption = document.createElement("div");
             answerOption.setAttribute("contentEditable","true");
             answerOption.className = "answer-option editable";
-            answerOption.textContent = option;
+            const lockedAnswerOption = createLocalizedTextElement(option);
+            answerOption.append(lockedAnswerOption);
 
             answerOption.addEventListener("input", event => {
                 this.answerOptions[language][index] = event.target.textContent;
@@ -234,7 +229,8 @@ class EditTrueAndFalse extends Question {
         let question = document.createElement("div");
         question.setAttribute("contentEditable","true");
         question.className = "question editable";
-        question.textContent = this.question[language];
+        const lockedQuestion = createLocalizedTextElement(this.question[language]);
+        question.append(lockedQuestion);
 
         question.addEventListener("input", event => {
             this.question[language] = event.target.textContent;
@@ -242,24 +238,6 @@ class EditTrueAndFalse extends Question {
         })
 
         let answerOptions = this.answerOptions[language] || [];
-
-        // There are bugs here. What if the teacher wants to edit???
-        if(this.answerOptions[language].length == 0){
-            switch(this.answer[language]){
-                case "Yes":
-                    answerOptions = ["Yes", "No"] //TODO: Match for other languages
-                    break;
-                case "True":
-                    answerOptions = ["True", "False"]
-                    break;
-                case "False":
-                    answerOptions = ["True", "False"]
-                    break;
-                case "No":
-                answerOptions = ["Yes", "No"]
-                break;
-            }
-        }
 
         let answerText = document.createElement("div");
         answerText.className = "question-header";
@@ -275,7 +253,8 @@ class EditTrueAndFalse extends Question {
 
 
             let answerOption = document.createElement("div");
-            answerOption.textContent = option;
+            const lockedAnswerOption = createLocalizedTextElement(option);
+            answerOption.append(lockedAnswerOption);
 
             if(this.answer[language] == answerOptions[index]){
                 answerOption.className = "button tf-answer-option active";
@@ -323,7 +302,8 @@ class EditFillInTheBlank extends Question {
         let question = document.createElement("div");
         question.setAttribute("contentEditable","true");
         question.className = "question editable";
-        question.textContent = this.question[language];
+        const lockedQuestion = createLocalizedTextElement(this.question[language]);
+        question.append(lockedQuestion);
 
         question.addEventListener("input", event => {
             this.question[language] = event.target.textContent;

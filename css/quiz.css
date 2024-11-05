@@ -126,9 +126,10 @@
     display: grid;
     grid-template-columns: 1fr auto;
     grid-gap: 20px;
-    width: 100%;
+    width: calc(100% - 100px);
     justify-self: start;
     align-items: center;
+    left: 50px;
 }
 
 .quiz-delete-button {

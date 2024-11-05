@@ -1,5 +1,8 @@
 let globalImageObject;
 let globalPDFObject;
+let globalVideoObject;
+let EditTextObject;
+let globalLinkView;
 
 function loadImageToPopupView(event, outputElement) {
   // const output = document.querySelector(outputElement);
@@ -23,6 +26,98 @@ function loadImageToPopupView(event, outputElement) {
   // output.onload = function() {
   // URL.revokeObjectURL(output.src) // free memory
   // }
+}
+
+function loadtextToPopupView(event, outputElement) {
+  // const output = document.querySelector(outputElement);
+
+  let uploadContainer = document.querySelector(".upload-options-container");
+  let uploadProgressContainer = document.querySelector(
+    ".upload-progress-container"
+  );
+  let textupload = document.getElementById("textviewer");
+
+  uploadContainer.style.display = "none";
+  uploadProgressContainer.style.display = "none";
+
+  textupload.style.display = "grid";
+
+  let TextToUpload = document.getElementById("TextToUpload");
+
+  setUploadTextObject({
+    value: TextToUpload.value,
+    type: "text",
+  });
+}
+
+function loadLinkToPopupView(event, outputElement) {
+  let uploadContainer = document.querySelector(".upload-options-container");
+  let uploadProgressContainer = document.querySelector(
+    ".upload-progress-container"
+  );
+  let Linkupload = document.getElementById("LinkViewer");
+  let LinkPreview = document.getElementById("preview");
+
+  uploadContainer.style.display = "none";
+  uploadProgressContainer.style.display = "none";
+
+  Linkupload.style.display = "grid";
+  LinkPreview.style.display = "grid";
+
+  let LinkToupload = document.getElementById("LinkToUpload");
+
+  setUploadLinkObject({
+    value: LinkToupload.value,
+    type: "link",
+  });
+}
+
+function loadVideoToPopupView(event, outputElement) {
+  console.log("video is needed");
+
+  let uploadContainer = document.querySelector(".upload-options-container");
+  let uploadProgressContainer = document.querySelector(
+    ".upload-progress-container"
+  );
+  // let uploadvideo = document.querySelector(".videoPreviewContainer");
+  uploadContainer.style.display = "none";
+  uploadProgressContainer.style.display = "grid";
+  // uploadvideo.style.display = "grid"; // Make sure the video container is displayed
+
+  console.log("Run Video 1");
+  // Get the selected file
+  const file = event.target.files[0];
+
+  if (file && file.type.startsWith("video/")) {
+    // Create a URL for the video file
+    const videoUrl = URL.createObjectURL(file);
+
+    console.log("Run Video 2");
+
+    // Get the video element and set its source
+    const videoPreview = document.getElementById("videoPreview");
+    videoPreview.src = videoUrl;
+
+    console.log("Run Video 3");
+
+    // Show the video preview container
+    const videoPreviewContainer = document.getElementById(
+      "videoPreviewContainer"
+    );
+    videoPreviewContainer.style.display = "block";
+  } else {
+    console.log("Run Video 4");
+
+    console.error("Selected file is not a video.");
+  }
+
+  let { name: VideoName, type: fileType } = event.target.files[0];
+
+  let truncatedString = truncateString(VideoName);
+  let truncatedFilename = document.querySelector("#truncatedFilename");
+  truncatedFilename.textContent = truncatedString;
+
+  setUploadVideoObject(event.target.files[0]);
 }
 
 function loadPDFToPopupView(event, outputElement) {
@@ -51,6 +146,25 @@ function revertUploadChoice() {
   );
   uploadContainer.style.display = "grid";
   uploadProgressContainer.style.display = "none";
+
+  let uploadvideo = document.querySelector(".videoPreviewContainer");
+  uploadvideo.style.display = "none";
+
+  // Clear the video preview source
+  const videoPreview = document.getElementById("videoPreview");
+  videoPreview.src = ""; // Reset the src attribute to clear the preview
+
+  const input = document.getElementById("videoUploadInput");
+  // Clear the input value after a file is selected or canceled
+  input.value = "";
+
+  let textupload = document.getElementById("textviewer");
+  textupload.style.display = "none";
+
+  let Linkupload = document.getElementById("LinkViewer");
+  Linkupload.style.display = "none";
+  let LinkPreview = document.getElementById("preview");
+  LinkPreview.style.display = "none";
 }
 
 function startUploading() {
@@ -59,6 +173,9 @@ function startUploading() {
 
   uploadWithObject(globalImageObject);
   uploadWithObject(globalPDFObject);
+  uploadWithObject(globalVideoObject);
+  uploadWithObject(EditTextObject);
+  uploadWithObject(globalLinkView);
 
   async function uploadWithObject(fileObject) {
     if (fileObject && subtopicID) {
@@ -66,22 +183,48 @@ function startUploading() {
       const id = uniqueID(1);
 
       try {
-        const { newFileName: value, oldFileName } = await uploadFile(
-          fileObject
-        );
-        if (value)
+
+        if (type == "text") {
+          let TextToUpload = document.getElementById("TextToUpload");
+          let value = TextToUpload.value;
+          console.log("value:", value);
           await sendResourceToDatabase({
             id,
             value,
             type,
             subtopicID,
-            oldFileName,
+            oldFileName: "",
           });
-        else throw new Error("Upload Failed");
+        } else if (type == "link") {
+          let LinkToupload = document.getElementById("LinkToUpload");
+          let value = LinkToupload.value;
+          console.log("value:", value);
+          await sendResourceToDatabase({
+            id,
+            value,
+            type,
+            subtopicID,
+            oldFileName: "",
+          });
+        }else {
+          const { newFileName: value, oldFileName } = await uploadFile(
+            fileObject
+          );
+          if (value)
+            await sendResourceToDatabase({
+              id,
+              value,
+              type,
+              subtopicID,
+              oldFileName,
+            });
+          else throw new Error("Upload Failed");
+        }
 
         setTimeout(() => {
           // TODO: animateSuccess();
           closeUploadOverlay();
+          refreshTeacherCourseOutline();
           // TODO: resetUploadOverlay();
         }, 5000);
       } catch (error) {
@@ -104,6 +247,10 @@ async function sendResourceToDatabase(resourceObject) {
   });
 }
 
+function setUploadTextObject(textObject) {
+  EditTextObject = textObject;
+}
+
 function setUploadImageObject(imageObject) {
   globalImageObject = imageObject;
 }
@@ -111,6 +258,15 @@ function setUploadImageObject(imageObject) {
 function setUploadPDFObject(PDFObject) {
   globalPDFObject = PDFObject;
 }
+
+function setUploadVideoObject(VideoObject) {
+  globalVideoObject = VideoObject;
+}
+
+function setUploadLinkObject(linkObject) {
+  globalLinkView = linkObject;
+}
+
 
 function openUploadOverlay(id) {
   let uploadOverlay = document.querySelector(".upload-overlay");
@@ -235,8 +391,8 @@ async function loadCourses(options = "id") {
       let cardText = createElement("div", "card-text");
       let courseCardCode = createElement("text", "course-card-code");
       let courseCardTitle = createElement("div", "course-card-title");
-      let courseCardCodeContent = createLocalizedTextElement(courseCode);   
-      let courseCardTitleContent = createLocalizedTextElement(title);   
+      let courseCardCodeContent = createLocalizedTextElement(courseCode);
+      let courseCardTitleContent = createLocalizedTextElement(title);
 
       courseCardCode.appendChild(courseCardCodeContent);
       courseCardTitle.appendChild(courseCardTitleContent);
@@ -255,7 +411,7 @@ async function loadCourses(options = "id") {
       courseCard.addEventListener("click", () => {
         switch (options) {
           case "id":
-            editCourseWith({id});
+            editCourseWith({ id });
             break;
           case "all":
             // TODO: Using Subscriptions, toggle different popups.
@@ -333,7 +489,7 @@ async function loadCourses(options = "id") {
   }
 }
 
-function goToCourse({id}) {
+function goToCourse({ id }) {
   console.log("curent id:", id);
   openPopup(".classroom-inner-overlay");
   let classRoomOverlay = document.querySelector(".classroom-inner-overlay");
@@ -341,7 +497,7 @@ function goToCourse({id}) {
   renderCourseOutline(id);
 }
 
-function editCourseWith({id}) {
+function editCourseWith({ id }) {
   let mainContainer = document.querySelector(".main-container");
   mainContainer.setAttribute("data-id", id);
 
@@ -415,4 +571,54 @@ async function checkImage(imagePath) {
   } catch (error) {
     return `../assets/images/courseDefault.jpg`;
   }
+}
+
+function showLinkPreview() {
+  const linkInput = document.getElementById("LinkToUpload").value;
+  const previewDiv = document.getElementById("preview");
+  previewDiv.innerHTML = ""; // Clear previous content
+
+  // Check if the link is a YouTube URL
+  if (
+    linkInput.includes("youtube.com/watch?v=") ||
+    linkInput.includes("youtu.be/")
+  ) {
+    let videoId;
+    if (linkInput.includes("youtube.com/watch?v=")) {
+      videoId = linkInput.split("v=")[1].split("&")[0];
+    } else if (linkInput.includes("youtu.be/")) {
+      videoId = linkInput.split("youtu.be/")[1];
+    }
+    const iframe = `<iframe width="500" height="300" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+    previewDiv.innerHTML = iframe;
+  } else {
+    // For general web links
+    const linkPreview = `<a href="${linkInput}" target="_blank">${linkInput}</a>`;
+    previewDiv.innerHTML = linkPreview;
+  }
+}
+
+function createLinkPreview(linkInput) {
+  let finalUI;
+
+  // Check if the link is a YouTube URL
+  if (
+    linkInput.includes("youtube.com/watch?v=") ||
+    linkInput.includes("youtu.be/")
+  ) {
+    let videoId;
+    if (linkInput.includes("youtube.com/watch?v=")) {
+      videoId = linkInput.split("v=")[1].split("&")[0];
+    } else if (linkInput.includes("youtu.be/")) {
+      videoId = linkInput.split("youtu.be/")[1];
+    }
+    const iframe = `<iframe height="300" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+    finalUI = iframe;
+  } else {
+    // For general web links
+    const linkPreview = `<a href="${linkInput}" target="_blank">${linkInput}</a>`;
+    finalUI = linkPreview;
+  }
+
+  return finalUI;
 }

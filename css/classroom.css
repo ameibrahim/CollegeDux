@@ -59,14 +59,9 @@
     grid-template-columns: auto 1fr auto;
     grid-gap: 20px;
     padding: 10px;
-    border-bottom: 1px solid var(--medium-gray);
     align-items: center;
 }.quiz-subtopic-item {
     grid-template-columns: auto 1fr auto auto;
-}
-
-.main-classroom-subtopic-item:last-child{
-    border-bottom: none;
 }
 
 .row-item-icon {
@@ -107,4 +102,16 @@
     width: 100%;
     padding-left: 10px;
     padding-right: 10px;
+}
+
+.row-item-action a {
+    display:grid;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    color: white;
+    text-decoration: none;
+}
+.red {
+    filter: invert(11%) sepia(63%) saturate(7384%) hue-rotate(358deg) brightness(126%) contrast(112%);
 }
