@@ -47,6 +47,8 @@
         "../js/UILoaders.js",
         "../js/CourseMoverEngine.js",
         "../js/Question.js",
+        "../js/GlobalCache.js",
+        "../js/videoRecommendation.js",
     );
 
     // These are for javascript files that you want

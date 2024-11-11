@@ -101,7 +101,10 @@ class Course {
         type: "lecture",
       };
 
-      let lectureInputElement = this.createInputElement(inputElementObject);
+      let {
+        inputElementContainer: lectureInputElement,
+        makeShiftInputWrapper,
+      } = this.createInputElement(inputElementObject);
 
       lectureInnerContainer.appendChild(lectureInputElement);
 
@@ -113,7 +116,7 @@ class Course {
       });
 
       const badgeButton = this.createBadgeButton(lecture.id, resourcesCount);
-      lectureInputElement.appendChild(badgeButton);
+      makeShiftInputWrapper.appendChild(badgeButton);
 
       let floatingContainer = document.createElement("div");
       floatingContainer.className = "lecture-floating-container";
@@ -172,7 +175,10 @@ class Course {
           type: "subtopic",
         };
 
-        let subtopicInputElement = this.createInputElement(inputElementObject);
+        let {
+          inputElementContainer: subtopicInputElement,
+          makeShiftInputWrapper,
+        } = this.createInputElement(inputElementObject, "subtopic");
         subtopicInputElement.appendChild(attachButton);
 
         subtopicWrapper.appendChild(subtopicInputElement);
@@ -248,15 +254,16 @@ class Course {
       "div",
       "main-classroom-subtopic-item"
     );
+
     mainClassroomSubtopicItem.setAttribute("id", id);
 
     let rowItemIcon = createElement("div", "row-item-icon");
     let rowItemText = createElement("div", "row-item-text");
     let rowItemAction = createElement("div", "row-item-action");
 
-    let previewElement = document.createElement("div")
+    let previewElement = document.createElement("div");
     previewElement.className = "preview";
-    previewElement.innerHTML = createLinkPreview(value)
+    previewElement.innerHTML = createLinkPreview(value);
 
     let imageElement = document.createElement("img");
 
@@ -311,11 +318,10 @@ class Course {
     mainClassroomSubtopicItem.appendChild(rowItemIcon);
     if (resourceType != "link")
       mainClassroomSubtopicItem.appendChild(rowItemText);
-    if (resourceType == "link"){
+    if (resourceType == "link") {
       // rowItemText.innerHTML = `<a style="color: inherit; text-decoration:none;" href="${value}" target="_blank">${value}</a>`;
       mainClassroomSubtopicItem.appendChild(previewElement);
     }
-
 
     if (resourceType != "text")
       mainClassroomSubtopicItem.appendChild(rowItemAction);
@@ -383,14 +389,14 @@ class Course {
       type: "lecture",
     };
 
-    let lectureInputElement =
+    let { inputElementContainer: lectureInputElement, makeShiftInputWrapper } =
       lectureTitle.length == 0
         ? this.createInputElement(inputElementObject)
         : this.createInputElement(inputElementObject, "excelUpload");
 
     // TODO: BADGE FOR SHOWING UPLOADS
     const badgeButton = this.createBadgeButton(lectureID, 0);
-    lectureInputElement.appendChild(badgeButton);
+    makeShiftInputWrapper.appendChild(badgeButton);
 
     let floatingContainer = document.createElement("div");
     floatingContainer.className = "lecture-floating-container";
@@ -451,9 +457,9 @@ class Course {
       type: "subtopic",
     };
 
-    let subtopicInputElement =
+    let { inputElementContainer: subtopicInputElement, makeShiftInputWrapper } =
       subtopicTitle.length == 0
-        ? this.createInputElement(inputElementObject)
+        ? this.createInputElement(inputElementObject, "subtopic")
         : this.createInputElement(inputElementObject, "excelUpload");
 
     subtopicInputElement.appendChild(attachButton);
@@ -622,11 +628,15 @@ class Course {
     let inputElementContainer = document.createElement("div");
     inputElementContainer.className = "input-element";
 
+    let makeShiftInputWrapper = document.createElement("div");
+    makeShiftInputWrapper.className = "make-shift-input-wrapper";
+
     let inputElement = document.createElement("input");
     inputElement.type = "text";
     inputElement.value = title;
     inputElement.setAttribute("data-id", id);
     inputElement.setAttribute("required", "true");
+    makeShiftInputWrapper.appendChild(inputElement);
 
     let inputCallbackObject = {
       id,
@@ -649,7 +659,6 @@ class Course {
     deleteButton.className = "delete-button";
     deleteButton.innerHTML = `<img src="../assets/icons/delete.png" alt="">`;
 
-    
     deleteButton.addEventListener("click", () => {
       switch (type) {
         case "lecture":
@@ -665,10 +674,57 @@ class Course {
       }
     });
 
-    inputElementContainer.appendChild(inputElement);
+    let generatePDFButton = document.createElement("div");
+    generatePDFButton.className = "generate-button";
+    generatePDFButton.innerHTML = `<img src="../assets/icons/fi/arrows-rotate.svg" alt="">`;
+
+    let generateVideoButton = document.createElement("div");
+    generateVideoButton.className = "generate-button";
+    generateVideoButton.innerHTML = `<img src="../assets/icons/video-icon.png" alt="">`;
+    //jeries / video
+
+    generateVideoButton.addEventListener("click", async () => {
+      const loader = showLoader("Recominding a video...");
+      const { videoUrl } = await recommendVideo({
+        courseName: this.title,
+        lectureTitle: title,
+      });
+      loadVideoIntoPopup(videoUrl);
+      removeLoader(loader);
+    });
+
+    function loadVideoIntoPopup(videoUrl) {
+      const embedUrl = videoUrl.replace("watch?v=", "embed/") + "?autoplay=1";
+      globalCache.save("savevideo", videoUrl);
+      globalCache.save("lectureid", id);
+      globalCache.save("title", title);
+      document.getElementById("videoFrame").src = embedUrl;
+      openPopup(".video-overlay");
+    }
+
+    generatePDFButton.addEventListener("click", async () => {
+      const loader = showLoader("Generating PDF...");
+      const { pdfOutput, pdfUrl } = await generatePDFfromGPT({
+        courseName: this.title,
+        lectureTitle: title,
+      });
+      await openPDFViewer(pdfUrl);
+      await uploadBlobPDF({ fileObject: pdfOutput, subtopicID: id });
+      removeLoader(loader);
+      //TODO: SAVING ONLY SHOWS AFTER REFRESH
+    });
+
+    inputElementContainer.appendChild(makeShiftInputWrapper);
+
+    if (addType == "subtopic") {
+      if (title.length > 0)
+        inputElementContainer.appendChild(generatePDFButton);
+      // inputElementContainer.appendChild(generateVideoButton);
+    }
+
     inputElementContainer.appendChild(deleteButton);
 
-    return inputElementContainer;
+    return { inputElementContainer, makeShiftInputWrapper };
   }
 
   createAttachButton(id) {
