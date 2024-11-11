@@ -42,7 +42,7 @@
 
 .lecture-inner-container .input-element {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr auto auto auto;
   grid-gap: 20px;
   align-items: center;
   position: relative;
@@ -177,7 +177,8 @@
   position: absolute;
   width: 50px;
   height: 100%;
-  right: 50px;
+  right: 0px;
+  top: 0px;
   place-content: center;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;

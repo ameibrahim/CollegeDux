@@ -179,7 +179,7 @@ class Course {
           inputElementContainer: subtopicInputElement,
           makeShiftInputWrapper,
         } = this.createInputElement(inputElementObject, "subtopic");
-        subtopicInputElement.appendChild(attachButton);
+        makeShiftInputWrapper.appendChild(attachButton);
 
         subtopicWrapper.appendChild(subtopicInputElement);
 
@@ -466,7 +466,7 @@ class Course {
         ? this.createInputElement(inputElementObject, "subtopic")
         : this.createInputElement(inputElementObject, "excelUpload");
 
-    subtopicInputElement.appendChild(attachButton);
+        makeShiftInputWrapper.appendChild(attachButton);
 
     parentElement.appendChild(subtopicInputElement);
   }
