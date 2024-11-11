@@ -9,8 +9,7 @@ class Question {
   marksWorth;
 
   constructor(questionObject) {
-    let { question, answerOptions, answer, type, hardness } =
-      questionObject;
+    let { question, answerOptions, answer, type, hardness } = questionObject;
 
     this.id = uniqueID(1);
     this.question = question;
@@ -18,7 +17,9 @@ class Question {
     this.answer = answer;
     this.type = type;
     this.hardness = hardness;
-    this.marksWorth = questionObject.marksWorth ? questionObject.marksWorth : getMarksForQuestion(type) ;
+    this.marksWorth = questionObject.marksWorth
+      ? questionObject.marksWorth
+      : getMarksForQuestion(type);
 
     if (questionObject.inputAnswer != null)
       this.inputAnswer = questionObject.inputAnswer;
@@ -167,7 +168,7 @@ class FillInTheBlank extends Question {
     if (this.inputAnswer) {
       blankTextEditableField.className = "fitb-answer-input active";
       blankTextEditableField.value = this.inputAnswer;
-    }else{
+    } else {
       blankTextEditableField.value = "";
     }
 
@@ -202,7 +203,6 @@ async function markFITBQuestion(questionObject, language) {
     `mark` +
     `, in the format: { "mark": <score> }. Ensure there are no nested objects or extra fields.
     `;
-
 
   // let unparsedJSONResponse = await generateGPTResponseFor(query);
   // console.log("result before marking: ", unparsedJSONResponse);
@@ -268,16 +268,10 @@ async function mark(questions, language) {
 // CHANGES FOR GENERATION
 
 async function generateQuestion(generateQuestionObject, amount = 1) {
-  console.log("GOT HERE");
-
   const { type, languages, educationEnvironment, level, topics } =
     generateQuestionObject;
 
-  console.log("generateQuestionObject: ", generateQuestionObject);
-
   const shortHandLanguages = getShortHandsFor(languages);
-
-  console.log("shortHandLanguages: ", shortHandLanguages);
 
   // TODO: Mickey #1
   // Everything can be generated, but it will go through a validator
@@ -306,47 +300,89 @@ async function generateQuestion(generateQuestionObject, amount = 1) {
   let query = `create for me in valid json format using ISO encoding, ${amount} questions with the keywords 'questions' in the ${languages
     .map((language) => `${language}`)
     .join("and ")} as well as their answers 
-        in the ${languages
-          .map((language) => `${language}`)
-          .join("and ")} with those exact key names in the topics of ${topics} 
-        for ${educationEnvironment}. 
-    
-        The questions should be ${type} with its respective answer choices as well in the languages types ${languages
+          in the ${languages
+            .map((language) => `${language}`)
+            .join(
+              "and "
+            )} with those exact key names in the topics of ${topics} 
+          for ${educationEnvironment}. 
+      
+          The questions should be ${type} with its respective answer choices as well in the languages types ${languages
     .map((language) => `${language}`)
     .join("and ")}
-        as well as the correct answer option in ${languages
-          .map((language) => `${language}`)
-          .join("and ")}.
-    
-        The questions should be ${level}.
-    
-        The json format should have the following keys, 
-        "question, answerOptions, answer, type, hardness". 
-    
-        question, answerOptions and answer should all come with the ${languages
-          .map((language) => `${language}`)
-          .join("and ")}
-    
-        The answerOptions should only be available if the 
-        question type is multiple choice or true and false.
-    
-        Do not add any invalid characters in the result please.`;
+          as well as the correct answer option in ${languages
+            .map((language) => `${language}`)
+            .join("and ")}.
+      
+          The questions should be ${level}.
+      
+          The json format should have the following keys, 
+          "question, answerOptions, answer, type, hardness". 
+      
+          question, answerOptions and answer should all come with the ${languages
+            .map((language) => `${language}`)
+            .join("and ")}
+      
+          The answerOptions should only be available if the 
+          question type is multiple choice or true and false.
+      
+          Do not add any invalid characters in the result please.`;
 
-  let unparsedJSONResponse = await generateGPTResponseFor(query);
-  let result = await JSON.parse(unparsedJSONResponse);
+  async function generateLegacyGPTResponseFor(prompt) {
+    const response = await fetchOpenAIKey();
+    let apiKey = response[0].value;
 
-  try {
-    if (result.questions) result = result.questions;
-    else if (result.question) result = result.question;
-    else if (result.questions.questions) result = result.questions.questions;
-    else result = result;
-  } catch (error) {
-    console.log(error);
+    const endpoint = "https://api.openai.com/v1/chat/completions";
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [
+            {
+              role: "system",
+              content: "You are a helpful assistant.",
+            },
+            {
+              role: "user",
+              content: prompt,
+            },
+          ],
+          response_format: { type: "json_object" },
+        }),
+      });
+
+      const data = await response.json();
+      console.log("HERE IS DATA FROM GPT: ", data);
+      return data.choices[0].message.content;
+    } catch (error) {
+      console.error("Error fetching response:", error);
+      return null;
+    }
   }
 
   // FROM HERE WE ARE VALIDATING;
 
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    console.log("running...");
+    let result = await generateLegacyGPTResponseFor(query);
+
+    try {
+      result = JSON.parse(result);
+      console.log("result ++++: ", result);
+      if (result.questions) result = result.questions;
+      else if (result.question) result = result.question;
+      else if (result.questions.questions) result = result.questions.questions;
+      else result = result;
+    } catch (error) {
+      console.log(error);
+    }
+
     let conformedResults = [];
 
     if (result == null || result == undefined || result.length < 1) {
