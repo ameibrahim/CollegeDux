@@ -56,10 +56,6 @@ function openyyoutubeViewer(videoURL) {
   videoElement.src = videoURL.replace("watch?v=", "embed/") + "?autoplay=1";
   videoElement.allow = "autoplay; encrypted-media";
 
-  //     <div class="video-container">
-  //     <iframe id="videoFrame" src="" width="560" height="315" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-  // </div>
-
   closeButton.appendChild(closeButtonIcon);
 
   videoViewerOverlay.appendChild(videoElement);

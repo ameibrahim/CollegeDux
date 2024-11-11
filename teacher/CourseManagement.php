@@ -209,7 +209,7 @@
                 <div class="button secondary-button" onclick="closePopup('.video-overlay')">
                     <text>Close</text>
                 </div>
-                <div class="button" onclick="saveVideo()">
+                <div class="button" onclick="saveVideo(); closePopup('.video-overlay')">
                     <text>Save</text>
                 </div>
 

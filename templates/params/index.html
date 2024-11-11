@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Params</title>
+</head>
+<body>
+
+    <script>
+
+        function setURLParameter(name, value){
+            let url = new URL(window.location);
+            let urlSearchParams = new URLSearchParams(url.search);
+
+            urlSearchParams.set(name, value);
+            url.search = urlSearchParams.toString();
+            window.history.pushState(null, null, url.toString());
+        }
+
+        function getURLParameter(identifier){
+            let searchParams = new URLSearchParams(window.location.search);
+            const hasIdentifier = searchParams.has(identifier); 
+            return hasIdentifier ? searchParams.get(identifier) : null;
+        }
+
+        setURLParameter("id", "4534336363");
+        console.log(getURLParameter("id"));
+
+    </script>
+    
+</body>
+</html>

@@ -323,6 +323,10 @@ class Course {
       mainClassroomSubtopicItem.appendChild(previewElement);
     }
 
+    if(resourceType == "video"){
+      rowItemText.innerHTML = `<a style="color:var(--accent);" target='_blank' href='${value}'>${value}</a>`;
+    }
+
     if (resourceType != "text")
       mainClassroomSubtopicItem.appendChild(rowItemAction);
     // mainClassroomSubtopicItem.appendChild(deleteButton);
@@ -684,7 +688,7 @@ class Course {
     //jeries / video
 
     generateVideoButton.addEventListener("click", async () => {
-      const loader = showLoader("Recominding a video...");
+      const loader = showLoader("Recommending a video...");
       const { videoUrl } = await recommendVideo({
         courseName: this.title,
         lectureTitle: title,
@@ -696,7 +700,7 @@ class Course {
     function loadVideoIntoPopup(videoUrl) {
       const embedUrl = videoUrl.replace("watch?v=", "embed/") + "?autoplay=1";
       globalCache.save("savevideo", videoUrl);
-      globalCache.save("lectureid", id);
+      globalCache.save("subtopicID", id);
       globalCache.save("title", title);
       document.getElementById("videoFrame").src = embedUrl;
       openPopup(".video-overlay");
@@ -719,7 +723,7 @@ class Course {
     if (addType == "subtopic") {
       if (title.length > 0)
         inputElementContainer.appendChild(generatePDFButton);
-      // inputElementContainer.appendChild(generateVideoButton);
+      inputElementContainer.appendChild(generateVideoButton);
     }
 
     inputElementContainer.appendChild(deleteButton);
@@ -1111,15 +1115,15 @@ async function saveVideo() {
     const value = globalCache.get("savevideo");
     const type = "video";
     const id = uniqueID(1);
-    const lectureID = globalCache.get("lectureid");
+    const subtopicID = globalCache.get("subtopicID");
     const title = globalCache.get("title");
 
     const params = {
-      id: id,
-      type: type,
-      value: value,
-      lectureID: lectureID,
-      title: title,
+      id,
+      type,
+      value,
+      subtopicID,
+      title,
     };
 
     const response = await AJAXCall({

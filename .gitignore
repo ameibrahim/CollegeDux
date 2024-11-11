@@ -5,7 +5,7 @@ uploads/*
 !uploads/demoAccount.png
 quiz/*.json
 objectives/*json
-exam/generated/*
-exam/taken/*
-templates/*
+exam/generated/*.*
+exam/taken/*.*
+templates/*.*
 /include/course/getTeachersA.php

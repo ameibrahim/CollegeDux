@@ -49,6 +49,7 @@
         "../js/Question.js",
         "../js/GlobalCache.js",
         "../js/videoRecommendation.js",
+        "../js/videoViewer.js",
     );
 
     // These are for javascript files that you want
