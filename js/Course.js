@@ -323,7 +323,7 @@ class Course {
       mainClassroomSubtopicItem.appendChild(previewElement);
     }
 
-    if(resourceType == "video"){
+    if (resourceType == "video") {
       rowItemText.innerHTML = `<a style="color:var(--accent);" target='_blank' href='${value}'>${value}</a>`;
     }
 
@@ -429,6 +429,8 @@ class Course {
     lectureSection.appendChild(lectureInnerContainer);
     courseGridContainer.appendChild(lectureSection);
 
+    this.recountItemizations();
+
     let editCourseContainer = document.querySelector(".edit-course-container");
     scrollBottom(editCourseContainer);
   }
@@ -439,9 +441,12 @@ class Course {
       courseGridContainer.querySelectorAll(".itemization");
 
     itemizationElements.forEach((itemizationElement, index) => {
+      console.log("I do run");
       this.itemizationIndex = index + 1;
       itemizationElement.textContent = this.itemizationIndex + ".";
     });
+
+    console.log("this.itemizationIndex: ", this.itemizationIndex);
   }
 
   addSubtopicElement(
@@ -466,7 +471,7 @@ class Course {
         ? this.createInputElement(inputElementObject, "subtopic")
         : this.createInputElement(inputElementObject, "excelUpload");
 
-        makeShiftInputWrapper.appendChild(attachButton);
+    makeShiftInputWrapper.appendChild(attachButton);
 
     parentElement.appendChild(subtopicInputElement);
   }
@@ -667,9 +672,9 @@ class Course {
       switch (type) {
         case "lecture":
           inputElementContainer.parentElement.parentElement.remove();
-          this.recountItemizations();
           this.searchAndDeleteLecture(id);
           this.lectureIndex--;
+          this.recountItemizations();
           break;
         case "subtopic":
           inputElementContainer.remove();
