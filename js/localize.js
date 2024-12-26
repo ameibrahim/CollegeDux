@@ -52,6 +52,8 @@ function fetchLocalization(text) {
     "upload resource": { en: "Upload Resource", tr: "Kaynağı Yükle" },
 
     "dux login": { en: "Dux Login", tr: "Dux Giriş Yap" },
+    "login": { en: "login", tr: "Giriş Yap" },
+    "signup": { en: "Signup", tr: "Üye ol" },
     "student number": { en: "Student Number", tr: "Okul Numarası" },
     "don't have an account? signup": {
       en: "Don’t have an account? Signup",
@@ -93,6 +95,7 @@ function fetchLocalization(text) {
     "this month": { en: "This Month", tr: "Bu Ay" },
     "view photo": { en: "view photo", tr: "fotoğrafı görüntüle" },
     open: { en: "open", tr: "aç" },
+    "move course": { en: "Move Course", tr: "Kursu Taşı" },
   };
 
   let escape = { en: text, tr: text };

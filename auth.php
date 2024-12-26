@@ -26,7 +26,7 @@
     <script src="/js/auth.js?5" defer></script>
     <script src="/js/functions.js?4" defer></script>
     <script src="/js/weather.js" defer></script>
-    <script src="/js/localize.js"></script>
+    <script src="/js/localize.js?1"></script>
 </head>
 <body>
 
@@ -49,7 +49,7 @@
                 <span class="text-box">
                     <input type="password" id="password-field" required class="bordered bordered-dark" placeholder="password">
                 </span>
-                <div class="button background-dark" onclick="login()">login</div>
+                <div class="button background-dark" onclick="login()"><text>login</text></div>
         
                 <p class="link" onclick="showSignup()"><text>Don't have an account? Signup</text></p>
             </form>
@@ -120,7 +120,7 @@
                     </span>
                 </div>
         
-                <div class="button background-dark" onclick="signup()">Signup</div>
+                <div class="button background-dark" onclick="signup()"><text>signup</text></div>
         
                 <p class="link" onclick="showLogin()">Have an account? Login</p>
             </form>

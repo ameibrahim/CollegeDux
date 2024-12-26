@@ -5,7 +5,7 @@
                 <img src="../assets/icons/close.png" alt="">
             </div>
             <h1 class="pop-up-title two-column-grid">
-                <div>Move Course</div>
+                <div><text>move mourse</text></div>
                 <div class="course-count"></div>
             </h1>
         </div>

@@ -36,7 +36,7 @@
 
         <a class="sidebar-link" data-id="Weight Assignment" href="Weights.php">
             <img src="../assets/icons/fi/fi-rr-chart-pie-alt.svg" alt="">
-            <p><text>Weight Assignment</text></p>
+            <p><text>Weight Assignments</text></p>
         </a>
 
         <a class="sidebar-link" data-id="Class Stats" href="Stats.php">

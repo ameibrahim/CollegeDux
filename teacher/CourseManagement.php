@@ -10,6 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <?php include '../include/teacherImports.php'; ?>
+    <script src="../js/localize.js?3"></script>
 
 </head>
 
@@ -28,7 +29,7 @@
 
                 <div class="two-column-grid">
                     <div class="button" onclick="openPopup('.create-mover-overlay'); startCourseMover()">
-                        <text>Move Course</text>
+                        <text>move course</text>
                     </div>
                     <div class="button" onclick="openCreateCourseOverlay()">
                         <text>Create Course</text>
