@@ -824,7 +824,8 @@ async function generateQuiz(
     "FillInTheBlankQuestion",
     "TrueAndFalseQuestion",
   ];
-  const levels = ["easy", "medium", "hard", "difficult", "extremely difficult"];
+  // const levels = ["easy", "medium", "hard", "difficult", "extremely difficult"];
+  const levels = ["difficult", "extremely difficult"];
 
   const lectureID = lectureObject.id;
   const lectureTitle = lectureObject.title;
