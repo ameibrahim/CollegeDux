@@ -53,6 +53,7 @@ function fetchLocalization(text) {
 
     "dux login": { en: "Dux Login", tr: "Dux Giriş Yap" },
     "login": { en: "login", tr: "Giriş Yap" },
+    "college dux": { en: "College Dux", tr: "Kolej Dux" },
     "signup": { en: "Signup", tr: "Üye ol" },
     "student number": { en: "Student Number", tr: "Okul Numarası" },
     "don't have an account? signup": {

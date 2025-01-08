@@ -4,18 +4,22 @@
     <div style="display: grid; grid-gap: 10px; align-items: start; grid-template-rows: auto 1fr;">
         <h1 class="medium-title" id="course-title"></h1>
         <p class="small-title" id="course-code"></p>
+        <div class="button" id="editCourseDetails" style="justify-self:start;">
+            <text>Edit Course Details</text>
+        </div>
         <div class="button" id="editLearningObjectives" style="justify-self:start;">
-            <text>Edit Learning Objectives</text> 
+            <text>Edit Learning Objectives</text>
         </div>
         <div class="button" id="deleteCourseButton" style="justify-self:start;">
-            <text>Delete Course</text> 
+            <text>Delete Course</text>
         </div>
     </div>
 
-    <div class="simple-grid">
+    <div style="display: grid; grid-gap: 10px; align-items: start; grid-template-rows: auto auto auto;">
         <label for="excelCourseFileUpload" class="button" id="excelUploadButton">
             <div>
-                <input type="file" id="excelCourseFileUpload" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                <input type="file" id="excelCourseFileUpload"
+                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                 <img src="../assets/icons/excel.png" alt="">
                 <text>Excel Upload</text>
             </div>

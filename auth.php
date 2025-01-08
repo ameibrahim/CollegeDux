@@ -26,14 +26,14 @@
     <script src="/js/auth.js?5" defer></script>
     <script src="/js/functions.js?4" defer></script>
     <script src="/js/weather.js" defer></script>
-    <script src="/js/localize.js?1"></script>
+    <script src="/js/localize.js?2"></script>
 </head>
 <body>
 
     <div class="wrapper">
         <div class="logo-container">
             <img src="assets/images/air-logo.png" alt="">
-            <div class="top-text">Prof Dux</div>
+            <div class="top-text"><text>College Dux</text></div>
         </div>
     
         <div class="outer-container">

@@ -11,6 +11,7 @@
 
     <?php include '../include/teacherImports.php'; ?>
     <script src="../js/localize.js?3"></script>
+    <script src="../js/courseDetailChanges.js?1"></script>
 
 </head>
 
@@ -50,7 +51,8 @@
 
             <div class="edit-course-container inner-overlay">
 
-                <div class="back-arrow" onclick="openPopup('.course-view-container','back'); closeEditCourseContainer()">
+                <div class="back-arrow"
+                    onclick="openPopup('.course-view-container','back'); closeEditCourseContainer()">
                     <img class="icon" src="../assets/icons/fi/fi-rr-arrow-alt-left.svg" alt="">
                 </div>
 
@@ -64,6 +66,7 @@
     <?php include 'components/courseCreationOverlay.php' ?>
     <?php include 'components/courseMoverOverlay.php' ?>
     <?php include 'components/editLearningObjectivesOverlay.php' ?>
+    <?php include 'components/editCourseDetailsOverlay.php' ?>
 
     <script>
 

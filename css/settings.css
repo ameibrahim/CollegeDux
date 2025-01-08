@@ -8,13 +8,13 @@
 
 .personal-upload-input{ justify-self: center; cursor: pointer;}
 
-.personal-image-view{
+.personal-image-view, .course-edit-view{
     height: 200px;
     width: 200px;
     justify-items: center;
 }   
 
-.personal-image-view img{
+.personal-image-view img, .course-edit-view img{
     height: 240px;
     /* width: 400px;
     margin-left: -25%; */

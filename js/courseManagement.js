@@ -610,19 +610,6 @@ function closeEditCourseContainer() {
     editCourseContainer.style.display = "none";
 }
 
-async function checkImage(imagePath) {
-    // This function checks for broken image paths
-    // and replaces it with a default image
-
-    try {
-        let result = await fetch(imagePath);
-        if (result.status != 404) return imagePath;
-        throw new Error();
-    } catch (error) {
-        return `../assets/images/courseDefault.jpg`;
-    }
-}
-
 // function showLinkPreview() {
 //     const linkInput = document.getElementById("LinkToUpload").value;
 //     const previewDiv = document.getElementById("preview");

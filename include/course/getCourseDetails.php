@@ -106,6 +106,7 @@
                 "id" => $course['id'],
                 "title" => $course['title'],
                 "courseCode" => $course['courseCode'],
+                "image" => $course['image'],
                 "lectures" => $lectureArray
             );
 
