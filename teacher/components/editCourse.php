@@ -25,6 +25,10 @@
             </div>
         </label>
 
+        <div class="button" onclick="openPopup('.course-sharing-overlay'); startCourseSharing()">
+            <text>add instructors</text>
+        </div>
+
         <div class="button" id="saveCourseDetails">
             <text>Save</text>
         </div>

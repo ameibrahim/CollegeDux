@@ -83,10 +83,16 @@ label:hover {
   word-break: break-all;
 }
 
-.split-view {
+.split-view, .footer-split-view {
     display: grid;
     grid-template-columns: 1fr 1fr;
     height: 100%;
+}
+
+.footer-split-view{
+  grid-gap: 20px;
+  width: 100%;
+  justify-items: center;
 }
 
 .create-mover-overlay .popup {

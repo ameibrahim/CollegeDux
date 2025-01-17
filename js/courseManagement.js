@@ -551,6 +551,9 @@ function editCourseWith({ id }) {
     let mainContainer = document.querySelector(".main-container");
     mainContainer.setAttribute("data-id", id);
 
+    console.log("id...: ", id);
+    globalCache.put("chosenCourseID", id);
+
     closePopup(".course-view-container");
     openPopup(".edit-course-container");
 

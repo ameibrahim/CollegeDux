@@ -65,12 +65,14 @@
 
     <?php include 'components/courseCreationOverlay.php' ?>
     <?php include 'components/courseMoverOverlay.php' ?>
+    <?php include 'components/courseSharingOverlay.php' ?>
     <?php include 'components/editLearningObjectivesOverlay.php' ?>
     <?php include 'components/editCourseDetailsOverlay.php' ?>
 
     <script>
 
         const URLID = getURLParameter("id");
+
         if (URLID && URLID.length > 1) {
             editCourseWith({ id: URLID });
         }
@@ -186,6 +188,26 @@
             courseMoverEngine.setCourseListContainer(courseListContainer)
             courseMoverEngine.setMoveButton(moveButton)
             courseMoverEngine.setCourseCountElement(courseCountElement)
+            courseMoverEngine.setup()
+
+        }
+
+        async function startCourseSharing() {
+
+            let { id: currentOwner } = await getGlobalDetails();
+            let courseID = globalCache.get("chosenCourseID");
+            const courseMoverEngine = new CourseSharingEngine({ courseID, userID: currentOwner });
+
+            const recipientListContainer = document.querySelector(".teacher-list-container.share");
+            const courseListContainer = document.querySelector(".course-list-container.share");
+            const addInstructorButton = document.querySelector(".add-instructor-button");
+            const removeInstructorButton = document.querySelector(".remove-instructor-button");
+            const courseCountElement = document.querySelector(".course-count.share");
+
+            courseMoverEngine.setRecipientListContainer(recipientListContainer)
+            courseMoverEngine.setCourseListContainer(courseListContainer)
+            courseMoverEngine.setAddInstructorButton(addInstructorButton)
+            courseMoverEngine.setRemoveInstructorButton(removeInstructorButton)
             courseMoverEngine.setup()
 
         }

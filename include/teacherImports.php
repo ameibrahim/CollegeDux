@@ -50,6 +50,7 @@
         "../js/GlobalCache.js",
         "../js/videoRecommendation.js",
         "../js/videoViewer.js",
+        "../js/CourseSharingEngine.js",
     );
 
     // These are for javascript files that you want
