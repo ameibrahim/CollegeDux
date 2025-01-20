@@ -342,7 +342,7 @@ async function generateQuestion(generateQuestionObject, amount = 1) {
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: "gpt-4",
+          model: "gpt-4o",
           messages: [
             {
               role: "system",
