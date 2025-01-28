@@ -720,3 +720,103 @@ async function checkImage(imagePath) {
         return `../assets/images/courseDefault.jpg`;
     }
 }
+
+async function getSummary(resourcesObjectArray) {
+    const PDFNames = resourcesObjectArray
+        .filter((object) => object.type == "application/pdf")
+        .map((object) => object.value);
+
+    console.log("PDFNames: ", PDFNames);
+
+    function summarize(pdfName) {
+        return new Promise(async (resolve, reject) => {
+            const pdfUrl = `../uploads/${pdfName}`;
+
+            try {
+                // Fetch the PDF using the Fetch API
+                const response = await fetch(pdfUrl);
+                if (!response.ok) {
+                    throw new Error(
+                        `Failed to fetch PDF: ${response.statusText}`
+                    );
+                }
+
+                const pdfData = await response.arrayBuffer();
+
+                // Load the PDF document
+                const pdf = await pdfjsLib.getDocument({ data: pdfData })
+                    .promise;
+
+                let fullText = "";
+
+                // Loop through all pages
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const textContent = await page.getTextContent();
+
+                    // Concatenate all text into one large string
+                    fullText +=
+                        textContent.items.map((item) => item.str).join(" ") +
+                        " ";
+                }
+
+                // Summarize the extracted text
+                const summary = summarizeText(fullText);
+                resolve(summary);
+                // Log the summarized content to the console
+                console.log("Summarized PDF Content:", summary);
+            } catch (error) {
+                reject(error);
+                console.error("Error extracting PDF content:", error);
+            }
+        });
+
+        function summarizeText(text) {
+            // Tokenize text into sentences
+            const sentences = text.match(/[^.!?]+[.!?]+/g) || [];
+
+            // Count word frequencies
+            const wordFrequencies = {};
+            const words = text
+                .toLowerCase()
+                .split(/\W+/)
+                .filter((word) => word.length > 3); // Filter out short words
+            words.forEach((word) => {
+                wordFrequencies[word] = (wordFrequencies[word] || 0) + 1;
+            });
+
+            // Rank sentences by important keywords
+            const sentenceScores = sentences.map((sentence) => {
+                const wordsInSentence = sentence.toLowerCase().split(/\W+/);
+                const score = wordsInSentence.reduce(
+                    (total, word) => total + (wordFrequencies[word] || 0),
+                    0
+                );
+                return { sentence, score };
+            });
+
+            // Sort sentences by score in descending order
+            sentenceScores.sort((a, b) => b.score - a.score);
+
+            // Return the top 3-5 sentences as the summary
+            const summary = sentenceScores
+                .slice(0, 5)
+                .map((item) => item.sentence.trim());
+            return summary.join(" ");
+        }
+    }
+
+    return new Promise(async (resolve, reject) => {
+        let summaries = [];
+
+        try {
+            for await (const names of PDFNames) {
+                summaries.push(await summarize(names));
+            }
+        } catch (error) {
+            reject(error);
+        }
+
+        resolve(summaries.join("\n"));
+    });
+}

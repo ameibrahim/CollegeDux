@@ -61,10 +61,19 @@
 }
 
 .subtopics-resource-wrapper {
-  width: calc(100% - 50px);
+  width: calc(100%);
   display: grid;
   margin-top: 10px;
+  grid-template-columns: 1fr auto;
+  grid-gap: 20px;
+  align-items: center;
 }
+
+.subtopics-resource-wrapper .main-classroom-subtopic-item {
+  border: 2px solid var(--border-shade);
+  border-radius: 5px;
+}
+
 .main-classroom-subtopic-item {
   border: 2px solid var(--border-shade);
   border-bottom: none;

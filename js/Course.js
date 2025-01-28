@@ -82,7 +82,7 @@ class Course {
         let courseGridContainer = findElement("#course-grid-container");
         courseGridContainer.innerHTML = "";
 
-        this.lectures.forEach((lecture, index) => {
+        this.lectures.forEach(async (lecture, index) => {
             console.log("lectures object: ", JSON.stringify(lecture));
 
             this.lectureIndex = lecture.hierarchy;
@@ -118,10 +118,16 @@ class Course {
             // BADGE FOR SHOWING UPLOADS
             let resourcesCount = 0;
 
+            let allResources = [];
+
             lecture.subtopics.forEach((subtopic) => {
-                if (subtopic.resources)
+                if (subtopic.resources) {
+                    allResources.push(...subtopic.resources);
                     resourcesCount += subtopic.resources.length;
+                }
             });
+
+            console.log("all resources: ", allResources);
 
             const badgeButton = this.createBadgeButton(
                 lecture.id,
@@ -144,12 +150,24 @@ class Course {
             generateQuizButton.textContent = "generate quiz";
             // generateQuizButton.innerHTML = `<img src="../assets/icons/fi/fi-rr-plus.svg" alt="">`;
             generateQuizButton.addEventListener("click", () => {
+                if (resourcesCount <= 0) {
+                    alert("You need atleast 1 resource to generate quiz");
+                    return;
+                }
+
                 switch (from) {
                     case "object":
-                        generateQuiz({ courseID: this.id, ...lecture });
+                        generateQuiz({
+                            courseID: this.id,
+                            allResources,
+                            ...lecture,
+                        });
                         break;
                     case "excel":
-                        generateQuiz({ courseID: this.id, ...lecture }, false);
+                        generateQuiz(
+                            { courseID: this.id, allResources, ...lecture },
+                            false
+                        );
                         this.save();
                         break;
                 }
@@ -204,6 +222,40 @@ class Course {
                         const resourceElement =
                             this.createSubtopicItem(resource);
                         subtopicResourceWrapper.appendChild(resourceElement);
+
+                        let resourceDeleteButton =
+                            document.createElement("div");
+                        resourceDeleteButton.className = "quiz-delete-button";
+                        let resourceDeleteIcon = document.createElement("img");
+                        resourceDeleteIcon.src = "../assets/icons/delete.png";
+                        resourceDeleteButton.appendChild(resourceDeleteIcon);
+
+                        resourceDeleteButton.addEventListener(
+                            "click",
+                            async () => {
+                                const loader = showLoader(
+                                    "Deleting Resource..."
+                                );
+                                try {
+                                    await deleteResourceWith(resource);
+                                    // Optionally, you can remove the resource from the UI here if deletion is successful
+                                } catch (error) {
+                                    console.error(
+                                        "Error deleting resource:",
+                                        error
+                                    );
+                                } finally {
+                                    setTimeout(() => {
+                                        removeLoader(loader);
+                                        refreshTeacherCourseOutline();
+                                    }, 5);
+                                }
+                            }
+                        );
+
+                        subtopicResourceWrapper.appendChild(
+                            resourceDeleteButton
+                        );
                     });
 
                 subtopicWrapper.appendChild(subtopicResourceWrapper);
@@ -884,7 +936,14 @@ async function generateQuiz(
     refresh = true,
     language = "english"
 ) {
-    let loader = loadLoader("Generating Quiz");
+    const allResources = lectureObject.allResources;
+
+    let loader = loadLoader("Gathering Lecture Summary");
+    const summary = await getSummary(allResources);
+    console.log("summaries: ", summary);
+    removeLoader(loader);
+
+    loader = loadLoader("Generating Quiz");
 
     const languages = ["english", "turkish"];
     const educationEnvironment = extrapolateEducationEnvironment();
@@ -914,6 +973,7 @@ async function generateQuiz(
 
             const generateQuestionObject = {
                 type,
+                summary,
                 languages,
                 subtopics: lectureObject.subtopics,
                 educationEnvironment,

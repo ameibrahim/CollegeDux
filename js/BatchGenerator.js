@@ -7,7 +7,8 @@ class BatchGenerator {
             languages,
             educationEnvironment,
             topics,
-            amount
+            amount,
+            summary
         } = metadata;
 
         this.questionType = type
@@ -18,6 +19,7 @@ class BatchGenerator {
         this.batchSize = batchSize
         this.callback = callbackObject.callback
         this.callbackClass = callbackObject.this
+        this.summary = summary
     }
 
     async start(){
@@ -40,6 +42,7 @@ class BatchGenerator {
             const generateQuestionObject = { 
                 type: this.questionType,
                 languages,
+                summary: this.summary,
                 educationEnvironment,
                 topics: this.topics,
                 level: getRandomElement(levels)

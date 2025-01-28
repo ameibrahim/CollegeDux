@@ -8,6 +8,7 @@
     <page data-id="Course Management"></page>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
     <?php include '../include/teacherImports.php'; ?>
     <script src="../js/localize.js?3"></script>
