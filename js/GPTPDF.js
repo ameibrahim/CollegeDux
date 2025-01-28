@@ -29,7 +29,7 @@ async function generatePDFfromGPT({ courseName, lectureTitle }) {
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: "gpt-4",
+          model: "gpt-3.5-turbo",
           messages: [
             { role: "system", content: "You are a helpful assistant." },
             { role: "user", content: prompt },

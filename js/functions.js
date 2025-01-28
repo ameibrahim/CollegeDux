@@ -329,7 +329,7 @@ async function generateGPTResponseFor(prompt) {
                 Authorization: `Bearer ${apiKey}`,
             },
             body: JSON.stringify({
-                model: "gpt-4", // Updated to a version that supports JSON response format
+                model: "gpt-3.5-turbo", // Updated to a version that supports JSON response format
                 messages: [systemMessage, userMessage],
                 response_format: { type: "json_object" },
                 temperature: 0.7,

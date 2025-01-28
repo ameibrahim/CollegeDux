@@ -21,7 +21,7 @@ async function getRelevantVideoFromGPT(videoOptions, courseName, lectureTitle, o
                 "Authorization": `Bearer ${openAiApiKey}`
             },
             body: JSON.stringify({
-                model: "gpt-4",
+                model: "gpt-3.5-turbo",
                 messages: messages,
                 max_tokens: 150,
                 temperature: 0.5
