@@ -47,8 +47,9 @@ class Classroom {
       let lectureTitleContainer = createElement("div", "class-lecture-title");
       let lectureTime = createElement("div", "class-lecture-time");
 
-      let lectureStartTime = lecture.time.timeStart; // check if null.
-      const isTimeReadyForLecture = testIfTimeIsReady(lectureStartTime);
+      console.log("lecture.time: ", lecture)
+      let lectureStartTime = lecture.time == undefined ? false : lecture.time.timeStart; // check if null.
+      const isTimeReadyForLecture = lectureStartTime && testIfTimeIsReady(lectureStartTime);
 
       if (!isTimeReadyForLecture) {
         mainClassroomLectureInnerContainer.className =

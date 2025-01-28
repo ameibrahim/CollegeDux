@@ -13,9 +13,9 @@
     overflow: hidden;
 }
 
-.overlay{
+.overlay {
     position: fixed;
-    background: #000000D0;
+    background: #000000d0;
     height: 100vh;
     width: 100%;
     box-sizing: border-box;
@@ -27,7 +27,7 @@
     z-index: 10;
 }
 
-.inner-overlay{
+.inner-overlay {
     background: white;
     height: 100%;
     width: 100%;
@@ -55,7 +55,7 @@
     width: 30px;
 }
 
-.pop-up-title{
+.pop-up-title {
     font-size: 1.3em;
     color: var(--accent);
     font-weight: 400;
@@ -71,7 +71,9 @@
     position: absolute;
 }
 
-.popup-header, .popup-body, .popup-footer{
+.popup-header,
+.popup-body,
+.popup-footer {
     position: relative;
     padding: 0.7em 2em;
     margin: 0px;
@@ -84,9 +86,12 @@
     align-self: start;
 }
 
-.popup-body { border-bottom: none; padding: 2em; }
+.popup-body {
+    border-bottom: none;
+    padding: 2em;
+}
 
-.popup-footer { 
+.popup-footer {
     border-bottom: none;
     place-items: center;
     padding: 1em 2em 2em 2em;
@@ -96,7 +101,7 @@
     height: 500px;
 }
 
-.overlay.edit-learning-objectives-overlay .popup .popup-body{
+.overlay.edit-learning-objectives-overlay .popup .popup-body {
     height: 100%;
     overflow: auto;
 }
