@@ -45,10 +45,11 @@ class Objectives {
     let objectiveItemization = document.createElement("div");
     objectiveItemization.className = "objective-itemization";
 
-    let objectiveText = document.createElement("div");
+    let objectiveText = document.createElement("input");
+    objectiveText.value = objective.title;
     objectiveText.className = "objective-text";
     objectiveText.setAttribute("contentEditable", "true");
-    objectiveText.textContent = objective.title;
+    // objectiveText.textContent = objective.title;
     objectiveText.addEventListener("input", () =>
       this.updateObjective(objectiveText, this.objectives[index])
     );
@@ -96,7 +97,7 @@ class Objectives {
   }
 
   updateObjective(element, textObject) {
-    textObject.title = element.textContent;
+    textObject.title = element.value;
     textObject.action = textObject.action == "new" ? "new" : "editted";
     console.log("updating objective: ", this.objectives);
   }
