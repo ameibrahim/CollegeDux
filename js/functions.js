@@ -364,7 +364,7 @@ async function generateGPTResponseFor(prompt) {
         // Parse the JSON response
         const parsedContent = JSON.parse(data.choices[0].message.content);
         console.log("parsedContent: ", parsedContent);
-        return parsedContent.response || "No response content available";
+        return parsedContent || "No response content available";
     } catch (error) {
         console.error("Error in generateGPTResponseFor:", error);
         return "I apologize, but I encountered an error processing your request.";
