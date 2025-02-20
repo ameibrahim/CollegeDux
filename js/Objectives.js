@@ -132,13 +132,12 @@ async function refreshObjectives() {
   const courseDetails = await getTitleAndFilename(courseID);
   console.log(courseDetails);
   const { title } = courseDetails[0];
-
-  const prompt = `generate for me in json format with the structure { courseTitle: "", learningObjectives: [ "" ] }, a decent amount of learning 
-    objectives for students for the given course title: ${title}
-    `;
+  const language=extrapolateLanguage();
+  console.log("jerry", language);
+  const prompt = `Create a JSON string with a structured format for a course with the title "${title}" in "${language}". The format should be: { courseTitle: "", learningObjectives: [ "" ] }, include a decent amount of learning objectives.`;
 
   const objectivesResponse = await generateGPTResponseFor(prompt);
-  const objectivesJSON = await JSON.parse(objectivesResponse);
+  const objectivesJSON = objectivesResponse;
   const objectivesList = objectivesJSON.learningObjectives;
 
   console.log("objectiveList: ", objectivesJSON);

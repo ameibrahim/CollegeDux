@@ -314,7 +314,18 @@ async function generateGPTResponseFor(prompt) {
         const systemMessage = {
             role: "system",
             content:
-                "You are a helpful assistant. Always respond in JSON format with a 'response' key containing your message.",
+            `You are an AI assistant that generates detailed lecture notes based on course and lecture titles and desired language.Ensure the response adheres to these JSON rules:
+            1. The JSON must represent an object or array.
+            2. All keys must be strings enclosed in double quotes ("key").
+            3. All strings must be enclosed in double quotes. Escape special characters using a backslash:
+              - Use \\ for backslash, \" for double quotes, \\n for newlines, etc.
+            4. Arrays should contain valid JSON values (e.g., strings, numbers, objects, arrays, true, false, null) and must not have trailing commas.
+            5. No trailing commas are allowed in objects or arrays.
+            6. Numbers must not have leading zeros unless the value is exactly zero, and must not be enclosed in quotes.
+            7. Boolean values and null must not be quoted (e.g., "true" is invalid, true is valid).
+            8. Avoid invalid characters or unescaped sequences. Use UTF-8 encoding.
+            9. Properly close all braces and brackets. JSON must be well-formed and free of truncation issues.
+            10.the output must be in proper json format and no extra characters before or after the json is allowed`
         };
 
         const userMessage = {
@@ -329,11 +340,11 @@ async function generateGPTResponseFor(prompt) {
                 Authorization: `Bearer ${apiKey}`,
             },
             body: JSON.stringify({
-                model: "gpt-3.5-turbo", // Updated to a version that supports JSON response format
+                model: "gpt-4o", // Updated to a version that supports JSON response format
                 messages: [systemMessage, userMessage],
                 response_format: { type: "json_object" },
                 temperature: 0.7,
-                max_tokens: 150,
+                max_tokens: 3500,
             }),
         });
 
