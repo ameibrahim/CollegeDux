@@ -289,30 +289,7 @@ async function generateQuestion(generateQuestionObject, amount = 1) {
 
     const shortHandLanguages = getShortHandsFor(languages);
 
-    // TODO: Mickey #1
-    // Everything can be generated, but it will go through a validator
-    // The validator may/will include
-    // * Error Checkers
-    // * Comparators ✅
-    // * Matchers ✅
-    // * Encoders/Decoders
-    // * Loggers
-
-    // TODO: Mickey #2
-    // Make a ReGenerate () Function that will be able to regenerate the
-    // results of just one question
-
-    // TODO: Mickey #3 ++DONE
-    // Create premade structure to fill in data and ensure integrity of
-    // a json file. Invalid JSON files should be logged.
-
-    // TODO: Mickey #4
-    // Abstract long generations as classes and ensure all of them have
-    // this new validation process.
-
-    // TODO: Mickey #5
-    // Document all findings.
-
+  
     let query = `create for me in valid json format using ISO encoding, ${amount} questions with the keywords 'questions' in the ${languages
         .map((language) => `${language}`)
         .join("and ")} as well as their answers 

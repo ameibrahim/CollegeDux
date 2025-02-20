@@ -765,6 +765,9 @@ class Course {
         let generatePDFButton = document.createElement("div");
         generatePDFButton.className = "generate-button";
         generatePDFButton.innerHTML = `<img src="../assets/icons/fi/arrows-rotate.svg" alt="">`;
+        generatePDFButton.addEventListener('click', function() {
+            openPopup(".pdf-overlay");
+        });
 
         let generateVideoButton = document.createElement("div");
         generateVideoButton.className = "generate-button";
@@ -783,7 +786,7 @@ class Course {
 
         function loadVideoIntoPopup(videoUrl) {
             const embedUrl =
-                videoUrl.replace("watch?v=", "embed/") + "?autoplay=1";
+           videoUrl.replace("watch?v=", "embed/") + "?autoplay=1";
             globalCache.save("savevideo", videoUrl);
             globalCache.save("subtopicID", id);
             globalCache.save("title", title);
@@ -791,17 +794,33 @@ class Course {
             openPopup(".video-overlay");
         }
 
-        generatePDFButton.addEventListener("click", async () => {
-            const loader = showLoader("Generating PDF...");
+       const continueButton = document.querySelector('.primary-button');
+       console.log(continueButton);
+        continueButton.addEventListener('click', async function() {
+        const language = document.getElementById('language').value;
+        const pageNumber = document.getElementById('page').value;
+
+        const loader = showLoader("Generating PDF...");
+        try {
             const { pdfOutput, pdfUrl } = await generatePDFfromGPT({
-                courseName: this.title,
-                lectureTitle: title,
+                courseName: this.title, // Ensure `this.title` is correctly referenced
+                lectureTitle: title, // Ensure `title` is correctly defined
+                language: language,
+                pages: pageNumber
             });
+
+            console.log('PDF :', this.title,title, language, pageNumber);
             await openPDFViewer(pdfUrl);
             await uploadBlobPDF({ fileObject: pdfOutput, subtopicID: id });
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+        } finally {
             removeLoader(loader);
-            //TODO: SAVING ONLY SHOWS AFTER REFRESH
-        });
+            closePopup('.pdf-overlay');
+        }
+    });
+
+  
 
         inputElementContainer.appendChild(makeShiftInputWrapper);
 

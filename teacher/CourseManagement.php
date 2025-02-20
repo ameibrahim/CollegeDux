@@ -9,6 +9,12 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
+<script src="https://unpkg.com/pdf-lib@1.16.0/dist/pdf-lib.min.js"></script>
+
+    
+
 
     <?php include '../include/teacherImports.php'; ?>
     <script src="../js/localize.js?3"></script>
@@ -219,6 +225,29 @@
     <?php include 'components/uploadCourseMaterialOverlay.php'; ?>
 
     <?php include 'components/editQuizOverlay.php'; ?>
+    <div class="overlay pdf-overlay" style="display: none;">
+    <div class="popup-header">
+        <div class="close-button" onclick="closePopup('.pdf-overlay')">
+            <img src="../assets/icons/close.png" alt="Close">
+        </div>
+        <h1 class="pop-up-title">Select Language and number of pages</h1>
+    </div>
+    <div class="popup-body">
+        <label for="language">Choose your language:</label>
+        <select name="language" id="language">
+            <option value="English">English</option>
+            <option value="Turkish">Turkish</option>
+        
+        </select>
+        <br><br>
+
+    </div>
+    <div class="popup-footer">
+        <button class="button secondary-button" onclick="closePopup('.pdf-overlay')">Close</button>
+        <button class="button primary-button" onclick="closePopup('.pdf-overlay')">Continue</button>
+    </div>
+</div>
+
 
     <div class="overlay video-overlay" style="display: none;">
         <!-- <div class="popup"> -->
