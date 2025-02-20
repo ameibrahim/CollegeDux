@@ -16,6 +16,10 @@ text::before,
     overflow: hidden;
 }
 
+.language-changer-container.pdf-language-checker{
+    border: 1px solid var(--accent);
+}
+
 .assessment-language-changer{
     padding: 0px 13px;
     color: white;

@@ -816,3 +816,22 @@ function summarize(pdfName) {
         return summary.join(" ");
     }
 }
+
+function setActive(element) {
+    console.log("element: ", element);
+    const value = element.textContent;
+
+    const parentElement = element.parentNode;
+    const children = parentElement.querySelectorAll(".language-changer-element");
+
+    console.log("children: ", children);
+
+    for (const child of children) {
+        console.log("child: ", child);
+        child.className = "language-changer-element";
+    }
+
+    element.className = "language-changer-element active";
+
+    parentElement.setAttribute("data-lang", value);
+}

@@ -797,8 +797,8 @@ class Course {
        const continueButton = document.querySelector('.primary-button');
        console.log(continueButton);
         continueButton.addEventListener('click', async function() {
-        const language = document.getElementById('language').value;
-        const pageNumber = document.getElementById('page').value;
+        const language = document.querySelector('.pdf-language-checker').getAttribute("data-lang");
+        const pageNumber = 10;
 
         const loader = showLoader("Generating PDF...");
         try {
@@ -806,7 +806,7 @@ class Course {
                 courseName: this.title, // Ensure `this.title` is correctly referenced
                 lectureTitle: title, // Ensure `title` is correctly defined
                 language: language,
-                pages: pageNumber
+                pages: 10
             });
 
             console.log('PDF :', this.title,title, language, pageNumber);
