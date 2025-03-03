@@ -154,7 +154,7 @@ function AJAXCall(callObject) {
                 console.log("Raw response:", this.responseText); // Log the raw response
                 try {
                     let result =
-                        type === "fetch"
+                        type === "fetch" && result.length > 0
                             ? JSON.parse(this.responseText)
                             : this.responseText;
 
@@ -486,6 +486,7 @@ function scrollBottom(element) {
 }
 
 async function getCourseDetails(givenID) {
+    console.log("breakpoint C");
     return AJAXCall({
         phpFilePath: "../include/course/getCourseDetails.php",
         rejectMessage: "Getting Details Failed",
@@ -591,7 +592,10 @@ async function fetchCourseWithID(givenID) {
 
     courseGridContainer.innerHTML = loader;
 
+    console.log("breakpoint B");
     let courses = await getCourseDetails(givenID);
+    console.log("breakpoint D");
+    console.log("courses: ", courses)
 
     if (courses.length > 0) if (courses[0].status == "error") return;
 

@@ -563,6 +563,7 @@ function editCourseWith({ id }) {
     let courseCode = document.querySelector("#course-code");
     courseCode.textContent = "";
 
+    console.log("breakpoint A");
     fetchCourseWithID(id);
 }
 
