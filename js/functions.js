@@ -154,7 +154,7 @@ function AJAXCall(callObject) {
                 console.log("Raw response:", this.responseText); // Log the raw response
                 try {
                     let result =
-                        type === "fetch" && result.length > 0
+                        type === "fetch" && this.responseText.length > 0
                             ? JSON.parse(this.responseText)
                             : this.responseText;
 
