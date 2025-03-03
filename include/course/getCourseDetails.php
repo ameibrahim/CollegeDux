@@ -1,122 +1,123 @@
 <?php
 
-    include "../databaseConnection.php"; 
+header('Content-Type: application/json; charset=utf-8');
 
-    $conn = OpenConnection();
+include "../databaseConnection.php";
 
-    if (!$conn) {
-        die("Connection failed: " . mysqli_connect_error());
-    }
+$conn = OpenConnection();
 
-    $courseID = $_POST["id"];
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
 
-    if($courseID){
+$courseID = $_POST["id"];
 
-        $query = "
+if ($courseID) {
+
+    $query = "
         SELECT *
         FROM `courses` WHERE id = '$courseID'
         ";
 
-        $result = mysqli_query($conn,$query);
-        $courses = mysqli_fetch_all($result,MYSQLI_ASSOC);
+    $result = mysqli_query($conn, $query);
+    $courses = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-        $finalResult = array();
+    $finalResult = array();
 
-        foreach($courses as $course) {
+    foreach ($courses as $course) {
 
-            $courseID = $course['id'];
-            
-            $lectureQuery = "
+        $courseID = $course['id'];
+
+        $lectureQuery = "
             SELECT *
             FROM `lectures` WHERE courseID = '$courseID'
             ORDER BY lectures.hierarchy
             ";
 
-            $lectureResult = mysqli_query($conn,$lectureQuery);
-            $lectures = mysqli_fetch_all($lectureResult,MYSQLI_ASSOC);
+        $lectureResult = mysqli_query($conn, $lectureQuery);
+        $lectures = mysqli_fetch_all($lectureResult, MYSQLI_ASSOC);
 
-            $lectureArray = array();
+        $lectureArray = array();
 
-            foreach($lectures as $lecture){
+        foreach ($lectures as $lecture) {
 
-                $lectureID = $lecture['id'];
+            $lectureID = $lecture['id'];
 
-                $timeQuery = "
+            $timeQuery = "
                     SELECT timeStart, timeFinish, hierarchy
                     FROM schedules 
                     INNER JOIN lectures ON schedules.foreignID = lectures.id
                     WHERE lectures.id = '$lectureID'
                 ";
 
-                $lectureTimeResult = mysqli_query($conn,$timeQuery);
-                $lectureTime = mysqli_fetch_all($lectureTimeResult,MYSQLI_ASSOC);
-                
-                $subtopicQuery = "
+            $lectureTimeResult = mysqli_query($conn, $timeQuery);
+            $lectureTime = mysqli_fetch_all($lectureTimeResult, MYSQLI_ASSOC);
+
+            $subtopicQuery = "
                 SELECT *
                 FROM `subtopics` WHERE lectureID = '$lectureID'
                 ORDER BY subtopics.hierarchy
                 ";
 
-                $subtopicResult = mysqli_query($conn,$subtopicQuery);
-                $subtopics = mysqli_fetch_all($subtopicResult,MYSQLI_ASSOC);
+            $subtopicResult = mysqli_query($conn, $subtopicQuery);
+            $subtopics = mysqli_fetch_all($subtopicResult, MYSQLI_ASSOC);
 
-                $subtopicArray = array();
+            $subtopicArray = array();
 
-                foreach($subtopics as $subtopic){
+            foreach ($subtopics as $subtopic) {
 
-                    $subtopicID = $subtopic['id'];
-                    
-                    $resourceQuery = "
+                $subtopicID = $subtopic['id'];
+
+                $resourceQuery = "
                     SELECT *
                     FROM `resources` WHERE subtopicID = '$subtopicID'
                     ";
-    
-                    $resourcesResult = mysqli_query($conn,$resourceQuery);
-                    $resources = mysqli_fetch_all($resourcesResult,MYSQLI_ASSOC);
 
-                    $subtopicArray[] = array(
-                        "id" => $subtopicID,
-                        "title" => $subtopic['title'],
-                        "hierarchy" => $subtopic['hierarchy'],
-                        "resources" => $resources
-                    );
-                    
-                }
+                $resourcesResult = mysqli_query($conn, $resourceQuery);
+                $resources = mysqli_fetch_all($resourcesResult, MYSQLI_ASSOC);
 
-                $quizQuery = "
-                SELECT *
-                FROM `quiz` WHERE lectureID = '$lectureID'
-                ";
-
-                $quizResult = mysqli_query($conn,$quizQuery);
-                $quizzes = mysqli_fetch_all($quizResult,MYSQLI_ASSOC);
-
-                $lectureArray[] = array(
-                    "id" => $lectureID,
-                    "title" => $lecture['title'],
-                    "time" => $lectureTime[0],
-                    "hierarchy" => $lecture['hierarchy'],
-                    "subtopics" => $subtopicArray,
-                    "quizzes" => $quizzes
+                $subtopicArray[] = array(
+                    "id" => $subtopicID,
+                    "title" => $subtopic['title'],
+                    "hierarchy" => $subtopic['hierarchy'],
+                    "resources" => $resources
                 );
 
             }
 
-            $resultA = array(
-                "id" => $course['id'],
-                "title" => $course['title'],
-                "courseCode" => $course['courseCode'],
-                "image" => $course['image'],
-                "lectures" => $lectureArray
-            );
+            $quizQuery = "
+                SELECT *
+                FROM `quiz` WHERE lectureID = '$lectureID'
+                ";
 
-            $finalResult[] = $resultA;
+            $quizResult = mysqli_query($conn, $quizQuery);
+            $quizzes = mysqli_fetch_all($quizResult, MYSQLI_ASSOC);
+
+            $lectureArray[] = array(
+                "id" => $lectureID,
+                "title" => $lecture['title'],
+                "time" => $lectureTime[0],
+                "hierarchy" => $lecture['hierarchy'],
+                "subtopics" => $subtopicArray,
+                "quizzes" => $quizzes
+            );
 
         }
 
-        echo json_encode($finalResult);
+        $resultA = array(
+            "id" => $course['id'],
+            "title" => $course['title'],
+            "courseCode" => $course['courseCode'],
+            "image" => $course['image'],
+            "lectures" => $lectureArray
+        );
+
+        $finalResult[] = $resultA;
 
     }
-    else{
-        echo json_encode(array("status" => "error"));
-    }
+
+    echo json_encode($finalResult, JSON_UNESCAPED_UNICODE);
+
+} else {
+    echo json_encode(array("status" => "error"));
+}
