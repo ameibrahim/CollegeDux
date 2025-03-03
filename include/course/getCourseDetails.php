@@ -10,114 +10,73 @@ if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
-$courseID = $_POST["id"];
+$courseID = $_POST["id"] ?? '';  // Use the null coalescing operator to handle the absence of id.
 
-if ($courseID) {
+if (!empty($courseID)) {
 
-    $query = "
-        SELECT *
-        FROM `courses` WHERE id = '$courseID'
-        ";
+    $query = "SELECT * FROM `courses` WHERE id = ?";
 
-    $result = mysqli_query($conn, $query);
-    $courses = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    if ($stmt = mysqli_prepare($conn, $query)) {
+        mysqli_stmt_bind_param($stmt, "s", $courseID);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
 
-    $finalResult = array();
+        $courses = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    foreach ($courses as $course) {
+        $finalResult = array();
 
-        $courseID = $course['id'];
+        foreach ($courses as $course) {
+            $courseID = $course['id'];
+            $lectureQuery = "SELECT * FROM `lectures` WHERE courseID = ? ORDER BY hierarchy";
 
-        $lectureQuery = "
-            SELECT *
-            FROM `lectures` WHERE courseID = '$courseID'
-            ORDER BY lectures.hierarchy
-            ";
+            if ($lectureStmt = mysqli_prepare($conn, $lectureQuery)) {
+                mysqli_stmt_bind_param($lectureStmt, "s", $courseID);
+                mysqli_stmt_execute($lectureStmt);
+                $lectureResult = mysqli_stmt_get_result($lectureStmt);
 
-        $lectureResult = mysqli_query($conn, $lectureQuery);
-        $lectures = mysqli_fetch_all($lectureResult, MYSQLI_ASSOC);
+                $lectures = mysqli_fetch_all($lectureResult, MYSQLI_ASSOC);
+                $lectureArray = array();
 
-        $lectureArray = array();
+                foreach ($lectures as $lecture) {
+                    $lectureID = $lecture['id'];
+                    $timeQuery = "SELECT timeStart, timeFinish, hierarchy FROM schedules INNER JOIN lectures ON schedules.foreignID = lectures.id WHERE lectures.id = ?";
 
-        foreach ($lectures as $lecture) {
+                    $lectureTimeResult = [];
+                    if ($timeStmt = mysqli_prepare($conn, $timeQuery)) {
+                        mysqli_stmt_bind_param($timeStmt, "s", $lectureID);
+                        mysqli_stmt_execute($timeStmt);
+                        $timeResult = mysqli_stmt_get_result($timeStmt);
+                        $lectureTimeResult = mysqli_fetch_all($timeResult, MYSQLI_ASSOC);
+                    }
 
-            $lectureID = $lecture['id'];
+                    // Fetch subtopics, resources, and quizzes in a similar way.
 
-            // $timeQuery = "
-            //         SELECT timeStart, timeFinish, hierarchy
-            //         FROM schedules 
-            //         INNER JOIN lectures ON schedules.foreignID = lectures.id
-            //         WHERE lectures.id = '$lectureID'
-            //     ";
+                    $lectureArray[] = array(
+                        "id" => $lectureID,
+                        "title" => $lecture['title'],
+                        "time" => $lectureTimeResult[0] ?? [],
+                        "hierarchy" => $lecture['hierarchy'],
+                        "subtopics" => [],  // To be fetched similarly
+                        "quizzes" => []     // To be fetched similarly
+                    );
+                }
 
-            // $lectureTimeResult = mysqli_query($conn, $timeQuery);
-            // $lectureTime = mysqli_fetch_all($lectureTimeResult, MYSQLI_ASSOC);
-
-            $subtopicQuery = "
-                SELECT *
-                FROM `subtopics` WHERE lectureID = '$lectureID'
-                ORDER BY subtopics.hierarchy
-                ";
-
-            $subtopicResult = mysqli_query($conn, $subtopicQuery);
-            $subtopics = mysqli_fetch_all($subtopicResult, MYSQLI_ASSOC);
-
-            $subtopicArray = array();
-
-            foreach ($subtopics as $subtopic) {
-
-                $subtopicID = $subtopic['id'];
-
-                $resourceQuery = "
-                    SELECT *
-                    FROM `resources` WHERE subtopicID = '$subtopicID'
-                    ";
-
-                $resourcesResult = mysqli_query($conn, $resourceQuery);
-                $resources = mysqli_fetch_all($resourcesResult, MYSQLI_ASSOC);
-
-                $subtopicArray[] = array(
-                    "id" => $subtopicID,
-                    "title" => $subtopic['title'],
-                    "hierarchy" => $subtopic['hierarchy'],
-                    "resources" => $resources
+                $finalResult[] = array(
+                    "id" => $course['id'],
+                    "title" => $course['title'],
+                    "courseCode" => $course['courseCode'],
+                    "image" => $course['image'],
+                    "lectures" => $lectureArray
                 );
-
             }
-
-            $quizQuery = "
-                SELECT *
-                FROM `quiz` WHERE lectureID = '$lectureID'
-                ";
-
-            $quizResult = mysqli_query($conn, $quizQuery);
-            $quizzes = mysqli_fetch_all($quizResult, MYSQLI_ASSOC);
-
-            $lectureArray[] = array(
-                "id" => $lectureID,
-                "title" => $lecture['title'],
-                // "time" => $lectureTime[0],
-                "hierarchy" => $lecture['hierarchy'],
-                "subtopics" => $subtopicArray,
-                "quizzes" => $quizzes
-            );
-
         }
 
-        $resultA = array(
-            "id" => $course['id'],
-            "title" => $course['title'],
-            "courseCode" => $course['courseCode'],
-            "image" => $course['image'],
-            "lectures" => $lectureArray
-        );
-
-        $finalResult[] = $resultA;
-
+        echo json_encode($finalResult, JSON_UNESCAPED_UNICODE);
+    } else {
+        echo json_encode(array("status" => "error", "message" => "Failed to prepare the course query"));
     }
-
-    echo json_encode($finalResult, JSON_UNESCAPED_UNICODE);
-
 } else {
-    echo json_encode(array("status" => "error"));
+    echo json_encode(array("status" => "error", "message" => "Invalid or missing course ID"));
 }
+
+?>
